@@ -78,6 +78,7 @@
             this.btnToggleB = new System.Windows.Forms.Button();
             this.btnToggleO = new System.Windows.Forms.Button();
             this.btnToggleS = new System.Windows.Forms.Button();
+            this.timerGetToggles = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).BeginInit();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -485,8 +486,6 @@
             this.btnRetrieveToggles.UseVisualStyleBackColor = true;
             this.btnRetrieveToggles.Visible = false;
             this.btnRetrieveToggles.Click += new System.EventHandler(this.btnRetrieveToggles_Click);
-            this.btnRetrieveToggles.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnRetrieveToggles.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // lbNeedsSaving
             // 
@@ -537,8 +536,7 @@
             this.btnToggleC.Text = "C";
             this.btnToggleC.UseVisualStyleBackColor = true;
             this.btnToggleC.Visible = false;
-            this.btnToggleC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleC.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleU
             // 
@@ -550,8 +548,7 @@
             this.btnToggleU.Text = "U";
             this.btnToggleU.UseVisualStyleBackColor = true;
             this.btnToggleU.Visible = false;
-            this.btnToggleU.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleU.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleU.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleA
             // 
@@ -563,8 +560,7 @@
             this.btnToggleA.Text = "A";
             this.btnToggleA.UseVisualStyleBackColor = true;
             this.btnToggleA.Visible = false;
-            this.btnToggleA.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleA.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleA.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleD
             // 
@@ -576,8 +572,7 @@
             this.btnToggleD.Text = "D";
             this.btnToggleD.UseVisualStyleBackColor = true;
             this.btnToggleD.Visible = false;
-            this.btnToggleD.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleD.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleD.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleK
             // 
@@ -589,8 +584,7 @@
             this.btnToggleK.Text = "K";
             this.btnToggleK.UseVisualStyleBackColor = true;
             this.btnToggleK.Visible = false;
-            this.btnToggleK.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleK.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleK.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleB
             // 
@@ -602,8 +596,7 @@
             this.btnToggleB.Text = "B";
             this.btnToggleB.UseVisualStyleBackColor = true;
             this.btnToggleB.Visible = false;
-            this.btnToggleB.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleB.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleB.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleO
             // 
@@ -615,8 +608,7 @@
             this.btnToggleO.Text = "O";
             this.btnToggleO.UseVisualStyleBackColor = true;
             this.btnToggleO.Visible = false;
-            this.btnToggleO.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleO.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleO.Click += new System.EventHandler(this.SetToggle);
             // 
             // btnToggleS
             // 
@@ -628,8 +620,13 @@
             this.btnToggleS.Text = "S";
             this.btnToggleS.UseVisualStyleBackColor = true;
             this.btnToggleS.Visible = false;
-            this.btnToggleS.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnToggleS.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.btnToggleS.Click += new System.EventHandler(this.SetToggle);
+            // 
+            // timerGetToggles
+            // 
+            this.timerGetToggles.Enabled = true;
+            this.timerGetToggles.Interval = 1000;
+            this.timerGetToggles.Tick += new System.EventHandler(this.timerGetToggles_Tick);
             // 
             // FrmMain
             // 
@@ -731,6 +728,7 @@
         private System.Windows.Forms.Button btnToggleB;
         private System.Windows.Forms.Button btnToggleO;
         private System.Windows.Forms.Button btnToggleS;
+        private System.Windows.Forms.Timer timerGetToggles;
     }
 }
 

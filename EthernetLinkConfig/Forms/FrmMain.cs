@@ -36,6 +36,8 @@ namespace EthernetLinkConfig
         public string DestMAC;
 
         public Dictionary<string, bool> Toggles;
+        public bool GotToggles = false;
+        public int ToggleAttempts = 0;
 
         // Others
         public bool NeedsSaving = false;
@@ -165,6 +167,7 @@ namespace EthernetLinkConfig
 
                     DeluxeUnitDetected = true;
                     UpdateToggles();
+                    GotToggles = true;
 
                 }
 
@@ -317,8 +320,32 @@ namespace EthernetLinkConfig
 
         // -----------------------------------------------------------------
 
+        private void SetToggle(object sender, EventArgs e)
+        {
+            if (!(sender is Button)) return;
+            
+            Button btn = (Button)sender;
+
+            string toSend = btn.Text.ToString();
+
+            if (toSend == toSend.ToUpper())
+            {
+                toSend = toSend.ToLower();
+            }
+            else
+            {
+                toSend = toSend.ToUpper();
+            }
+
+            SendUdp("^^Id-" + toSend, LinkPort);
+            Common.WaitFor(250);
+            btnRetrieveToggles_Click(new object(), new EventArgs());
+
+        }
+
         private void UpdateToggles()
         {
+            SetToggleVisibility(true);
             foreach (string toggle in Toggles.Keys)
             {
                 UpdateToggleButton(toggle, Toggles[toggle]);
@@ -577,20 +604,6 @@ namespace EthernetLinkConfig
             {
                 SendUdp("^^IdX", LinkPort);
                 timerRefresher.Interval = 1000;
-                Common.WaitFor(250);
-                SendUdp("^^Id-V", LinkPort);
-
-                // Deluxe
-                if (DeluxeUnitDetected)
-                {
-                    SetToggleVisibility(true);
-                    lbDeluxeUnitDetected.Text = "Deluxe Unit DETECTED";
-                }
-                else
-                {
-                    lbDeluxeUnitDetected.Text = "Deluxe Unit NOT detected";
-                    SetToggleVisibility(false);
-                }
             }
         }
 
@@ -607,6 +620,16 @@ namespace EthernetLinkConfig
         private void btnRetrieveToggles_Click(object sender, EventArgs e)
         {
             SendUdp("^^Id-V", LinkPort);
+        }
+
+        private void timerGetToggles_Tick(object sender, EventArgs e)
+        {
+            if (ToggleAttempts > 4) return;
+
+            if (!GotToggles)
+            {
+                SendUdp("^^Id-V", LinkPort);
+            }
         }
         
         // ----------------------------------------------------------------------------------
