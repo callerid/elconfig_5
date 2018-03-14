@@ -65,5 +65,18 @@ namespace EthernetLinkConfig.Classes
             sw.Stop();
         }
 
+        public static string HexFromIP(string ip)
+        {
+            string[] parts = ip.Split('.');
+
+            string fullHex = "";
+            foreach (string part in parts)
+            {
+                fullHex += int.Parse(part).ToString("X").PadLeft(2, '0');
+            }
+
+            return fullHex;
+        }
+
     }
 }

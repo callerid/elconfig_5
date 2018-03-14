@@ -136,6 +136,12 @@ namespace EthernetLinkConfig
 
             LinkPort = port;
 
+            if (receptionBytes.Length < 57 && reception.Contains("ok"))
+            {
+                NeedsSaving = false;
+                lbNeedsSaving.Visible = false;
+            }
+
             if (receptionBytes.Length != 90 && reception.Length != 57) return;
 
             ConnectionPings = 0;
@@ -395,8 +401,41 @@ namespace EthernetLinkConfig
             switch (button_name)
             {
                 case "btnUnlockUnitNumber":
+
+                    SendUdp("^^IdU" + tbUnitNumber.Text.PadLeft(12, '0'), LinkPort);
+
                     break;
-                    
+
+                case "btnUnlockIPAddress":
+
+                    SendUdp("^^IdI" + Common.HexFromIP(tbIP.Text), LinkPort);
+
+                    break;
+
+                case "btnUnlockMACAddress":
+
+                    SendUdp("^^IdM" + tbMAC.Text.Replace(":", ""), LinkPort);
+
+                    break;
+
+                case "btnUnlockDestPort":
+
+                    SendUdp("^^IdT" + tbDestPort.Text.PadLeft(4, '0'), LinkPort);
+
+                    break;
+
+                case "btnUnlockDestIP":
+
+                    SendUdp("^^IdD" + Common.HexFromIP(tbDestIP.Text), LinkPort);
+
+                    break;
+
+                case "btnUnlockDestMAC":
+
+                    SendUdp("^^IdC" + tbDestMAC.Text.Replace(":", ""), LinkPort);
+
+                    break;
+
                 default:
                     return;
             }

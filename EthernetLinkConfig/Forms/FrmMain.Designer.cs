@@ -79,6 +79,20 @@
             this.btnToggleO = new System.Windows.Forms.Button();
             this.btnToggleS = new System.Windows.Forms.Button();
             this.timerGetToggles = new System.Windows.Forms.Timer(this.components);
+            this.resetEthernetDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.setUnitToCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setUnitToLineCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.sendDuplicateCallRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.listeningPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayComputerIPAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).BeginInit();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -280,6 +294,7 @@
             // 
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configureToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
@@ -288,12 +303,25 @@
             // 
             // configureToolStripMenuItem
             // 
+            this.configureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetEthernetDefaultsToolStripMenuItem,
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.setUnitToCurrentTimeToolStripMenuItem,
+            this.setUnitToLineCountToolStripMenuItem,
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.sendDuplicateCallRecordsToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.listeningPortToolStripMenuItem});
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
             this.configureToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.configureToolStripMenuItem.Text = "&Configure";
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.userManualToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -628,6 +656,90 @@
             this.timerGetToggles.Interval = 1000;
             this.timerGetToggles.Tick += new System.EventHandler(this.timerGetToggles_Tick);
             // 
+            // resetEthernetDefaultsToolStripMenuItem
+            // 
+            this.resetEthernetDefaultsToolStripMenuItem.Name = "resetEthernetDefaultsToolStripMenuItem";
+            this.resetEthernetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.resetEthernetDefaultsToolStripMenuItem.Text = "Reset &Ethernet Defaults";
+            // 
+            // setDeluxeUnitOutputDefaultsToolStripMenuItem
+            // 
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Name = "setDeluxeUnitOutputDefaultsToolStripMenuItem";
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Text = "Set &Deluxe Unit Output Defaults";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(237, 6);
+            // 
+            // setUnitToCurrentTimeToolStripMenuItem
+            // 
+            this.setUnitToCurrentTimeToolStripMenuItem.Name = "setUnitToCurrentTimeToolStripMenuItem";
+            this.setUnitToCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setUnitToCurrentTimeToolStripMenuItem.Text = "Set Unit to &Current Time";
+            // 
+            // setUnitToLineCountToolStripMenuItem
+            // 
+            this.setUnitToLineCountToolStripMenuItem.Name = "setUnitToLineCountToolStripMenuItem";
+            this.setUnitToLineCountToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setUnitToLineCountToolStripMenuItem.Text = "Set Unit &Line Count";
+            // 
+            // setDeluxeUnitToBasicUnitToolStripMenuItem
+            // 
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Name = "setDeluxeUnitToBasicUnitToolStripMenuItem";
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Text = "Set Deluxe Unit to &Basic Unit";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(237, 6);
+            // 
+            // sendDuplicateCallRecordsToolStripMenuItem
+            // 
+            this.sendDuplicateCallRecordsToolStripMenuItem.Name = "sendDuplicateCallRecordsToolStripMenuItem";
+            this.sendDuplicateCallRecordsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.sendDuplicateCallRecordsToolStripMenuItem.Text = "Send Duplicate Call &Records";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(237, 6);
+            // 
+            // listeningPortToolStripMenuItem
+            // 
+            this.listeningPortToolStripMenuItem.Name = "listeningPortToolStripMenuItem";
+            this.listeningPortToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.listeningPortToolStripMenuItem.Text = "Listening Port";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.displayComputerIPAddressToolStripMenuItem,
+            this.pingToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // displayComputerIPAddressToolStripMenuItem
+            // 
+            this.displayComputerIPAddressToolStripMenuItem.Name = "displayComputerIPAddressToolStripMenuItem";
+            this.displayComputerIPAddressToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.displayComputerIPAddressToolStripMenuItem.Text = "Display Computer &IP Address";
+            // 
+            // pingToolStripMenuItem
+            // 
+            this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
+            this.pingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.pingToolStripMenuItem.Text = "Ping";
+            // 
+            // userManualToolStripMenuItem
+            // 
+            this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
+            this.userManualToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.userManualToolStripMenuItem.Text = "User &Manual";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -729,6 +841,20 @@
         private System.Windows.Forms.Button btnToggleO;
         private System.Windows.Forms.Button btnToggleS;
         private System.Windows.Forms.Timer timerGetToggles;
+        private System.Windows.Forms.ToolStripMenuItem resetEthernetDefaultsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setDeluxeUnitOutputDefaultsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem setUnitToCurrentTimeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setUnitToLineCountToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setDeluxeUnitToBasicUnitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem sendDuplicateCallRecordsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem listeningPortToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayComputerIPAddressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem userManualToolStripMenuItem;
     }
 }
 
