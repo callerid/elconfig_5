@@ -35,6 +35,22 @@ namespace EthernetLinkConfig
         public string DestIP;
         public string DestMAC;
 
+        // Phone data
+        private const int DGV_PHONE_DATA_LINE_INDEX = 0;
+        private const int DGV_PHONE_DATA_IO_INDEX = 1;
+        private const int DGV_PHONE_DATA_SE_INDEX = 2;
+        private const int DGV_PHONE_DATA_DUR_INDEX = 3;
+        private const int DGV_PHONE_DATA_CS_INDEX = 4;
+        private const int DGV_PHONE_DATA_RING_INDEX = 5;
+        private const int DGV_PHONE_DATA_DATE_INDEX = 6;
+        private const int DGV_PHONE_DATA_TIME_INDEX = 7;
+        private const int DGV_PHONE_DATA_NUMBER_INDEX = 8;
+        private const int DGV_PHONE_DATA_NAME_INDEX = 9;
+
+        // Comm data
+        private const int DGV_COMM_DATA_DISPLAY_INDEX = 0;
+
+        // Toggles
         public Dictionary<string, bool> Toggles;
         public bool GotToggles = false;
         public int ToggleAttempts = 0;
@@ -142,13 +158,43 @@ namespace EthernetLinkConfig
                 lbNeedsSaving.Visible = false;
             }
 
-            if (receptionBytes.Length != 90 && reception.Length != 57) return;
+            if (receptionBytes.Length != 90 && receptionBytes.Length != 57 && receptionBytes.Length != 83 && receptionBytes.Length != 52) return;
 
             ConnectionPings = 0;
             lbConnected.Visible = true;
             imgConnected.Visible = true;
             lbListeningOn.Visible = true;
             lbListeningOn.Text = "Listening On: " + LinkPort;
+
+            // ------------------------------------------------------------------------
+            // If Call Record
+            // ------------------------------------------------------------------------
+            if (receptionBytes.Length == 83 || receptionBytes.Length == 52)
+            {
+
+                CallRecord record = new CallRecord(reception);
+
+                if (record.IsValid)
+                {
+                    if (record.Detailed)
+                    {
+                        AddCallRecordToPhoneData(record.Line.ToString(), record.DetailedType.ToString(), "", "", "", "", record.DateTime.ToShortDateString(), record.DateTime.ToShortTimeString(), "", "");
+                    }
+                    else
+                    {
+                        AddCallRecordToPhoneData(record.Line.ToString(), record.InboundOrOutboundOrBlock.ToString(), record.StartOrEnd, record.Duration.ToString(),
+                            record.CheckSum.ToString(), record.RingType + record.RingNumber, record.DateTime.ToShortDateString(), record.DateTime.ToShortTimeString(),
+                            record.PhoneNumber, record.Name);
+                    }
+                }
+
+                return;
+            }
+            else if (receptionBytes.Length != 57)
+            {
+                dgvCommData.Rows.Add();
+                dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+            }
 
             // -------------------------------------------------------------------------
             // If Toggles
@@ -173,6 +219,7 @@ namespace EthernetLinkConfig
 
                     DeluxeUnitDetected = true;
                     UpdateToggles();
+                    lbDeluxeUnitDetected.Text = "Deluxe Unit DETECTED";
                     GotToggles = true;
 
                 }
@@ -591,6 +638,22 @@ namespace EthernetLinkConfig
             btn.BackColor = Common.C_BUTTON_BACK;
         }
 
+        // -----------------------------------------------------------------
+
+        private void AddCallRecordToPhoneData(string ln, string io, string se, string dur, string cs, string ring, string date, string time, string number, string name)
+        {
+            dgvPhoneData.Rows.Add();
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_LINE_INDEX].Value = ln.PadLeft(2, '0');
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_IO_INDEX].Value = io;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_SE_INDEX].Value = se;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_DUR_INDEX].Value = dur;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_CS_INDEX].Value = cs;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_RING_INDEX].Value = ring;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_DATE_INDEX].Value = date;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_TIME_INDEX].Value = time;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NUMBER_INDEX].Value = number;
+            dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NAME_INDEX].Value = name;
+        }
         // -----------------------------------------------------------------
 
         private void timerRefresher_Tick(object sender, EventArgs e)

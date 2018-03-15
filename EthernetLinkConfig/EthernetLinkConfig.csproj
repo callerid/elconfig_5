@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CallRecord.cs" />
     <Compile Include="Classes\Common.cs" />
     <Compile Include="Classes\UdpRecieverClass.cs" />
     <Compile Include="Forms\FrmMain.cs">
