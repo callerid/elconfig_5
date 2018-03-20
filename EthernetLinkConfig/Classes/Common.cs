@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
+using EthernetLinkConfig.Forms;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -77,6 +78,20 @@ namespace EthernetLinkConfig.Classes
 
             return fullHex;
         }
+
+        // -----------------------------------------
+        public static DialogResult MessageBox(string mText, string mTitle, bool ok_only = true, int auto_close_ms = 1500)
+        {
+            DialogResult result;
+            using (var fMsgBox = new FrmMessageBox(mText, mTitle, ok_only, auto_close_ms))
+            {
+                result = fMsgBox.ShowDialog();
+
+            }
+            return result;
+        }
+
+        // -----------------------------------------
 
     }
 }

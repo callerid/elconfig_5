@@ -9,21 +9,26 @@ using System.Windows.Forms;
 using EthernetLinkConfig.Classes;
 using System.Threading;
 using System.Text.RegularExpressions;
+using EthernetLinkConfig.Forms;
 
 
 namespace EthernetLinkConfig
 {
     public partial class FrmMain : Form
     {
+        public bool Loading = true;
 
         // Receivers
         public static UdpReceiverClass6699 UdpReceiver6699 = new UdpReceiverClass6699();
         readonly Thread _udpReceiveThread6699 = new Thread(UdpReceiver6699.UdpIdleReceive);
         public static UdpReceiverClass3520 UdpReceiver3520 = new UdpReceiverClass3520();
         readonly Thread _udpReceiveThread3520 = new Thread(UdpReceiver3520.UdpIdleReceive);
-        public int LinkPort = 0;
+        public static int LinkPort = 0;
         public int ConnectionPings = 3;
         public bool DeluxeUnitDetected = false;
+
+        // Call Record reception
+        List<string> previousReceptions = new List<string>();
 
         // Reception values
         public string UnitNumber;
@@ -34,6 +39,8 @@ namespace EthernetLinkConfig
         public string ListPort;
         public string DestIP;
         public string DestMAC;
+        public int LineCount = 1;
+        public static int Dups = 1;
 
         // Phone data
         private const int DGV_PHONE_DATA_LINE_INDEX = 0;
@@ -60,6 +67,8 @@ namespace EthernetLinkConfig
 
         public FrmMain()
         {
+            Loading = true;
+
             InitializeComponent();
             MinimumSize = Size;
 
@@ -74,6 +83,8 @@ namespace EthernetLinkConfig
             Toggles.Add("B", false);
             Toggles.Add("K", false);
 
+            cbLineCount.SelectedIndex = 0;
+
             Common.DrawColors(this);
             Common.SetTitle(this, "Editing Unit");
 
@@ -87,6 +98,7 @@ namespace EthernetLinkConfig
             Subscribe(UdpReceiver6699);
             Subscribe(UdpReceiver3520);
 
+            Loading = false;
         }
 
         // UDP Port --------------------------------------------------------------------------
@@ -126,6 +138,28 @@ namespace EthernetLinkConfig
         private void HandleReception3520()
         {
             HandleAllReception(3520);
+        }
+
+        private void RemovePreviousReceptionFromBuffer(string reception)
+        {
+            List<int> indexes = new List<int>();
+            int cnt = 0;
+            foreach (string rec in previousReceptions)
+            {
+                if (rec.Contains(reception.Substring(reception.Length - 20)))
+                {
+                    indexes.Add(cnt);
+                }
+
+                cnt++;
+
+            }
+
+            for (int i = indexes.Count - 1; i >= 0; i--)
+            {
+                previousReceptions.RemoveAt(indexes[i]);
+            }
+
         }
 
         private void HandleAllReception(int port)
@@ -171,11 +205,38 @@ namespace EthernetLinkConfig
             // ------------------------------------------------------------------------
             if (receptionBytes.Length == 83 || receptionBytes.Length == 52)
             {
+                // Duplicate handling
+                if (ckbIgnoreDups.Checked)
+                {
+                    if (previousReceptions.Contains(reception))
+                    {
+                        return;
+                    }
+                    else
+                    {
 
+                        if (previousReceptions.Count > 30)
+                        {
+                            previousReceptions.Add(reception);
+                            previousReceptions.RemoveAt(0);
+                        }
+                        else
+                        {
+                            previousReceptions.Add(reception);
+                        }
+                    }
+                }
+                
                 CallRecord record = new CallRecord(reception);
 
                 if (record.IsValid)
                 {
+                    // If end record then remove entries form previousReceptions buffer
+                    if (record.IsEndRecord() && ckbIgnoreDups.Checked)
+                    {
+                        RemovePreviousReceptionFromBuffer(reception);
+                    }
+
                     if (record.Detailed)
                     {
                         AddCallRecordToPhoneData(record.Line.ToString(), record.DetailedType.ToString(), "", "", "", "", record.DateTime.ToShortDateString(), record.DateTime.ToShortTimeString(), "", "");
@@ -190,10 +251,21 @@ namespace EthernetLinkConfig
 
                 return;
             }
-            else if (receptionBytes.Length != 57)
+            else if (receptionBytes.Length != 90 && receptionBytes.Length != 83)
             {
-                dgvCommData.Rows.Add();
-                dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+                if (dgvCommData.Rows.Count > 0)
+                {
+                    if (dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString() != reception)
+                    {
+                        dgvCommData.Rows.Add();
+                        dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+                    }
+                }
+                else
+                {
+                    dgvCommData.Rows.Add();
+                    dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+                }
             }
 
             // -------------------------------------------------------------------------
@@ -216,6 +288,9 @@ namespace EthernetLinkConfig
                     Toggles["O"] = m.Groups[start_at + 7].Value.ToString() == "o";
                     Toggles["B"] = m.Groups[start_at + 8].Value.ToString() == "b";
                     Toggles["K"] = m.Groups[start_at + 9].Value.ToString() == "k";
+
+                    LineCount = int.Parse(m.Groups[start_at + 11].Value.ToString());
+                    lbLineCount.Text = LineCount.ToString().PadLeft(2,'0');
 
                     DeluxeUnitDetected = true;
                     UpdateToggles();
@@ -356,9 +431,12 @@ namespace EthernetLinkConfig
 
             // ----------------------------------
 
+            Dups = receptionBytes[75];
+            lbDups.Text = "# Of Dups: " + Dups.ToString();
+
         }
 
-        private void SendUdp(string toSend, int port)
+        public static void SendUdp(string toSend, int port)
         {
             var s = Encoding.ASCII.GetBytes(toSend.ToCharArray(), 0, toSend.Length);
             if (port == 6699)
@@ -665,7 +743,7 @@ namespace EthernetLinkConfig
                 lbNeedsSaving.Visible = !lbNeedsSaving.Visible;
             }
 
-            if (ConnectionPings > 3)
+            if (ConnectionPings > 6)
             {
                 imgConnected.Visible = false;
                 imgConnected.BackColor = Color.Pink;
@@ -722,6 +800,13 @@ namespace EthernetLinkConfig
         private void btnRetrieveToggles_Click(object sender, EventArgs e)
         {
             SendUdp("^^Id-V", LinkPort);
+            Common.WaitFor(250);
+            SendUdp("^^Id-V", LinkPort);
+            Common.WaitFor(250);
+            SendUdp("^^Id-V", LinkPort);
+            Common.WaitFor(250);
+            SendUdp("^^Id-V", LinkPort);
+            Common.WaitFor(250);
         }
 
         private void timerGetToggles_Tick(object sender, EventArgs e)
@@ -732,6 +817,147 @@ namespace EthernetLinkConfig
             {
                 SendUdp("^^Id-V", LinkPort);
             }
+        }
+
+        private void resetEthernetDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendUdp("^^IdDFFFFFFFF", LinkPort); //External IP
+            Common.WaitFor(250);
+            SendUdp("^^IdU000000000001", LinkPort); //Unit ID
+            Common.WaitFor(250);
+            SendUdp("^^IdIC0A8005A", LinkPort); //Internal IP
+            Common.WaitFor(250);
+            SendUdp("^^IdCFFFFFFFFFFFF", LinkPort); //Destination MAC address
+            Common.WaitFor(250);
+            SendUdp("^^IdT0DC0", LinkPort); //Port Number
+            Common.WaitFor(250);
+
+            Common.MessageBox("Command Sent.", "Finished");
+
+        }
+
+        private void setDeluxeUnitOutputDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendUdp("^^Id-N0000007701", LinkPort);
+            Common.WaitFor(250);
+            SendUdp("^^Id-R", LinkPort);
+
+            Common.MessageBox("Command Sent.", "Finished");
+        }
+
+        private void displayComputerIPAddressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP(), "Computer IP Address");
+        }
+
+        private string GetComputerIP()
+        {
+
+            string strHostName = System.Net.Dns.GetHostName();
+            string strIPAddress = System.Net.Dns.GetHostByName(strHostName).AddressList[0].ToString();
+        
+            return strIPAddress;
+
+        }
+
+        private void setUnitToCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendUdp("^^Id-N0000007701\r\n",LinkPort);
+            Common.WaitFor(250);
+            DateTime t = DateTime.Now;
+            string timeString = t.Month.ToString().PadLeft(2, '0') + t.Day.ToString().PadLeft(2, '0') + t.Hour.ToString().PadLeft(2, '0') + t.Minute.ToString().PadLeft(2, '0');
+            timeString = "^^Id-Z" + timeString + "\r";
+            SendUdp(timeString, LinkPort);
+            Common.WaitFor(800);
+            SendUdp("^^Id-V",LinkPort);
+
+            Common.MessageBox("Command Sent.", "Finished");
+        }
+
+        private void SetLineCount(int line)
+        {
+            string sendString = "";
+            switch (line)
+            {
+
+                case 1:
+                    sendString = "^^Id-N0000007701\r\n";
+                    break;
+
+                case 5:
+                    sendString = "^^Id-N0000007705\r\n";
+                    break;
+
+                case 9:
+                    sendString = "^^Id-N0000007709\r\n";
+                    break;
+
+                case 17:
+                    sendString = "^^Id-N0000007711\r\n";
+                    break;
+
+                case 21:
+                    sendString = "^^Id-N0000007715\r\n";
+                    break;
+
+                case 25:
+                    sendString = "^^Id-N0000007719\r\n";
+                    break;
+
+                case 33:
+                    sendString = "^^Id-N0000007721\r\n";
+                    break;
+            }
+
+            SendUdp(sendString, LinkPort);
+
+            Common.MessageBox("Command Sent.", "Finished");
+
+        }
+
+        private void cbLineCount_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Loading) return;
+            SetLineCount(int.Parse(cbLineCount.Text.ToString()));
+            Common.WaitFor(250);
+            btnRetrieveToggles_Click(new object(), new EventArgs());
+        }
+
+        private void setDeluxeUnitToBasicUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendUdp("^^Id-a", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-E", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-C", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-X", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-U", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-K", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-S", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-B", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-D", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-O", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-T", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-a", LinkPort);
+            Common.WaitFor(100);
+            SendUdp("^^Id-V", LinkPort);
+
+            Common.MessageBox("Commands to Reset Sent.", "Finished");
+        }
+
+        private void sendDuplicateCallRecordsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmSendDups fDups = new FrmSendDups();
+            fDups.ShowDialog();
         }
         
         // ----------------------------------------------------------------------------------

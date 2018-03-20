@@ -55,7 +55,6 @@
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.setUnitToCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setUnitToLineCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDeluxeUnitToBasicUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.sendDuplicateCallRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +67,18 @@
             this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
             this.dgvCommData = new System.Windows.Forms.DataGridView();
+            this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvPhoneData = new System.Windows.Forms.DataGridView();
+            this.dgvPhoneDataColLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColIO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColSE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColDur = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColCS = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColRing = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPhoneDataColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.btnUnlockUnitNumber = new System.Windows.Forms.Button();
@@ -93,17 +103,10 @@
             this.btnToggleO = new System.Windows.Forms.Button();
             this.btnToggleS = new System.Windows.Forms.Button();
             this.timerGetToggles = new System.Windows.Forms.Timer(this.components);
-            this.dgvPhoneDataColLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColIO = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColSE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColDur = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColCS = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColRing = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPhoneDataColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbLineCount = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lbLineCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).BeginInit();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -319,7 +322,6 @@
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem,
             this.toolStripSeparator1,
             this.setUnitToCurrentTimeToolStripMenuItem,
-            this.setUnitToLineCountToolStripMenuItem,
             this.setDeluxeUnitToBasicUnitToolStripMenuItem,
             this.toolStripSeparator2,
             this.sendDuplicateCallRecordsToolStripMenuItem,
@@ -334,12 +336,14 @@
             this.resetEthernetDefaultsToolStripMenuItem.Name = "resetEthernetDefaultsToolStripMenuItem";
             this.resetEthernetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.resetEthernetDefaultsToolStripMenuItem.Text = "Reset &Ethernet Defaults";
+            this.resetEthernetDefaultsToolStripMenuItem.Click += new System.EventHandler(this.resetEthernetDefaultsToolStripMenuItem_Click);
             // 
             // setDeluxeUnitOutputDefaultsToolStripMenuItem
             // 
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Name = "setDeluxeUnitOutputDefaultsToolStripMenuItem";
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Text = "Set &Deluxe Unit Output Defaults";
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Click += new System.EventHandler(this.setDeluxeUnitOutputDefaultsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -351,18 +355,14 @@
             this.setUnitToCurrentTimeToolStripMenuItem.Name = "setUnitToCurrentTimeToolStripMenuItem";
             this.setUnitToCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.setUnitToCurrentTimeToolStripMenuItem.Text = "Set Unit to &Current Time";
-            // 
-            // setUnitToLineCountToolStripMenuItem
-            // 
-            this.setUnitToLineCountToolStripMenuItem.Name = "setUnitToLineCountToolStripMenuItem";
-            this.setUnitToLineCountToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
-            this.setUnitToLineCountToolStripMenuItem.Text = "Set Unit &Line Count";
+            this.setUnitToCurrentTimeToolStripMenuItem.Click += new System.EventHandler(this.setUnitToCurrentTimeToolStripMenuItem_Click);
             // 
             // setDeluxeUnitToBasicUnitToolStripMenuItem
             // 
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Name = "setDeluxeUnitToBasicUnitToolStripMenuItem";
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Text = "Set Deluxe Unit to &Basic Unit";
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Click += new System.EventHandler(this.setDeluxeUnitToBasicUnitToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -374,6 +374,7 @@
             this.sendDuplicateCallRecordsToolStripMenuItem.Name = "sendDuplicateCallRecordsToolStripMenuItem";
             this.sendDuplicateCallRecordsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.sendDuplicateCallRecordsToolStripMenuItem.Text = "Send Duplicate Call &Records";
+            this.sendDuplicateCallRecordsToolStripMenuItem.Click += new System.EventHandler(this.sendDuplicateCallRecordsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -400,6 +401,7 @@
             this.displayComputerIPAddressToolStripMenuItem.Name = "displayComputerIPAddressToolStripMenuItem";
             this.displayComputerIPAddressToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.displayComputerIPAddressToolStripMenuItem.Text = "Display Computer &IP Address";
+            this.displayComputerIPAddressToolStripMenuItem.Click += new System.EventHandler(this.displayComputerIPAddressToolStripMenuItem_Click);
             // 
             // pingToolStripMenuItem
             // 
@@ -443,11 +445,20 @@
             this.dgvCommData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvCommDataColDisplay});
             this.dgvCommData.Location = new System.Drawing.Point(12, 257);
+            this.dgvCommData.MultiSelect = false;
             this.dgvCommData.Name = "dgvCommData";
             this.dgvCommData.ReadOnly = true;
             this.dgvCommData.RowHeadersVisible = false;
+            this.dgvCommData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvCommData.Size = new System.Drawing.Size(765, 141);
             this.dgvCommData.TabIndex = 20;
+            // 
+            // dgvCommDataColDisplay
+            // 
+            this.dgvCommDataColDisplay.HeaderText = "Unit Output";
+            this.dgvCommDataColDisplay.Name = "dgvCommDataColDisplay";
+            this.dgvCommDataColDisplay.ReadOnly = true;
+            this.dgvCommDataColDisplay.Width = 745;
             // 
             // dgvPhoneData
             // 
@@ -475,6 +486,76 @@
             this.dgvPhoneData.RowHeadersVisible = false;
             this.dgvPhoneData.Size = new System.Drawing.Size(765, 179);
             this.dgvPhoneData.TabIndex = 21;
+            // 
+            // dgvPhoneDataColLine
+            // 
+            this.dgvPhoneDataColLine.HeaderText = "Ln";
+            this.dgvPhoneDataColLine.Name = "dgvPhoneDataColLine";
+            this.dgvPhoneDataColLine.ReadOnly = true;
+            this.dgvPhoneDataColLine.Width = 40;
+            // 
+            // dgvPhoneDataColIO
+            // 
+            this.dgvPhoneDataColIO.HeaderText = "I/O";
+            this.dgvPhoneDataColIO.Name = "dgvPhoneDataColIO";
+            this.dgvPhoneDataColIO.ReadOnly = true;
+            this.dgvPhoneDataColIO.Width = 40;
+            // 
+            // dgvPhoneDataColSE
+            // 
+            this.dgvPhoneDataColSE.HeaderText = "S/E";
+            this.dgvPhoneDataColSE.Name = "dgvPhoneDataColSE";
+            this.dgvPhoneDataColSE.ReadOnly = true;
+            this.dgvPhoneDataColSE.Width = 40;
+            // 
+            // dgvPhoneDataColDur
+            // 
+            this.dgvPhoneDataColDur.HeaderText = "Dur";
+            this.dgvPhoneDataColDur.Name = "dgvPhoneDataColDur";
+            this.dgvPhoneDataColDur.ReadOnly = true;
+            this.dgvPhoneDataColDur.Width = 60;
+            // 
+            // dgvPhoneDataColCS
+            // 
+            this.dgvPhoneDataColCS.HeaderText = "CS";
+            this.dgvPhoneDataColCS.Name = "dgvPhoneDataColCS";
+            this.dgvPhoneDataColCS.ReadOnly = true;
+            this.dgvPhoneDataColCS.Width = 40;
+            // 
+            // dgvPhoneDataColRing
+            // 
+            this.dgvPhoneDataColRing.HeaderText = "Ring";
+            this.dgvPhoneDataColRing.Name = "dgvPhoneDataColRing";
+            this.dgvPhoneDataColRing.ReadOnly = true;
+            this.dgvPhoneDataColRing.Width = 60;
+            // 
+            // dgvPhoneDataColDate
+            // 
+            this.dgvPhoneDataColDate.HeaderText = "Date";
+            this.dgvPhoneDataColDate.Name = "dgvPhoneDataColDate";
+            this.dgvPhoneDataColDate.ReadOnly = true;
+            this.dgvPhoneDataColDate.Width = 80;
+            // 
+            // dgvPhoneDataColTime
+            // 
+            this.dgvPhoneDataColTime.HeaderText = "Time";
+            this.dgvPhoneDataColTime.Name = "dgvPhoneDataColTime";
+            this.dgvPhoneDataColTime.ReadOnly = true;
+            this.dgvPhoneDataColTime.Width = 80;
+            // 
+            // dgvPhoneDataColNumber
+            // 
+            this.dgvPhoneDataColNumber.HeaderText = "Number";
+            this.dgvPhoneDataColNumber.Name = "dgvPhoneDataColNumber";
+            this.dgvPhoneDataColNumber.ReadOnly = true;
+            this.dgvPhoneDataColNumber.Width = 150;
+            // 
+            // dgvPhoneDataColName
+            // 
+            this.dgvPhoneDataColName.HeaderText = "Name";
+            this.dgvPhoneDataColName.Name = "dgvPhoneDataColName";
+            this.dgvPhoneDataColName.ReadOnly = true;
+            this.dgvPhoneDataColName.Width = 150;
             // 
             // label8
             // 
@@ -622,9 +703,9 @@
             // btnRetrieveToggles
             // 
             this.btnRetrieveToggles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRetrieveToggles.Location = new System.Drawing.Point(659, 171);
+            this.btnRetrieveToggles.Location = new System.Drawing.Point(677, 171);
             this.btnRetrieveToggles.Name = "btnRetrieveToggles";
-            this.btnRetrieveToggles.Size = new System.Drawing.Size(118, 23);
+            this.btnRetrieveToggles.Size = new System.Drawing.Size(100, 23);
             this.btnRetrieveToggles.TabIndex = 30;
             this.btnRetrieveToggles.Text = "Retrieve Toggles";
             this.btnRetrieveToggles.UseVisualStyleBackColor = true;
@@ -772,88 +853,61 @@
             this.timerGetToggles.Interval = 1000;
             this.timerGetToggles.Tick += new System.EventHandler(this.timerGetToggles_Tick);
             // 
-            // dgvPhoneDataColLine
+            // cbLineCount
             // 
-            this.dgvPhoneDataColLine.HeaderText = "Ln";
-            this.dgvPhoneDataColLine.Name = "dgvPhoneDataColLine";
-            this.dgvPhoneDataColLine.ReadOnly = true;
-            this.dgvPhoneDataColLine.Width = 40;
+            this.cbLineCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbLineCount.FormattingEnabled = true;
+            this.cbLineCount.Items.AddRange(new object[] {
+            "1",
+            "5",
+            "9",
+            "17",
+            "21",
+            "25",
+            "33"});
+            this.cbLineCount.Location = new System.Drawing.Point(733, 65);
+            this.cbLineCount.Name = "cbLineCount";
+            this.cbLineCount.Size = new System.Drawing.Size(44, 21);
+            this.cbLineCount.TabIndex = 44;
+            this.cbLineCount.SelectedIndexChanged += new System.EventHandler(this.cbLineCount_SelectedIndexChanged);
             // 
-            // dgvPhoneDataColIO
+            // label10
             // 
-            this.dgvPhoneDataColIO.HeaderText = "I/O";
-            this.dgvPhoneDataColIO.Name = "dgvPhoneDataColIO";
-            this.dgvPhoneDataColIO.ReadOnly = true;
-            this.dgvPhoneDataColIO.Width = 40;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(476, 68);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(108, 13);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "Current Line Count:";
             // 
-            // dgvPhoneDataColSE
+            // label11
             // 
-            this.dgvPhoneDataColSE.HeaderText = "S/E";
-            this.dgvPhoneDataColSE.Name = "dgvPhoneDataColSE";
-            this.dgvPhoneDataColSE.ReadOnly = true;
-            this.dgvPhoneDataColSE.Width = 40;
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(616, 68);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(111, 13);
+            this.label11.TabIndex = 45;
+            this.label11.Text = "Reset Line Count To:";
             // 
-            // dgvPhoneDataColDur
+            // lbLineCount
             // 
-            this.dgvPhoneDataColDur.HeaderText = "Dur";
-            this.dgvPhoneDataColDur.Name = "dgvPhoneDataColDur";
-            this.dgvPhoneDataColDur.ReadOnly = true;
-            this.dgvPhoneDataColDur.Width = 60;
-            // 
-            // dgvPhoneDataColCS
-            // 
-            this.dgvPhoneDataColCS.HeaderText = "CS";
-            this.dgvPhoneDataColCS.Name = "dgvPhoneDataColCS";
-            this.dgvPhoneDataColCS.ReadOnly = true;
-            this.dgvPhoneDataColCS.Width = 40;
-            // 
-            // dgvPhoneDataColRing
-            // 
-            this.dgvPhoneDataColRing.HeaderText = "Ring";
-            this.dgvPhoneDataColRing.Name = "dgvPhoneDataColRing";
-            this.dgvPhoneDataColRing.ReadOnly = true;
-            this.dgvPhoneDataColRing.Width = 60;
-            // 
-            // dgvPhoneDataColDate
-            // 
-            this.dgvPhoneDataColDate.HeaderText = "Date";
-            this.dgvPhoneDataColDate.Name = "dgvPhoneDataColDate";
-            this.dgvPhoneDataColDate.ReadOnly = true;
-            this.dgvPhoneDataColDate.Width = 80;
-            // 
-            // dgvPhoneDataColTime
-            // 
-            this.dgvPhoneDataColTime.HeaderText = "Time";
-            this.dgvPhoneDataColTime.Name = "dgvPhoneDataColTime";
-            this.dgvPhoneDataColTime.ReadOnly = true;
-            this.dgvPhoneDataColTime.Width = 80;
-            // 
-            // dgvPhoneDataColNumber
-            // 
-            this.dgvPhoneDataColNumber.HeaderText = "Number";
-            this.dgvPhoneDataColNumber.Name = "dgvPhoneDataColNumber";
-            this.dgvPhoneDataColNumber.ReadOnly = true;
-            this.dgvPhoneDataColNumber.Width = 150;
-            // 
-            // dgvPhoneDataColName
-            // 
-            this.dgvPhoneDataColName.HeaderText = "Name";
-            this.dgvPhoneDataColName.Name = "dgvPhoneDataColName";
-            this.dgvPhoneDataColName.ReadOnly = true;
-            this.dgvPhoneDataColName.Width = 150;
-            // 
-            // dgvCommDataColDisplay
-            // 
-            this.dgvCommDataColDisplay.HeaderText = "Unit Output";
-            this.dgvCommDataColDisplay.Name = "dgvCommDataColDisplay";
-            this.dgvCommDataColDisplay.ReadOnly = true;
-            this.dgvCommDataColDisplay.Width = 745;
+            this.lbLineCount.AutoSize = true;
+            this.lbLineCount.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLineCount.Location = new System.Drawing.Point(590, 68);
+            this.lbLineCount.Name = "lbLineCount";
+            this.lbLineCount.Size = new System.Drawing.Size(19, 13);
+            this.lbLineCount.TabIndex = 46;
+            this.lbLineCount.Text = "01";
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 635);
+            this.Controls.Add(this.lbLineCount);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.cbLineCount);
             this.Controls.Add(this.btnToggleK);
             this.Controls.Add(this.btnToggleB);
             this.Controls.Add(this.btnToggleO);
@@ -954,7 +1008,6 @@
         private System.Windows.Forms.ToolStripMenuItem setDeluxeUnitOutputDefaultsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem setUnitToCurrentTimeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setUnitToLineCountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setDeluxeUnitToBasicUnitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem sendDuplicateCallRecordsToolStripMenuItem;
@@ -975,6 +1028,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvCommDataColDisplay;
+        private System.Windows.Forms.ComboBox cbLineCount;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lbLineCount;
     }
 }
 
