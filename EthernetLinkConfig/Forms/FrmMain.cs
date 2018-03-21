@@ -17,6 +17,7 @@ namespace EthernetLinkConfig
     public partial class FrmMain : Form
     {
         public bool Loading = true;
+        public bool AlwaysShowToggles = false;
 
         // Receivers
         public static UdpReceiverClass6699 UdpReceiver6699 = new UdpReceiverClass6699();
@@ -776,8 +777,11 @@ namespace EthernetLinkConfig
                 Common.WaitFor(250);
                 SendUdp("^^IdX", 3520);
 
-                lbDeluxeUnitDetected.Text = "Deluxe Unit NOT detected";
-                SetToggleVisibility(false);
+                if (!AlwaysShowToggles)
+                {
+                    lbDeluxeUnitDetected.Text = "Deluxe Unit NOT detected";
+                    SetToggleVisibility(false);
+                }
 
             }
             else
@@ -958,6 +962,14 @@ namespace EthernetLinkConfig
         {
             FrmSendDups fDups = new FrmSendDups();
             fDups.ShowDialog();
+        }
+
+        private void unlockTogglesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AlwaysShowToggles = true;
+                        
+            SetToggleVisibility(true);
+
         }
         
         // ----------------------------------------------------------------------------------

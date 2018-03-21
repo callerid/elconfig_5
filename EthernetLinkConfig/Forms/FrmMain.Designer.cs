@@ -63,6 +63,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayComputerIPAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unlockTogglesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
@@ -391,7 +392,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.displayComputerIPAddressToolStripMenuItem,
-            this.pingToolStripMenuItem});
+            this.pingToolStripMenuItem,
+            this.unlockTogglesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -408,6 +410,13 @@
             this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
             this.pingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.pingToolStripMenuItem.Text = "Ping";
+            // 
+            // unlockTogglesToolStripMenuItem
+            // 
+            this.unlockTogglesToolStripMenuItem.Name = "unlockTogglesToolStripMenuItem";
+            this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.unlockTogglesToolStripMenuItem.Text = "Unlock Toggles";
+            this.unlockTogglesToolStripMenuItem.Click += new System.EventHandler(this.unlockTogglesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1032,6 +1041,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lbLineCount;
+        private System.Windows.Forms.ToolStripMenuItem unlockTogglesToolStripMenuItem;
     }
 }
 
