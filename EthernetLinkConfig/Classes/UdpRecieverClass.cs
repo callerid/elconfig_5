@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -13,6 +14,7 @@ namespace EthernetLinkConfig.Classes
         public static Boolean Done;
         public static string ReceivedMessage;
         public static byte[] ReceviedMessageByte;
+        public static string LastIncomingIPAddress;
         public static int[] NListenPorts = new int[] { 6699 };
         public static string BoundTo;
 
@@ -72,6 +74,14 @@ namespace EthernetLinkConfig.Classes
                     ReceviedMessageByte = listener.Receive(ref groupEp);
                     ReceivedMessage = Encoding.UTF7.GetString(ReceviedMessageByte, 0, ReceviedMessageByte.Length);
 
+                    // Use for getting incoming IP Address ------------------------
+                    if (ReceviedMessageByte.Length == 90 || ReceviedMessageByte.Length == 83 || ReceviedMessageByte.Length == 52)
+                    {
+                        LastIncomingIPAddress = groupEp.Address.ToString();
+                    }
+
+                    //  ----------------------------------------------------------
+
                     // Filter smaller messages););
                     if (ReceviedMessageByte.Length > filterMessageSmallerThan)
                     {
@@ -90,7 +100,7 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6699);
+            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
@@ -102,6 +112,7 @@ namespace EthernetLinkConfig.Classes
         public static Boolean Done;
         public static string ReceivedMessage;
         public static byte[] ReceviedMessageByte;
+        public static string LastIncomingIPAddress;
         public static int[] NListenPorts = new int[] { 3520 };
         public static string BoundTo;
 
@@ -161,6 +172,12 @@ namespace EthernetLinkConfig.Classes
                     ReceviedMessageByte = listener.Receive(ref groupEp);
                     ReceivedMessage = Encoding.UTF7.GetString(ReceviedMessageByte, 0, ReceviedMessageByte.Length);
 
+                    // Use for getting incoming IP Address ------------------------
+                    if (ReceviedMessageByte.Length == 90 || ReceviedMessageByte.Length == 83 || ReceviedMessageByte.Length == 52)
+                    {
+                        LastIncomingIPAddress = groupEp.Address.ToString();
+                    }
+
                     // Filter smaller messages););
                     if (ReceviedMessageByte.Length > filterMessageSmallerThan)
                     {
@@ -179,7 +196,7 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 3520);
+            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 

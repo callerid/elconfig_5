@@ -68,11 +68,23 @@
     <Compile Include="Forms\FrmMessageBox.Designer.cs">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmPing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPing.Designer.cs">
+      <DependentUpon>FrmPing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmSendDups.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmSendDups.Designer.cs">
       <DependentUpon>FrmSendDups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmUniCast.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmUniCast.Designer.cs">
+      <DependentUpon>FrmUniCast.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,8 +94,14 @@
     <EmbeddedResource Include="Forms\FrmMessageBox.resx">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPing.resx">
+      <DependentUpon>FrmPing.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSendDups.resx">
       <DependentUpon>FrmSendDups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmUniCast.resx">
+      <DependentUpon>FrmUniCast.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

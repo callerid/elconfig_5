@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 using EthernetLinkConfig.Forms;
+using System.Net.NetworkInformation;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -77,6 +78,23 @@ namespace EthernetLinkConfig.Classes
             }
 
             return fullHex;
+        }
+
+        public static bool PingHost(string nameOrAddress)
+        {
+            bool pingable = false;
+            Ping pinger = new Ping();
+            try
+            {
+                PingReply reply = pinger.Send(nameOrAddress);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException)
+            {
+                // Discard PingExceptions and return false;
+                return false;
+            }
+            return pingable;
         }
 
         // -----------------------------------------

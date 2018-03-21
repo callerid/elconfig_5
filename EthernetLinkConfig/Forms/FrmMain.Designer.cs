@@ -47,7 +47,6 @@
             this.tbDestIP = new IPAddressControlLib.IPAddressControl();
             this.label7 = new System.Windows.Forms.Label();
             this.tbDestPort = new System.Windows.Forms.TextBox();
-            this.imgConnected = new System.Windows.Forms.PictureBox();
             this.timerRefresher = new System.Windows.Forms.Timer(this.components);
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,8 +63,6 @@
             this.displayComputerIPAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unlockTogglesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
             this.dgvCommData = new System.Windows.Forms.DataGridView();
             this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -108,11 +105,16 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.lbLineCount = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).BeginInit();
+            this.lbUnitFoundIP = new System.Windows.Forms.Label();
+            this.setupUnicastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imgConnected = new System.Windows.Forms.PictureBox();
+            this.lbSendingTo = new System.Windows.Forms.Label();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPhoneData)).BeginInit();
             this.panChangers.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).BeginInit();
             this.SuspendLayout();
             // 
             // panStatus
@@ -288,29 +290,17 @@
             this.tbDestPort.Size = new System.Drawing.Size(111, 22);
             this.tbDestPort.TabIndex = 15;
             // 
-            // imgConnected
-            // 
-            this.imgConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.imgConnected.BackColor = System.Drawing.Color.Pink;
-            this.imgConnected.Image = global::EthernetLinkConfig.Properties.Resources.connected;
-            this.imgConnected.Location = new System.Drawing.Point(12, 603);
-            this.imgConnected.Name = "imgConnected";
-            this.imgConnected.Size = new System.Drawing.Size(17, 26);
-            this.imgConnected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgConnected.TabIndex = 17;
-            this.imgConnected.TabStop = false;
-            // 
             // timerRefresher
             // 
             this.timerRefresher.Enabled = true;
+            this.timerRefresher.Interval = 250;
             this.timerRefresher.Tick += new System.EventHandler(this.timerRefresher_Tick);
             // 
             // mnuMain
             // 
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configureToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.toolsToolStripMenuItem});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
             this.mnuMain.Size = new System.Drawing.Size(789, 24);
@@ -393,7 +383,9 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.displayComputerIPAddressToolStripMenuItem,
             this.pingToolStripMenuItem,
-            this.unlockTogglesToolStripMenuItem});
+            this.toolStripSeparator4,
+            this.unlockTogglesToolStripMenuItem,
+            this.setupUnicastToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -410,6 +402,7 @@
             this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
             this.pingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.pingToolStripMenuItem.Text = "Ping";
+            this.pingToolStripMenuItem.Click += new System.EventHandler(this.pingToolStripMenuItem_Click);
             // 
             // unlockTogglesToolStripMenuItem
             // 
@@ -417,20 +410,6 @@
             this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.unlockTogglesToolStripMenuItem.Text = "Unlock Toggles";
             this.unlockTogglesToolStripMenuItem.Click += new System.EventHandler(this.unlockTogglesToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.userManualToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "&Help";
-            // 
-            // userManualToolStripMenuItem
-            // 
-            this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
-            this.userManualToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.userManualToolStripMenuItem.Text = "User &Manual";
             // 
             // lbConnected
             // 
@@ -874,7 +853,7 @@
             "21",
             "25",
             "33"});
-            this.cbLineCount.Location = new System.Drawing.Point(733, 65);
+            this.cbLineCount.Location = new System.Drawing.Point(733, 50);
             this.cbLineCount.Name = "cbLineCount";
             this.cbLineCount.Size = new System.Drawing.Size(44, 21);
             this.cbLineCount.TabIndex = 44;
@@ -883,7 +862,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(476, 68);
+            this.label10.Location = new System.Drawing.Point(476, 53);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(108, 13);
             this.label10.TabIndex = 30;
@@ -892,7 +871,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(616, 68);
+            this.label11.Location = new System.Drawing.Point(616, 53);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(111, 13);
             this.label11.TabIndex = 45;
@@ -902,17 +881,61 @@
             // 
             this.lbLineCount.AutoSize = true;
             this.lbLineCount.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLineCount.Location = new System.Drawing.Point(590, 68);
+            this.lbLineCount.Location = new System.Drawing.Point(590, 53);
             this.lbLineCount.Name = "lbLineCount";
             this.lbLineCount.Size = new System.Drawing.Size(19, 13);
             this.lbLineCount.TabIndex = 46;
             this.lbLineCount.Text = "01";
+            // 
+            // lbUnitFoundIP
+            // 
+            this.lbUnitFoundIP.AutoSize = true;
+            this.lbUnitFoundIP.Location = new System.Drawing.Point(549, 241);
+            this.lbUnitFoundIP.Name = "lbUnitFoundIP";
+            this.lbUnitFoundIP.Size = new System.Drawing.Size(228, 13);
+            this.lbUnitFoundIP.TabIndex = 47;
+            this.lbUnitFoundIP.Text = "Unit Found On IP Address: 000.000.000.000";
+            // 
+            // setupUnicastToolStripMenuItem
+            // 
+            this.setupUnicastToolStripMenuItem.Name = "setupUnicastToolStripMenuItem";
+            this.setupUnicastToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.setupUnicastToolStripMenuItem.Text = "Setup Uni-cast";
+            this.setupUnicastToolStripMenuItem.Click += new System.EventHandler(this.setupUnicastToolStripMenuItem_Click);
+            // 
+            // imgConnected
+            // 
+            this.imgConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.imgConnected.BackColor = System.Drawing.Color.Pink;
+            this.imgConnected.Image = global::EthernetLinkConfig.Properties.Resources.connected;
+            this.imgConnected.Location = new System.Drawing.Point(12, 603);
+            this.imgConnected.Name = "imgConnected";
+            this.imgConnected.Size = new System.Drawing.Size(17, 26);
+            this.imgConnected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgConnected.TabIndex = 17;
+            this.imgConnected.TabStop = false;
+            // 
+            // lbSendingTo
+            // 
+            this.lbSendingTo.AutoSize = true;
+            this.lbSendingTo.Location = new System.Drawing.Point(282, 241);
+            this.lbSendingTo.Name = "lbSendingTo";
+            this.lbSendingTo.Size = new System.Drawing.Size(261, 13);
+            this.lbSendingTo.TabIndex = 48;
+            this.lbSendingTo.Text = "Currently Sending Commands To: 000.000.000.000";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(224, 6);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 635);
+            this.Controls.Add(this.lbSendingTo);
+            this.Controls.Add(this.lbUnitFoundIP);
             this.Controls.Add(this.lbLineCount);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
@@ -950,13 +973,13 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ethernet Link Config v.0.0.0.1";
-            ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).EndInit();
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPhoneData)).EndInit();
             this.panChangers.ResumeLayout(false);
             this.panChangers.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgConnected)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -985,7 +1008,6 @@
         private System.Windows.Forms.Timer timerRefresher;
         private System.Windows.Forms.MenuStrip mnuMain;
         private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Label lbConnected;
         private System.Windows.Forms.DataGridView dgvCommData;
         private System.Windows.Forms.DataGridView dgvPhoneData;
@@ -1025,7 +1047,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayComputerIPAddressToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem userManualToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColLine;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColIO;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColSE;
@@ -1042,6 +1063,10 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lbLineCount;
         private System.Windows.Forms.ToolStripMenuItem unlockTogglesToolStripMenuItem;
+        private System.Windows.Forms.Label lbUnitFoundIP;
+        private System.Windows.Forms.ToolStripMenuItem setupUnicastToolStripMenuItem;
+        private System.Windows.Forms.Label lbSendingTo;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
 

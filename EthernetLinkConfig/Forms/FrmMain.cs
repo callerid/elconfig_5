@@ -18,7 +18,9 @@ namespace EthernetLinkConfig
     {
         public bool Loading = true;
         public bool AlwaysShowToggles = false;
-
+        public bool FoundAndSwitchedToUnicast = false;
+        public bool HasHadAConnection = false;
+        
         // Receivers
         public static UdpReceiverClass6699 UdpReceiver6699 = new UdpReceiverClass6699();
         readonly Thread _udpReceiveThread6699 = new Thread(UdpReceiver6699.UdpIdleReceive);
@@ -27,6 +29,10 @@ namespace EthernetLinkConfig
         public static int LinkPort = 0;
         public int ConnectionPings = 3;
         public bool DeluxeUnitDetected = false;
+
+        // Required sending IP data
+        public static string FoundIP = "";
+        public static string SendToIP = "255.255.255.255";
 
         // Call Record reception
         List<string> previousReceptions = new List<string>();
@@ -191,6 +197,8 @@ namespace EthernetLinkConfig
             {
                 NeedsSaving = false;
                 lbNeedsSaving.Visible = false;
+                AddToCommData("Unit Updated");
+                ReEnableAllUnlocks();
             }
 
             if (receptionBytes.Length != 90 && receptionBytes.Length != 57 && receptionBytes.Length != 83 && receptionBytes.Length != 52) return;
@@ -258,14 +266,12 @@ namespace EthernetLinkConfig
                 {
                     if (dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString() != reception)
                     {
-                        dgvCommData.Rows.Add();
-                        dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+                        AddToCommData(reception);
                     }
                 }
                 else
                 {
-                    dgvCommData.Rows.Add();
-                    dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = reception;
+                    AddToCommData(reception);
                 }
             }
 
@@ -571,6 +577,8 @@ namespace EthernetLinkConfig
         {
             if (!(sender is Button)) return;
 
+            lbNeedsSaving.Visible = true;
+
             Button btn = (Button)sender;
 
             switch (btn.Name)
@@ -583,13 +591,11 @@ namespace EthernetLinkConfig
                         tbUnitNumber.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        DisableAllUnlocksExcept(btn.Name);
                     }
                     else
                     {
-                        btn.Text = "Unlock";
-                        tbUnitNumber.Enabled = false;
                         UpdateParameter(btn.Name);
-                        btn.BackColor = Common.C_BUTTON_BACK;
                     }
 
                     break;
@@ -695,6 +701,53 @@ namespace EthernetLinkConfig
             }            
         }
 
+        private void DisableAllUnlocksExcept(string btnName)
+        {
+            foreach (Control ctrl in Controls)
+            {
+                if (!(ctrl is Panel)) continue;
+
+                if (ctrl.Name != "panChangers") continue;
+
+                foreach (Control pan_ctrl in ctrl.Controls)
+                {
+                    if (!(pan_ctrl is Button)) continue;
+
+                    if (pan_ctrl.Name.Contains("btnUnlock"))
+                    {
+                        if (pan_ctrl.Name != btnName) pan_ctrl.Enabled = false;
+                    }
+                }                
+            }
+        }
+
+        private void ReEnableAllUnlocks()
+        {
+            foreach (Control ctrl in Controls)
+            {
+                if (!(ctrl is Panel)) continue;
+
+                if (ctrl.Name != "panChangers") continue;
+
+                foreach (Control pan_ctrl in ctrl.Controls)
+                {
+                    if (pan_ctrl is Button)
+                    {
+                        if (pan_ctrl.Name.Contains("btnUnlock"))
+                        {
+                            pan_ctrl.Enabled = true;
+                            pan_ctrl.Text = "Unlock";
+                            pan_ctrl.BackColor = Common.C_BUTTON_BACK;
+                        }
+                    }
+                    if (pan_ctrl is TextBox)
+                    {
+                        pan_ctrl.Enabled = false;
+                    }
+                }
+            }
+        }
+        
         private void ButtonMouseEnter(object sender, EventArgs e)
         {
             if (!(sender is Button)) return;
@@ -719,6 +772,12 @@ namespace EthernetLinkConfig
 
         // -----------------------------------------------------------------
 
+        private void AddToCommData(string message)
+        {
+            dgvCommData.Rows.Add();
+            dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = message;
+        }
+
         private void AddCallRecordToPhoneData(string ln, string io, string se, string dur, string cs, string ring, string date, string time, string number, string name)
         {
             dgvPhoneData.Rows.Add();
@@ -738,13 +797,8 @@ namespace EthernetLinkConfig
         private void timerRefresher_Tick(object sender, EventArgs e)
         {
             ConnectionPings += 1;
-
-            if (NeedsSaving)
-            {
-                lbNeedsSaving.Visible = !lbNeedsSaving.Visible;
-            }
-
-            if (ConnectionPings > 6)
+            
+            if (ConnectionPings > 4)
             {
                 imgConnected.Visible = false;
                 imgConnected.BackColor = Color.Pink;
@@ -755,6 +809,27 @@ namespace EthernetLinkConfig
                 lbNeedsSaving.BackColor = Color.Pink;
                 lbConnected.Text = "NOT Connected";
                 lbListeningOn.Text = "Listening...";
+                lbUnitFoundIP.Visible = false;
+
+                if (!FoundAndSwitchedToUnicast)
+                {
+                    if (!string.IsNullOrEmpty(FoundIP))
+                    {
+                        if (!HasHadAConnection)
+                        {
+                            // If ELC found an IP that works
+                            // but has not connected then
+                            // Switch to Uni-cast and attempt
+                            // tries via Uni-cast.
+                            FoundAndSwitchedToUnicast = true;
+                            SendToIP = FoundIP;
+                        }
+                    }
+                }
+
+                // Reset for fast poling unit
+                timerRefresher.Interval = 750;
+
             }
             else
             {
@@ -768,12 +843,12 @@ namespace EthernetLinkConfig
                 lbNeedsSaving.BackColor = Color.LightGreen;
                 lbListeningOn.BackColor = Color.LightGreen;
                 lbConnected.Text = "Connected";
+                lbUnitFoundIP.Visible = true;
             }
 
             if (LinkPort == 0)
             {
                 SendUdp("^^IdX", 6699);
-                timerRefresher.Interval = 1000;
                 Common.WaitFor(250);
                 SendUdp("^^IdX", 3520);
 
@@ -786,8 +861,32 @@ namespace EthernetLinkConfig
             }
             else
             {
+                HasHadAConnection = true;
+
                 SendUdp("^^IdX", LinkPort);
-                timerRefresher.Interval = 1000;
+
+                // Reset to slow poling
+                if (ConnectionPings < 4)
+                {
+                    timerRefresher.Interval = 3000;
+                }
+                else
+                {
+                    timerRefresher.Interval = 750;
+                }
+
+                if (LinkPort == 6699)
+                {
+                    FoundIP = UdpReceiverClass6699.LastIncomingIPAddress;
+                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass6699.LastIncomingIPAddress;
+                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
+                }
+                else
+                {
+                    FoundIP = UdpReceiverClass3520.LastIncomingIPAddress;
+                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass3520.LastIncomingIPAddress;
+                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
+                }
             }
         }
 
@@ -851,7 +950,7 @@ namespace EthernetLinkConfig
 
         private void displayComputerIPAddressToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP(), "Computer IP Address");
+            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP(), "Computer IP Address", true, -1);
         }
 
         private string GetComputerIP()
@@ -970,6 +1069,18 @@ namespace EthernetLinkConfig
                         
             SetToggleVisibility(true);
 
+        }
+
+        private void pingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmPing fPing = new FrmPing();
+            fPing.ShowDialog();
+        }
+
+        private void setupUnicastToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmUniCast fUniCast = new FrmUniCast();
+            fUniCast.ShowDialog();
         }
         
         // ----------------------------------------------------------------------------------

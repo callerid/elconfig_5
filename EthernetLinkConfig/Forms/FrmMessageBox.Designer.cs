@@ -77,7 +77,9 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.tbText);
             this.Controls.Add(this.btnOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "FrmMessageBox";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Title";
