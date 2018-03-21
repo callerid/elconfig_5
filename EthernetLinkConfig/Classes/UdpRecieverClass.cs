@@ -61,7 +61,18 @@ namespace EthernetLinkConfig.Classes
 
             if (!bound)
             {
-                MessageBox.Show(new Form() { TopMost = true }, "Binding to port 6699 failed." + Environment.NewLine + "Another program may already be bound to port 6699.", "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string programName = Common.GetProgramBoundToUDPPort(6699);
+                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 6699. Another program [possible_program] may already be bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\nELConfig will attempt to bind to Port 3520. If the Port on the unit is set to 6699 it will not be detected.";
+                if (programName != "none")
+                {
+                    message = message.Replace("[possible_program]", "(" + programName + ")");
+                }
+                else
+                {
+                    message.Replace("[possible_program]", "");
+                }
+
+                MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -159,7 +170,19 @@ namespace EthernetLinkConfig.Classes
 
             if (!bound)
             {
-                MessageBox.Show(new Form() { TopMost = true }, "Binding to port 3520 failed." + Environment.NewLine + "Another program may already be bound to port 3520.", "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string programName = Common.GetProgramBoundToUDPPort(6699);
+                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 3520. Another program [possible_program] may already be bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\nELConfig will attempt to bind to Port 6699. If the Port on the unit is set to 3520 it will not be detected.";
+                if (programName != "none")
+                {
+                    message = message.Replace("[possible_program]", "(" + programName + ")");
+                }
+                else
+                {
+                    message.Replace("[possible_program]", "");
+                }
+
+                MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
                 return;
             }
 

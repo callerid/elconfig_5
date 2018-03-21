@@ -7,6 +7,9 @@ using System.Drawing;
 using System.Diagnostics;
 using EthernetLinkConfig.Forms;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.ComponentModel;
+using System.Net;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -110,6 +113,142 @@ namespace EthernetLinkConfig.Classes
         }
 
         // -----------------------------------------
+
+        public static string GetProgramBoundToUDPPort(int port)
+        {
+
+            List<UdpProcessRecord> programs = GetAllUdpConnections();
+
+            foreach (UdpProcessRecord program in programs)
+            {
+                if (program.LocalPort == port)
+                {
+                    return program.ProcessName;
+                }
+            }
+
+            return "none";
+        }
+
+        private static List<UdpProcessRecord> GetAllUdpConnections()
+        {
+            int bufferSize = 0;
+            List<UdpProcessRecord> udpTableRecords = new List<UdpProcessRecord>();
+
+            // Getting the size of UDP table, that is returned in 'bufferSize' variable. 
+            uint result = GetExtendedUdpTable(IntPtr.Zero, ref bufferSize, true,
+                AF_INET, UdpTableClass.UDP_TABLE_OWNER_PID);
+
+            // Allocating memory from the unmanaged memory of the process by using the 
+            // specified number of bytes in 'bufferSize' variable. 
+            IntPtr udpTableRecordPtr = Marshal.AllocHGlobal(bufferSize);
+
+            try
+            {
+                // The size of the table returned in 'bufferSize' variable in previous 
+                // call must be used in this subsequent call to 'GetExtendedUdpTable' 
+                // function in order to successfully retrieve the table. 
+                result = GetExtendedUdpTable(udpTableRecordPtr, ref bufferSize, true,
+                    AF_INET, UdpTableClass.UDP_TABLE_OWNER_PID);
+
+                // Non-zero value represent the function 'GetExtendedUdpTable' failed, 
+                // hence empty list is returned to the caller function. 
+                if (result != 0)
+                    return new List<UdpProcessRecord>();
+
+                // Marshals data from an unmanaged block of memory to a newly allocated 
+                // managed object 'udpRecordsTable' of type 'MIB_UDPTABLE_OWNER_PID' 
+                // to get number of entries of the specified TCP table structure. 
+                MIB_UDPTABLE_OWNER_PID udpRecordsTable = (MIB_UDPTABLE_OWNER_PID)
+                    Marshal.PtrToStructure(udpTableRecordPtr, typeof(MIB_UDPTABLE_OWNER_PID));
+                IntPtr tableRowPtr = (IntPtr)((long)udpTableRecordPtr +
+                    Marshal.SizeOf(udpRecordsTable.dwNumEntries));
+
+                // Reading and parsing the UDP records one by one from the table and 
+                // storing them in a list of 'UdpProcessRecord' structure type objects. 
+                for (int i = 0; i < udpRecordsTable.dwNumEntries; i++)
+                {
+                    MIB_UDPROW_OWNER_PID udpRow = (MIB_UDPROW_OWNER_PID)
+                        Marshal.PtrToStructure(tableRowPtr, typeof(MIB_UDPROW_OWNER_PID));
+                    udpTableRecords.Add(new UdpProcessRecord(new IPAddress(udpRow.localAddr),
+                        BitConverter.ToUInt16(new byte[2] { udpRow.localPort[1], 
+                            udpRow.localPort[0] }, 0), udpRow.owningPid));
+                    tableRowPtr = (IntPtr)((long)tableRowPtr + Marshal.SizeOf(udpRow));
+                }
+            }
+            catch (OutOfMemoryException outOfMemoryException)
+            {
+                MessageBox(outOfMemoryException.Message.ToString(), "Out Of Memory");
+            }
+            catch (Exception exception)
+            {
+                MessageBox(exception.Message, "Exception");
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(udpTableRecordPtr);
+            }
+            return udpTableRecords != null ? udpTableRecords.Distinct()
+                .ToList<UdpProcessRecord>() : new List<UdpProcessRecord>();
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MIB_UDPROW_OWNER_PID
+        {
+            public uint localAddr;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public byte[] localPort;
+            public int owningPid;
+        }
+
+        /// <summary> 
+        /// The structure contains the User Datagram Protocol (UDP) listener table for IPv4 
+        /// on the local computer. The table also includes the process ID (PID) that issued 
+        /// the call to the bind function for each UDP endpoint. 
+        /// </summary> 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MIB_UDPTABLE_OWNER_PID
+        {
+            public uint dwNumEntries;
+            [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct,
+                SizeConst = 1)]
+            public UdpProcessRecord[] table;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public class UdpProcessRecord
+        {
+            [DisplayName("Local Address")]
+            public IPAddress LocalAddress { get; set; }
+            [DisplayName("Local Port")]
+            public uint LocalPort { get; set; }
+            [DisplayName("Process ID")]
+            public int ProcessId { get; set; }
+            [DisplayName("Process Name")]
+            public string ProcessName { get; set; }
+
+            public UdpProcessRecord(IPAddress localAddress, uint localPort, int pId)
+            {
+                LocalAddress = localAddress;
+                LocalPort = localPort;
+                ProcessId = pId;
+                if (Process.GetProcesses().Any(process => process.Id == pId))
+                    ProcessName = Process.GetProcessById(ProcessId).ProcessName;
+            }
+        }
+
+        public enum UdpTableClass
+        {
+            UDP_TABLE_BASIC,
+            UDP_TABLE_OWNER_PID,
+            UDP_TABLE_OWNER_MODULE
+        }
+
+        [DllImport("iphlpapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int pdwSize,
+            bool bOrder, int ulAf, UdpTableClass tableClass, uint reserved = 0);
+
+        private const int AF_INET = 2;
 
     }
 }
