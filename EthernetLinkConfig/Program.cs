@@ -7,6 +7,9 @@ namespace EthernetLinkConfig
 {
     static class Program
     {
+
+        public static FrmMain FMain = null;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -15,7 +18,10 @@ namespace EthernetLinkConfig
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            
+            FMain = new FrmMain();
+            Application.Run(FMain);
+
         }
     }
 }

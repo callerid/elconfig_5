@@ -28,9 +28,9 @@ namespace EthernetLinkConfig.Forms
 
         private void btnUseFound_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(FrmMain.FoundIP))
+            if (FrmMain.FoundIPs.Count > 0)
             {
-                ipSendIPAddress.Text = FrmMain.FoundIP;
+                ipSendIPAddress.Text = FrmMain.FoundIPs[0];
             }
             else
             {

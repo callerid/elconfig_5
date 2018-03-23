@@ -55,6 +55,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.setUnitToCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDeluxeUnitToBasicUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setLineCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.sendDuplicateCallRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -62,7 +63,11 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayComputerIPAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.unlockTogglesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setupUnicastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.duplicateTrackingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
             this.dgvCommData = new System.Windows.Forms.DataGridView();
             this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -86,6 +91,7 @@
             this.btnUnlockDestIP = new System.Windows.Forms.Button();
             this.btnUnlockDestMAC = new System.Windows.Forms.Button();
             this.panChangers = new System.Windows.Forms.Panel();
+            this.lbMultipleUnits = new System.Windows.Forms.Label();
             this.lbDups = new System.Windows.Forms.Label();
             this.ckbIgnoreDups = new System.Windows.Forms.CheckBox();
             this.btnRetrieveToggles = new System.Windows.Forms.Button();
@@ -101,15 +107,14 @@
             this.btnToggleO = new System.Windows.Forms.Button();
             this.btnToggleS = new System.Windows.Forms.Button();
             this.timerGetToggles = new System.Windows.Forms.Timer(this.components);
-            this.cbLineCount = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.lbLineCount = new System.Windows.Forms.Label();
             this.lbUnitFoundIP = new System.Windows.Forms.Label();
-            this.setupUnicastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imgConnected = new System.Windows.Forms.PictureBox();
             this.lbSendingTo = new System.Windows.Forms.Label();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.lbLineCount = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.timerPreviousReceptionHandliing = new System.Windows.Forms.Timer(this.components);
+            this.lbUnlock = new System.Windows.Forms.Label();
+            this.timerFoundIPChecker = new System.Windows.Forms.Timer(this.components);
+            this.imgConnected = new System.Windows.Forms.PictureBox();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPhoneData)).BeginInit();
@@ -314,6 +319,7 @@
             this.toolStripSeparator1,
             this.setUnitToCurrentTimeToolStripMenuItem,
             this.setDeluxeUnitToBasicUnitToolStripMenuItem,
+            this.setLineCountToolStripMenuItem,
             this.toolStripSeparator2,
             this.sendDuplicateCallRecordsToolStripMenuItem,
             this.toolStripSeparator3,
@@ -355,6 +361,13 @@
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Text = "Set Deluxe Unit to &Basic Unit";
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Click += new System.EventHandler(this.setDeluxeUnitToBasicUnitToolStripMenuItem_Click);
             // 
+            // setLineCountToolStripMenuItem
+            // 
+            this.setLineCountToolStripMenuItem.Name = "setLineCountToolStripMenuItem";
+            this.setLineCountToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setLineCountToolStripMenuItem.Text = "Set Line Count";
+            this.setLineCountToolStripMenuItem.Click += new System.EventHandler(this.setLineCountToolStripMenuItem_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -377,6 +390,7 @@
             this.listeningPortToolStripMenuItem.Name = "listeningPortToolStripMenuItem";
             this.listeningPortToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.listeningPortToolStripMenuItem.Text = "Listening Port";
+            this.listeningPortToolStripMenuItem.Click += new System.EventHandler(this.listeningPortToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -385,7 +399,9 @@
             this.pingToolStripMenuItem,
             this.toolStripSeparator4,
             this.unlockTogglesToolStripMenuItem,
-            this.setupUnicastToolStripMenuItem});
+            this.setupUnicastToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.duplicateTrackingToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -404,12 +420,37 @@
             this.pingToolStripMenuItem.Text = "Ping";
             this.pingToolStripMenuItem.Click += new System.EventHandler(this.pingToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(224, 6);
+            // 
             // unlockTogglesToolStripMenuItem
             // 
             this.unlockTogglesToolStripMenuItem.Name = "unlockTogglesToolStripMenuItem";
             this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.unlockTogglesToolStripMenuItem.Text = "Unlock Toggles";
             this.unlockTogglesToolStripMenuItem.Click += new System.EventHandler(this.unlockTogglesToolStripMenuItem_Click);
+            // 
+            // setupUnicastToolStripMenuItem
+            // 
+            this.setupUnicastToolStripMenuItem.Name = "setupUnicastToolStripMenuItem";
+            this.setupUnicastToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.setupUnicastToolStripMenuItem.Text = "Setup Uni-cast";
+            this.setupUnicastToolStripMenuItem.Click += new System.EventHandler(this.setupUnicastToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(224, 6);
+            // 
+            // duplicateTrackingToolStripMenuItem
+            // 
+            this.duplicateTrackingToolStripMenuItem.Name = "duplicateTrackingToolStripMenuItem";
+            this.duplicateTrackingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.duplicateTrackingToolStripMenuItem.Text = "Duplicate Tracking";
+            this.duplicateTrackingToolStripMenuItem.Visible = false;
+            this.duplicateTrackingToolStripMenuItem.Click += new System.EventHandler(this.duplicateTrackingToolStripMenuItem_Click);
             // 
             // lbConnected
             // 
@@ -643,7 +684,7 @@
             // 
             // panChangers
             // 
-            this.panChangers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panChangers.Controls.Add(this.lbMultipleUnits);
             this.panChangers.Controls.Add(this.btnUnlockUnitNumber);
             this.panChangers.Controls.Add(this.btnUnlockDestMAC);
             this.panChangers.Controls.Add(this.tbIP);
@@ -668,6 +709,17 @@
             this.panChangers.Name = "panChangers";
             this.panChangers.Size = new System.Drawing.Size(417, 206);
             this.panChangers.TabIndex = 30;
+            // 
+            // lbMultipleUnits
+            // 
+            this.lbMultipleUnits.AutoSize = true;
+            this.lbMultipleUnits.ForeColor = System.Drawing.Color.DarkRed;
+            this.lbMultipleUnits.Location = new System.Drawing.Point(18, 13);
+            this.lbMultipleUnits.Name = "lbMultipleUnits";
+            this.lbMultipleUnits.Size = new System.Drawing.Size(64, 13);
+            this.lbMultipleUnits.TabIndex = 30;
+            this.lbMultipleUnits.Text = "Mult. Units";
+            this.lbMultipleUnits.Visible = false;
             // 
             // lbDups
             // 
@@ -841,52 +893,6 @@
             this.timerGetToggles.Interval = 1000;
             this.timerGetToggles.Tick += new System.EventHandler(this.timerGetToggles_Tick);
             // 
-            // cbLineCount
-            // 
-            this.cbLineCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbLineCount.FormattingEnabled = true;
-            this.cbLineCount.Items.AddRange(new object[] {
-            "1",
-            "5",
-            "9",
-            "17",
-            "21",
-            "25",
-            "33"});
-            this.cbLineCount.Location = new System.Drawing.Point(733, 50);
-            this.cbLineCount.Name = "cbLineCount";
-            this.cbLineCount.Size = new System.Drawing.Size(44, 21);
-            this.cbLineCount.TabIndex = 44;
-            this.cbLineCount.SelectedIndexChanged += new System.EventHandler(this.cbLineCount_SelectedIndexChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(476, 53);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(108, 13);
-            this.label10.TabIndex = 30;
-            this.label10.Text = "Current Line Count:";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(616, 53);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(111, 13);
-            this.label11.TabIndex = 45;
-            this.label11.Text = "Reset Line Count To:";
-            // 
-            // lbLineCount
-            // 
-            this.lbLineCount.AutoSize = true;
-            this.lbLineCount.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLineCount.Location = new System.Drawing.Point(590, 53);
-            this.lbLineCount.Name = "lbLineCount";
-            this.lbLineCount.Size = new System.Drawing.Size(19, 13);
-            this.lbLineCount.TabIndex = 46;
-            this.lbLineCount.Text = "01";
-            // 
             // lbUnitFoundIP
             // 
             this.lbUnitFoundIP.AutoSize = true;
@@ -896,12 +902,57 @@
             this.lbUnitFoundIP.TabIndex = 47;
             this.lbUnitFoundIP.Text = "Unit Found On IP Address: 000.000.000.000";
             // 
-            // setupUnicastToolStripMenuItem
+            // lbSendingTo
             // 
-            this.setupUnicastToolStripMenuItem.Name = "setupUnicastToolStripMenuItem";
-            this.setupUnicastToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.setupUnicastToolStripMenuItem.Text = "Setup Uni-cast";
-            this.setupUnicastToolStripMenuItem.Click += new System.EventHandler(this.setupUnicastToolStripMenuItem_Click);
+            this.lbSendingTo.AutoSize = true;
+            this.lbSendingTo.Location = new System.Drawing.Point(282, 241);
+            this.lbSendingTo.Name = "lbSendingTo";
+            this.lbSendingTo.Size = new System.Drawing.Size(261, 13);
+            this.lbSendingTo.TabIndex = 48;
+            this.lbSendingTo.Text = "Currently Sending Commands To: 000.000.000.000";
+            // 
+            // lbLineCount
+            // 
+            this.lbLineCount.AutoSize = true;
+            this.lbLineCount.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLineCount.Location = new System.Drawing.Point(562, 28);
+            this.lbLineCount.Name = "lbLineCount";
+            this.lbLineCount.Size = new System.Drawing.Size(19, 13);
+            this.lbLineCount.TabIndex = 52;
+            this.lbLineCount.Text = "01";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(438, 28);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(118, 13);
+            this.label10.TabIndex = 51;
+            this.label10.Text = "Starting Line Count =";
+            // 
+            // timerPreviousReceptionHandliing
+            // 
+            this.timerPreviousReceptionHandliing.Enabled = true;
+            this.timerPreviousReceptionHandliing.Interval = 1000;
+            this.timerPreviousReceptionHandliing.Tick += new System.EventHandler(this.timerPreviousReceptionHandliing_Tick);
+            // 
+            // lbUnlock
+            // 
+            this.lbUnlock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbUnlock.AutoSize = true;
+            this.lbUnlock.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lbUnlock.Location = new System.Drawing.Point(768, 5);
+            this.lbUnlock.Name = "lbUnlock";
+            this.lbUnlock.Size = new System.Drawing.Size(15, 13);
+            this.lbUnlock.TabIndex = 53;
+            this.lbUnlock.Text = "U";
+            this.lbUnlock.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbUnlock_MouseDown);
+            // 
+            // timerFoundIPChecker
+            // 
+            this.timerFoundIPChecker.Enabled = true;
+            this.timerFoundIPChecker.Interval = 750;
+            this.timerFoundIPChecker.Tick += new System.EventHandler(this.timerFoundIPChecker_Tick);
             // 
             // imgConnected
             // 
@@ -915,31 +966,16 @@
             this.imgConnected.TabIndex = 17;
             this.imgConnected.TabStop = false;
             // 
-            // lbSendingTo
-            // 
-            this.lbSendingTo.AutoSize = true;
-            this.lbSendingTo.Location = new System.Drawing.Point(282, 241);
-            this.lbSendingTo.Name = "lbSendingTo";
-            this.lbSendingTo.Size = new System.Drawing.Size(261, 13);
-            this.lbSendingTo.TabIndex = 48;
-            this.lbSendingTo.Text = "Currently Sending Commands To: 000.000.000.000";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(224, 6);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 635);
+            this.Controls.Add(this.lbUnlock);
+            this.Controls.Add(this.lbLineCount);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.lbSendingTo);
             this.Controls.Add(this.lbUnitFoundIP);
-            this.Controls.Add(this.lbLineCount);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.cbLineCount);
             this.Controls.Add(this.btnToggleK);
             this.Controls.Add(this.btnToggleB);
             this.Controls.Add(this.btnToggleO);
@@ -1058,15 +1094,20 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPhoneDataColName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvCommDataColDisplay;
-        private System.Windows.Forms.ComboBox cbLineCount;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label lbLineCount;
         private System.Windows.Forms.ToolStripMenuItem unlockTogglesToolStripMenuItem;
         private System.Windows.Forms.Label lbUnitFoundIP;
         private System.Windows.Forms.ToolStripMenuItem setupUnicastToolStripMenuItem;
         private System.Windows.Forms.Label lbSendingTo;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.Label lbLineCount;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ToolStripMenuItem setLineCountToolStripMenuItem;
+        private System.Windows.Forms.Timer timerPreviousReceptionHandliing;
+        private System.Windows.Forms.ToolStripMenuItem duplicateTrackingToolStripMenuItem;
+        private System.Windows.Forms.Label lbUnlock;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.Timer timerFoundIPChecker;
+        private System.Windows.Forms.Label lbMultipleUnits;
     }
 }
 

@@ -20,22 +20,34 @@ namespace EthernetLinkConfig
         public bool AlwaysShowToggles = false;
         public bool FoundAndSwitchedToUnicast = false;
         public bool HasHadAConnection = false;
+        public bool HasShownMultipleUnitMessage = false;
+        public static bool AskedToChangeLineCount = false;
+
+        // Forms
+        FrmSetLineCount FSetLineCount = new FrmSetLineCount(0);
+        FrmDuplicateTracking FDupsTracking = new FrmDuplicateTracking();
         
         // Receivers
         public static UdpReceiverClass6699 UdpReceiver6699 = new UdpReceiverClass6699();
         readonly Thread _udpReceiveThread6699 = new Thread(UdpReceiver6699.UdpIdleReceive);
         public static UdpReceiverClass3520 UdpReceiver3520 = new UdpReceiverClass3520();
         readonly Thread _udpReceiveThread3520 = new Thread(UdpReceiver3520.UdpIdleReceive);
+        
+        // Custom receiver
+        public static UdpReceiverClassCustom UdpReceiverCustom = new UdpReceiverClassCustom();
+        public static Thread _udpReceiveThreadCustom = new Thread(UdpReceiverCustom.UdpIdleReceive);
+        
+        // Receive vitals
         public static int LinkPort = 0;
         public int ConnectionPings = 3;
         public bool DeluxeUnitDetected = false;
 
         // Required sending IP data
-        public static string FoundIP = "";
+        public static List<string> FoundIPs = new List<string>();
         public static string SendToIP = "255.255.255.255";
 
-        // Call Record reception
-        List<string> previousReceptions = new List<string>();
+        // Call Record reception <reception_string, seconds_since_it_came_in>
+        Dictionary<string, int> previousReceptions = new Dictionary<string, int>();
 
         // Reception values
         public string UnitNumber;
@@ -77,6 +89,7 @@ namespace EthernetLinkConfig
             Loading = true;
 
             InitializeComponent();
+            FSetLineCount = new FrmSetLineCount(0);
             MinimumSize = Size;
 
             // Setup Toggles
@@ -89,8 +102,6 @@ namespace EthernetLinkConfig
             Toggles.Add("O", false);
             Toggles.Add("B", false);
             Toggles.Add("K", false);
-
-            cbLineCount.SelectedIndex = 0;
 
             Common.DrawColors(this);
             Common.SetTitle(this, "Editing Unit");
@@ -106,6 +117,20 @@ namespace EthernetLinkConfig
             Subscribe(UdpReceiver3520);
 
             Loading = false;
+        }
+
+        // Custom receiver
+        public void StartCustomReceiver(int port)
+        {
+            UdpReceiverClassCustom.ListenOn = port;
+
+            UdpReceiverCustom = new UdpReceiverClassCustom();
+            _udpReceiveThreadCustom = new Thread(UdpReceiverCustom.UdpIdleReceive);
+
+            _udpReceiveThreadCustom.IsBackground = true;
+            _udpReceiveThreadCustom.Start();
+
+            Subscribe(UdpReceiverCustom);
         }
 
         // UDP Port --------------------------------------------------------------------------
@@ -137,6 +162,25 @@ namespace EthernetLinkConfig
 
         }
 
+        public void Subscribe(UdpReceiverClassCustom u)
+        {
+            // If UDP event occurs run HeardIt method
+            u.DataReceived += HeardItCustom;
+        }
+
+        private void HeardItCustom(UdpReceiverClassCustom u, EventArgs e)
+        {
+            // HELP : example how to call method
+            // Invoke((MethodInvoker)(() => methodName()));
+            Invoke((MethodInvoker)(HandleReceptionCustom));
+
+        }
+
+        private void HandleReceptionCustom()
+        {
+            HandleAllReception(UdpReceiverClassCustom.ListenOn);
+        }
+
         private void HandleReception6699()
         {
             HandleAllReception(6699);
@@ -146,29 +190,7 @@ namespace EthernetLinkConfig
         {
             HandleAllReception(3520);
         }
-
-        private void RemovePreviousReceptionFromBuffer(string reception)
-        {
-            List<int> indexes = new List<int>();
-            int cnt = 0;
-            foreach (string rec in previousReceptions)
-            {
-                if (rec.Contains(reception.Substring(reception.Length - 20)))
-                {
-                    indexes.Add(cnt);
-                }
-
-                cnt++;
-
-            }
-
-            for (int i = indexes.Count - 1; i >= 0; i--)
-            {
-                previousReceptions.RemoveAt(indexes[i]);
-            }
-
-        }
-
+        
         private void HandleAllReception(int port)
         {
             // Handle UDP Reception
@@ -182,14 +204,20 @@ namespace EthernetLinkConfig
                 receptionBytes = UdpReceiverClass6699.ReceviedMessageByte;
 
             }
-            else
+            else if (port == 3520)
             {
                 // 3520
                 reception = UdpReceiverClass3520.ReceivedMessage;
                 receptionBytes = UdpReceiverClass3520.ReceviedMessageByte;
             }
+            else
+            {
+                // Other
+                reception = UdpReceiverClassCustom.ReceivedMessage;
+                receptionBytes = UdpReceiverClassCustom.ReceviedMessageByte;
+            }
 
-            if (receptionBytes.Length == 5) return;
+            if (receptionBytes.Length == 5 || receptionBytes.Length == 6) return;
 
             LinkPort = port;
 
@@ -208,6 +236,7 @@ namespace EthernetLinkConfig
             imgConnected.Visible = true;
             lbListeningOn.Visible = true;
             lbListeningOn.Text = "Listening On: " + LinkPort;
+            if (FoundIPs.Count > 1) lbMultipleUnits.Visible = true;
 
             // ------------------------------------------------------------------------
             // If Call Record
@@ -217,21 +246,33 @@ namespace EthernetLinkConfig
                 // Duplicate handling
                 if (ckbIgnoreDups.Checked)
                 {
-                    if (previousReceptions.Contains(reception))
+                    if (previousReceptions.ContainsKey(reception))
                     {
-                        return;
+                        if (previousReceptions[reception] < 60) return;
                     }
                     else
                     {
 
                         if (previousReceptions.Count > 30)
                         {
-                            previousReceptions.Add(reception);
-                            previousReceptions.RemoveAt(0);
+                            previousReceptions.Add(reception, 0);
+
+                            string removeKey = "";
+                            foreach (string key in previousReceptions.Keys)
+                            {
+                                removeKey = key;
+                                break;
+                            }
+
+                            if (!string.IsNullOrEmpty(removeKey))
+                            {
+                                previousReceptions.Remove(removeKey);
+                            }
+
                         }
                         else
                         {
-                            previousReceptions.Add(reception);
+                            previousReceptions.Add(reception, 0);
                         }
                     }
                 }
@@ -240,12 +281,6 @@ namespace EthernetLinkConfig
 
                 if (record.IsValid)
                 {
-                    // If end record then remove entries form previousReceptions buffer
-                    if (record.IsEndRecord() && ckbIgnoreDups.Checked)
-                    {
-                        RemovePreviousReceptionFromBuffer(reception);
-                    }
-
                     if (record.Detailed)
                     {
                         AddCallRecordToPhoneData(record.Line.ToString(), record.DetailedType.ToString(), "", "", "", "", record.DateTime.ToShortDateString(), record.DateTime.ToShortTimeString(), "", "");
@@ -288,6 +323,7 @@ namespace EthernetLinkConfig
                 {
 
                     Toggles["E"] = m.Groups[start_at].Value.ToString() == "e";
+                    Toggles["C"] = m.Groups[start_at + 1].Value.ToString() == "c";
                     Toggles["U"] = m.Groups[start_at + 3].Value.ToString() == "u";
                     Toggles["D"] = m.Groups[start_at + 4].Value.ToString() == "d";
                     Toggles["A"] = m.Groups[start_at + 5].Value.ToString() == "a";
@@ -297,7 +333,27 @@ namespace EthernetLinkConfig
                     Toggles["K"] = m.Groups[start_at + 9].Value.ToString() == "k";
 
                     LineCount = int.Parse(m.Groups[start_at + 11].Value.ToString());
+
+                    if (LineCount > 8)
+                    {
+                        if (!AskedToChangeLineCount)
+                        {
+                            FSetLineCount = new FrmSetLineCount(LineCount, true);
+                            FSetLineCount.Show();
+                            AskedToChangeLineCount = true;
+                        }
+                    }
+
                     lbLineCount.Text = LineCount.ToString().PadLeft(2,'0');
+
+                    if (FSetLineCount.Visible)
+                    {
+                        FSetLineCount.lbLineCount.Text = LineCount.ToString().PadLeft(2, '0');
+                        FrmSetLineCount.Loading = true;
+                        FSetLineCount.DisplayNewLineCount(LineCount);
+                        FSetLineCount.cbLineCount.Text = LineCount.ToString();
+                        FrmSetLineCount.Loading = false;
+                    }
 
                     DeluxeUnitDetected = true;
                     UpdateToggles();
@@ -450,9 +506,13 @@ namespace EthernetLinkConfig
             {
                 UdpReceiver6699.SendUDP(s);
             }
-            else
+            else if (port == 3520)
             {
                 UdpReceiver3520.SendUDP(s);
+            }
+            else
+            {
+                UdpReceiverCustom.SendUDP(s);
             }
         }
 
@@ -552,7 +612,7 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockDestPort":
 
-                    SendUdp("^^IdT" + tbDestPort.Text.PadLeft(4, '0'), LinkPort);
+                    SendUdp("^^IdT" + (int.Parse(tbDestPort.Text).ToString("X")).PadLeft(4, '0'), LinkPort);
 
                     break;
 
@@ -776,6 +836,7 @@ namespace EthernetLinkConfig
         {
             dgvCommData.Rows.Add();
             dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = message;
+            dgvCommData.FirstDisplayedScrollingRowIndex = dgvCommData.Rows.Count - 1;
         }
 
         private void AddCallRecordToPhoneData(string ln, string io, string se, string dur, string cs, string ring, string date, string time, string number, string name)
@@ -791,7 +852,9 @@ namespace EthernetLinkConfig
             dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_TIME_INDEX].Value = time;
             dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NUMBER_INDEX].Value = number;
             dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NAME_INDEX].Value = name;
+            dgvPhoneData.FirstDisplayedScrollingRowIndex = dgvPhoneData.Rows.Count - 1;
         }
+        
         // -----------------------------------------------------------------
 
         private void timerRefresher_Tick(object sender, EventArgs e)
@@ -813,7 +876,7 @@ namespace EthernetLinkConfig
 
                 if (!FoundAndSwitchedToUnicast)
                 {
-                    if (!string.IsNullOrEmpty(FoundIP))
+                    if (FoundIPs.Count > 1)
                     {
                         if (!HasHadAConnection)
                         {
@@ -822,7 +885,7 @@ namespace EthernetLinkConfig
                             // Switch to Uni-cast and attempt
                             // tries via Uni-cast.
                             FoundAndSwitchedToUnicast = true;
-                            SendToIP = FoundIP;
+                            SendToIP = FoundIPs[0];
                         }
                     }
                 }
@@ -877,14 +940,44 @@ namespace EthernetLinkConfig
 
                 if (LinkPort == 6699)
                 {
-                    FoundIP = UdpReceiverClass6699.LastIncomingIPAddress;
+                    
+                    if(!(FoundIPs.Contains(UdpReceiverClass6699.LastIncomingIPAddress)))
+                    {
+                        if (UdpReceiverClass6699.LastIncomingIPAddress != null)
+                        {
+                            FoundIPs.Add(UdpReceiverClass6699.LastIncomingIPAddress);
+                        }
+                    }
+                    
                     lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass6699.LastIncomingIPAddress;
+                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
+                }
+                else if(LinkPort == 3520)
+                {
+
+                    if (!(FoundIPs.Contains(UdpReceiverClass3520.LastIncomingIPAddress)))
+                    {
+                        if (UdpReceiverClass3520.LastIncomingIPAddress != null)
+                        {
+                            FoundIPs.Add(UdpReceiverClass3520.LastIncomingIPAddress);
+                        }
+                    }
+
+                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass3520.LastIncomingIPAddress;
                     lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
                 }
                 else
                 {
-                    FoundIP = UdpReceiverClass3520.LastIncomingIPAddress;
-                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass3520.LastIncomingIPAddress;
+
+                    if (!(FoundIPs.Contains(UdpReceiverClassCustom.LastIncomingIPAddress)))
+                    {
+                        if (UdpReceiverClassCustom.LastIncomingIPAddress != null)
+                        {
+                            FoundIPs.Add(UdpReceiverClassCustom.LastIncomingIPAddress);
+                        }
+                    }
+
+                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClassCustom.LastIncomingIPAddress;
                     lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
                 }
             }
@@ -977,55 +1070,6 @@ namespace EthernetLinkConfig
             Common.MessageBox("Command Sent.", "Finished");
         }
 
-        private void SetLineCount(int line)
-        {
-            string sendString = "";
-            switch (line)
-            {
-
-                case 1:
-                    sendString = "^^Id-N0000007701\r\n";
-                    break;
-
-                case 5:
-                    sendString = "^^Id-N0000007705\r\n";
-                    break;
-
-                case 9:
-                    sendString = "^^Id-N0000007709\r\n";
-                    break;
-
-                case 17:
-                    sendString = "^^Id-N0000007711\r\n";
-                    break;
-
-                case 21:
-                    sendString = "^^Id-N0000007715\r\n";
-                    break;
-
-                case 25:
-                    sendString = "^^Id-N0000007719\r\n";
-                    break;
-
-                case 33:
-                    sendString = "^^Id-N0000007721\r\n";
-                    break;
-            }
-
-            SendUdp(sendString, LinkPort);
-
-            Common.MessageBox("Command Sent.", "Finished");
-
-        }
-
-        private void cbLineCount_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Loading) return;
-            SetLineCount(int.Parse(cbLineCount.Text.ToString()));
-            Common.WaitFor(250);
-            btnRetrieveToggles_Click(new object(), new EventArgs());
-        }
-
         private void setDeluxeUnitToBasicUnitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SendUdp("^^Id-a", LinkPort);
@@ -1081,6 +1125,102 @@ namespace EthernetLinkConfig
         {
             FrmUniCast fUniCast = new FrmUniCast();
             fUniCast.ShowDialog();
+        }
+
+        private void setLineCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FSetLineCount = new FrmSetLineCount(LineCount);
+            FSetLineCount.ShowDialog();
+        }
+
+        private void timerPreviousReceptionHandliing_Tick(object sender, EventArgs e)
+        {
+            // This timer is used to increment all seconds
+            // of the previous receptions and remove them 
+            // after 2 seconds have passed.
+
+            // If there is nothing in the reception buffer then simply exit function
+            if (previousReceptions.Count < 1) return;
+
+            // Create needed lists
+            List<string> keysToRemove = new List<string>();
+            List<string> keysToIncrement = new List<string>();
+
+            // Loop through previously received call records
+            // and mark the ones which need to be removed and
+            // mark the ones to increment the seconds on
+            foreach (string key in previousReceptions.Keys)
+            {
+                if (previousReceptions[key] > 2)
+                {
+                    // This reception will be removed
+                    keysToRemove.Add(key);
+                }
+                else
+                {
+                    // This reception has no waited another second
+                    keysToIncrement.Add(key);
+                }
+            }
+
+            // Increment the second of all needed receptions in buffer
+            foreach (string key in keysToIncrement)
+            {
+                previousReceptions[key]++;
+            }
+
+            // Remove all receptions in buffer that are past the time limit (2 seconds)
+            foreach (string key in keysToRemove)
+            {
+                previousReceptions.Remove(key);
+            }
+
+            // If we are debugging/developer/unlocked mode then refresh the presentation of buffer
+            if (FDupsTracking.Visible)
+            {
+                FDupsTracking.RefreshDups(previousReceptions);
+            }
+        }
+
+        private void duplicateTrackingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FDupsTracking = new FrmDuplicateTracking();
+            FDupsTracking.Show();
+        }
+
+        private void lbUnlock_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (lbUnlock.Text == "U")
+            {
+                duplicateTrackingToolStripMenuItem.Visible = true;
+                lbUnlock.Text = "L";
+            }
+            else
+            {
+                duplicateTrackingToolStripMenuItem.Visible = false;
+                lbUnlock.Text = "U";
+            }
+        }
+
+        private void timerFoundIPChecker_Tick(object sender, EventArgs e)
+        {
+
+            if (HasShownMultipleUnitMessage) return;
+
+            if (FoundIPs.Count > 1)
+            {
+                HasShownMultipleUnitMessage = true;
+                FrmMultipleUnits fMultiUnits = new FrmMultipleUnits();
+                fMultiUnits.ShowDialog();
+                timerFoundIPChecker.Enabled = false;
+                timerFoundIPChecker.Stop();
+            }
+        }
+
+        private void listeningPortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmChangeListeningPort fChangeListeningPort = new FrmChangeListeningPort();
+            fChangeListeningPort.ShowDialog();
         }
         
         // ----------------------------------------------------------------------------------

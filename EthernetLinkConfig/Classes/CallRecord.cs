@@ -103,6 +103,12 @@ namespace EthernetLinkConfig.Classes
                 DetailedType = DetailedMatch.Groups[2].Value;
 
                 var date = DetailedMatch.Groups[3].Value.ToString();
+                if(date.Contains("00/00"))
+                {
+                    IsValid = false;
+                    return;
+                }
+
                 DateTime = DateTime.ParseExact(date, "MM/dd HH:mm:ss", new CultureInfo("en-US"));
 
                 return;

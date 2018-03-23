@@ -56,6 +56,18 @@
     <Compile Include="Classes\CallRecord.cs" />
     <Compile Include="Classes\Common.cs" />
     <Compile Include="Classes\UdpRecieverClass.cs" />
+    <Compile Include="Forms\FrmChangeListeningPort.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeListeningPort.Designer.cs">
+      <DependentUpon>FrmChangeListeningPort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDuplicateTracking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDuplicateTracking.Designer.cs">
+      <DependentUpon>FrmDuplicateTracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +79,12 @@
     </Compile>
     <Compile Include="Forms\FrmMessageBox.Designer.cs">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmMultipleUnits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmMultipleUnits.Designer.cs">
+      <DependentUpon>FrmMultipleUnits.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmPing.cs">
       <SubType>Form</SubType>
@@ -80,6 +98,12 @@
     <Compile Include="Forms\FrmSendDups.Designer.cs">
       <DependentUpon>FrmSendDups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmSetLineCount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSetLineCount.Designer.cs">
+      <DependentUpon>FrmSetLineCount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmUniCast.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,17 +112,29 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmChangeListeningPort.resx">
+      <DependentUpon>FrmChangeListeningPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDuplicateTracking.resx">
+      <DependentUpon>FrmDuplicateTracking.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMessageBox.resx">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmMultipleUnits.resx">
+      <DependentUpon>FrmMultipleUnits.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmPing.resx">
       <DependentUpon>FrmPing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSendDups.resx">
       <DependentUpon>FrmSendDups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSetLineCount.resx">
+      <DependentUpon>FrmSetLineCount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmUniCast.resx">
       <DependentUpon>FrmUniCast.cs</DependentUpon>
