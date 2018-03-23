@@ -25,6 +25,7 @@ namespace EthernetLinkConfig.Forms
             int intVal = int.Parse(ndNumberOfPackets.Value.ToString());
             string hexStr = intVal.ToString("X").PadLeft(2,'0');
 
+            Program.FMain.HaveShownDupResetWindow = true;
             FrmMain.SendUdp("^^IdO" + hexStr, FrmMain.LinkPort);
 
             Close();

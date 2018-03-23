@@ -68,6 +68,12 @@
     <Compile Include="Forms\FrmDuplicateTracking.Designer.cs">
       <DependentUpon>FrmDuplicateTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmDupsOverOne.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDupsOverOne.Designer.cs">
+      <DependentUpon>FrmDupsOverOne.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +123,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDuplicateTracking.resx">
       <DependentUpon>FrmDuplicateTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDupsOverOne.resx">
+      <DependentUpon>FrmDupsOverOne.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>

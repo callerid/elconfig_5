@@ -85,7 +85,7 @@
             // 
             this.Label2.AutoSize = true;
             this.Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label2.ForeColor = System.Drawing.Color.Red;
+            this.Label2.ForeColor = System.Drawing.Color.DarkRed;
             this.Label2.Location = new System.Drawing.Point(52, 170);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(275, 26);

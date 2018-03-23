@@ -32,11 +32,12 @@
             this.tbDestPort = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnChangePort = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // tbDestPort
             // 
-            this.tbDestPort.Location = new System.Drawing.Point(149, 21);
+            this.tbDestPort.Location = new System.Drawing.Point(149, 77);
             this.tbDestPort.MaxLength = 5;
             this.tbDestPort.Name = "tbDestPort";
             this.tbDestPort.Size = new System.Drawing.Size(111, 22);
@@ -45,7 +46,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 24);
+            this.label7.Location = new System.Drawing.Point(12, 80);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(130, 13);
             this.label7.TabIndex = 17;
@@ -53,7 +54,7 @@
             // 
             // btnChangePort
             // 
-            this.btnChangePort.Location = new System.Drawing.Point(266, 21);
+            this.btnChangePort.Location = new System.Drawing.Point(266, 77);
             this.btnChangePort.Name = "btnChangePort";
             this.btnChangePort.Size = new System.Drawing.Size(131, 23);
             this.btnChangePort.TabIndex = 18;
@@ -61,11 +62,24 @@
             this.btnChangePort.UseVisualStyleBackColor = true;
             this.btnChangePort.Click += new System.EventHandler(this.btnChangePort_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.DarkRed;
+            this.label1.Location = new System.Drawing.Point(47, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(330, 39);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "By default, ELConfig listens to Network ports 3520 and 6699. \r\nIf the unit has pr" +
+                "eviously been set to a different Network port, \r\nyou must specify the listening " +
+                "port in order to communicate.";
+            // 
             // FrmChangeListeningPort
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 128);
+            this.ClientSize = new System.Drawing.Size(417, 118);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnChangePort);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.tbDestPort);
@@ -86,5 +100,6 @@
         private System.Windows.Forms.TextBox tbDestPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnChangePort;
+        private System.Windows.Forms.Label label1;
     }
 }

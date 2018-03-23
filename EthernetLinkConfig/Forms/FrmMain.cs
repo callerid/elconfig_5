@@ -19,9 +19,10 @@ namespace EthernetLinkConfig
         public bool Loading = true;
         public bool AlwaysShowToggles = false;
         public bool FoundAndSwitchedToUnicast = false;
-        public bool HasHadAConnection = false;
-        public bool HasShownMultipleUnitMessage = false;
+        public bool HaveHadAConnection = false;
+        public bool HaveShownMultipleUnitMessage = false;
         public static bool AskedToChangeLineCount = false;
+        public bool HaveShownDupResetWindow = false;
 
         // Forms
         FrmSetLineCount FSetLineCount = new FrmSetLineCount(0);
@@ -497,6 +498,13 @@ namespace EthernetLinkConfig
             Dups = receptionBytes[75];
             lbDups.Text = "# Of Dups: " + Dups.ToString();
 
+            if (Dups > 1 && !HaveShownDupResetWindow)
+            {
+                HaveShownDupResetWindow = true;
+                FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne();
+                fDupsOverOne.Show();
+            }
+
         }
 
         public static void SendUdp(string toSend, int port)
@@ -614,6 +622,10 @@ namespace EthernetLinkConfig
 
                     SendUdp("^^IdT" + (int.Parse(tbDestPort.Text).ToString("X")).PadLeft(4, '0'), LinkPort);
 
+                    if (string.IsNullOrEmpty(tbDestPort.Text)) break;
+                    Program.FMain.StartCustomReceiver(int.Parse(tbDestPort.Text));
+                    FrmMain.LinkPort = int.Parse(tbDestPort.Text);
+
                     break;
 
                 case "btnUnlockDestIP":
@@ -702,6 +714,10 @@ namespace EthernetLinkConfig
 
                     if (btn.Text == "Unlock")
                     {
+                        string message = "The 2 default Network Ports suuported by ELConfig are 3520 and 6699." + Environment.NewLine + Environment.NewLine + "Changing the port number that the unit sends to other than these 2 default ports is not reccomended." + Environment.NewLine + Environment.NewLine + "Do so only if absolutely neccesary for your application." + Environment.NewLine + Environment.NewLine + "Are you sure you wish to change the Destination Port now?";
+
+                        if (MessageBox.Show(new Form() { TopMost = true }, message, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No) return;
+                        
                         btn.Text = "Save";
                         tbDestPort.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -878,7 +894,7 @@ namespace EthernetLinkConfig
                 {
                     if (FoundIPs.Count > 1)
                     {
-                        if (!HasHadAConnection)
+                        if (!HaveHadAConnection)
                         {
                             // If ELC found an IP that works
                             // but has not connected then
@@ -924,7 +940,7 @@ namespace EthernetLinkConfig
             }
             else
             {
-                HasHadAConnection = true;
+                HaveHadAConnection = true;
 
                 SendUdp("^^IdX", LinkPort);
 
@@ -1205,11 +1221,11 @@ namespace EthernetLinkConfig
         private void timerFoundIPChecker_Tick(object sender, EventArgs e)
         {
 
-            if (HasShownMultipleUnitMessage) return;
+            if (HaveShownMultipleUnitMessage) return;
 
             if (FoundIPs.Count > 1)
             {
-                HasShownMultipleUnitMessage = true;
+                HaveShownMultipleUnitMessage = true;
                 FrmMultipleUnits fMultiUnits = new FrmMultipleUnits();
                 fMultiUnits.ShowDialog();
                 timerFoundIPChecker.Enabled = false;
