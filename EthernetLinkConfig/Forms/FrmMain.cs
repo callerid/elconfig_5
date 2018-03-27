@@ -327,7 +327,7 @@ namespace EthernetLinkConfig
             // ------------------------------------------------------------------------
             if (receptionBytes.Length == 83 || receptionBytes.Length == 52)
             {
-                // Duplicate handling
+                // DUPLICATES CODING START
                 if (ckbIgnoreDups.Checked)
                 {
                     if (previousReceptions.ContainsKey(reception))
@@ -360,6 +360,7 @@ namespace EthernetLinkConfig
                         }
                     }
                 }
+                // DUPLICATES CODING END
                 
                 CallRecord record = new CallRecord(reception);
 
@@ -1503,6 +1504,7 @@ namespace EthernetLinkConfig
 
         private void timerPreviousReceptionHandliing_Tick(object sender, EventArgs e)
         {
+            // DUPLICATES CODING START
             // This timer is used to increment all seconds
             // of the previous receptions and remove them 
             // after 4 seconds have passed.
@@ -1548,6 +1550,8 @@ namespace EthernetLinkConfig
             {
                 FDupsTracking.RefreshDups(previousReceptions);
             }
+
+            // DUPLICATES CODING END
         }
 
         private void duplicateTrackingToolStripMenuItem_Click(object sender, EventArgs e)
