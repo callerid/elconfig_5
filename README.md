@@ -7,9 +7,9 @@ CallerID.com
 	
 ---------------------------------------
 
-	- Duplicates work by added reception to buffer then after 4 seconds removing it. This gives
+	- Duplicates work by adding reception to buffer then after 4 seconds removing it. This gives
 	the Caller ID unit long enough to send all duplicates and then resets ELConfig for next call.
 	
 	- Help with handing duplicates can be found by searching for: "DUPLICATES CODING START"
-	and "DUPLICATES CODING END"
+	and "DUPLICATES CODING END" within this project on the Forms\FrmMain.cs
 
