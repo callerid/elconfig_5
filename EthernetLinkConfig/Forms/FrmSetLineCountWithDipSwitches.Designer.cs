@@ -1,6 +1,6 @@
 ﻿namespace EthernetLinkConfig.Forms
 {
-    partial class FrmDupsOverOne
+    partial class FrmSetLineCountWithDipSwitches
     {
         /// <summary>
         /// Required designer variable.
@@ -28,57 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDupsOverOne));
-            this.lbMessage = new System.Windows.Forms.Label();
-            this.btnResetDupsToOne = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSetLineCountWithDipSwitches));
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnOK = new System.Windows.Forms.Button();
             this.btnIgnore = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // lbMessage
+            // label1
             // 
-            this.lbMessage.AutoSize = true;
-            this.lbMessage.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbMessage.Location = new System.Drawing.Point(26, 16);
-            this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(342, 52);
-            this.lbMessage.TabIndex = 0;
-            this.lbMessage.Text = resources.GetString("lbMessage.Text");
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(248, 78);
+            this.label1.TabIndex = 0;
+            this.label1.Text = resources.GetString("label1.Text");
             // 
-            // btnResetDupsToOne
+            // btnOK
             // 
-            this.btnResetDupsToOne.Location = new System.Drawing.Point(232, 87);
-            this.btnResetDupsToOne.Name = "btnResetDupsToOne";
-            this.btnResetDupsToOne.Size = new System.Drawing.Size(138, 23);
-            this.btnResetDupsToOne.TabIndex = 1;
-            this.btnResetDupsToOne.Text = "Reset To Single Records";
-            this.btnResetDupsToOne.UseVisualStyleBackColor = true;
-            this.btnResetDupsToOne.Click += new System.EventHandler(this.btnResetDupsToOne_Click);
+            this.btnOK.Location = new System.Drawing.Point(183, 126);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.TabIndex = 1;
+            this.btnOK.Text = "OK";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnIgnore
             // 
-            this.btnIgnore.Location = new System.Drawing.Point(15, 87);
+            this.btnIgnore.Location = new System.Drawing.Point(12, 126);
             this.btnIgnore.Name = "btnIgnore";
-            this.btnIgnore.Size = new System.Drawing.Size(78, 23);
+            this.btnIgnore.Size = new System.Drawing.Size(75, 23);
             this.btnIgnore.TabIndex = 2;
             this.btnIgnore.Text = "Ignore";
             this.btnIgnore.UseVisualStyleBackColor = true;
             this.btnIgnore.Click += new System.EventHandler(this.btnIgnore_Click);
             // 
-            // FrmDupsOverOne
+            // FrmSetLineCountWithDipSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(386, 122);
+            this.ClientSize = new System.Drawing.Size(270, 161);
             this.Controls.Add(this.btnIgnore);
-            this.Controls.Add(this.btnResetDupsToOne);
-            this.Controls.Add(this.lbMessage);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "FrmDupsOverOne";
+            this.Name = "FrmSetLineCountWithDipSwitches";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Use Duplicates?";
+            this.Text = "Line Count";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,8 +85,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbMessage;
-        private System.Windows.Forms.Button btnResetDupsToOne;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnIgnore;
     }
 }

@@ -63,7 +63,6 @@
             // 
             // btnPing
             // 
-            this.btnPing.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnPing.Location = new System.Drawing.Point(179, 23);
             this.btnPing.Name = "btnPing";
             this.btnPing.Size = new System.Drawing.Size(60, 23);
@@ -78,9 +77,8 @@
             this.lbResponse.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbResponse.Location = new System.Drawing.Point(35, 6);
             this.lbResponse.Name = "lbResponse";
-            this.lbResponse.Size = new System.Drawing.Size(139, 25);
+            this.lbResponse.Size = new System.Drawing.Size(0, 25);
             this.lbResponse.TabIndex = 4;
-            this.lbResponse.Text = "          Waiting...";
             // 
             // panResponse
             // 

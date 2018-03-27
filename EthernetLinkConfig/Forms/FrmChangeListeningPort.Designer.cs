@@ -42,6 +42,7 @@
             this.tbDestPort.Name = "tbDestPort";
             this.tbDestPort.Size = new System.Drawing.Size(111, 22);
             this.tbDestPort.TabIndex = 16;
+            this.tbDestPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
             // 
             // label7
             // 

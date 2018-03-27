@@ -37,17 +37,17 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.DarkRed;
-            this.label1.Location = new System.Drawing.Point(46, 18);
+            this.label1.Location = new System.Drawing.Point(20, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 52);
+            this.label1.Size = new System.Drawing.Size(283, 65);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Multiple Caller ID units detected.\r\nYou must set up one unit at a time.\r\nDisconne" +
-                "ct power from either unit\r\nbefore changing parameters.";
+            this.label1.Text = "ELConfig has detected multiple units on the Network.\r\n\r\nUse Menu: Tools / Setup U" +
+                "nicast to configure one\r\nunit at a time.  Or, disconnect all but one unit from \r" +
+                "\nthe Network.";
             // 
             // btnOk
             // 
-            this.btnOk.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnOk.Location = new System.Drawing.Point(101, 85);
+            this.btnOk.Location = new System.Drawing.Point(121, 100);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -59,11 +59,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(274, 120);
+            this.ClientSize = new System.Drawing.Size(316, 135);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "FrmMultipleUnits";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Multiple Units";

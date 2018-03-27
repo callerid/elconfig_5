@@ -26,7 +26,9 @@ namespace EthernetLinkConfig.Forms
             string hexStr = intVal.ToString("X").PadLeft(2,'0');
 
             Program.FMain.HaveShownDupResetWindow = true;
-            FrmMain.SendUdp("^^IdO" + hexStr, FrmMain.LinkPort);
+            int previous_dups = FrmMain.Dups;
+            FrmMain.SendUdp("^^IdO" + hexStr, FrmMain.LinkPorts.MainPort);
+            Common.AddToLogFile("Duplicates", previous_dups.ToString(), intVal.ToString());
 
             Close();
         }

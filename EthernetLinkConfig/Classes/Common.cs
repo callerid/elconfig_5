@@ -10,6 +10,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Net;
+using System.IO;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -22,7 +23,8 @@ namespace EthernetLinkConfig.Classes
         public static Color C_BACK = Color.WhiteSmoke;
         public static Color C_FORE = Color.Black;
         public static Color C_ATTENTION = Color.LightGoldenrodYellow;
-        public static Color C_NEEDS_SAVING = Color.LightPink;
+        public static Color C_NEEDS_SAVING = Color.FromArgb(251, 215, 218);
+        public static Color C_GREENISH = Color.FromArgb(189, 221, 189);
 
         public static void DrawColors(Form frm)
         {
@@ -31,6 +33,12 @@ namespace EthernetLinkConfig.Classes
 
             foreach (Control ctrl in frm.Controls)
             {
+                if (ctrl is RichTextBox)
+                {
+                    ctrl.BackColor = C_BACK;
+                    continue;
+                }
+
                 if (ctrl is Panel)
                 {
                     if (ctrl.Name == "panChangers")
@@ -98,6 +106,45 @@ namespace EthernetLinkConfig.Classes
                 return false;
             }
             return pingable;
+        }
+
+        public static void AddToLogFile(string field, string changed_from, string changed_to)
+        {
+            string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if(!(Directory.Exists(my_docs_path + @"\CallerID.com\ELConfig5")))
+            {
+                Directory.CreateDirectory(my_docs_path + @"\CallerID.com\ELConfig5");
+            }
+
+            string current_log = "";
+            if(File.Exists(my_docs_path + @"\CallerID.com\ELConfig5\log.txt"))
+            {
+                current_log = File.ReadAllText(my_docs_path + @"\CallerID.com\ELConfig5\log.txt");
+            }
+
+            string write_line = "Field Changed: " + field + Environment.NewLine + "On: " + DateTime.Now.ToShortDateString() + " at " + DateTime.Now.ToShortTimeString() + Environment.NewLine +
+                "Changed To: " + changed_to + Environment.NewLine + "Changed From: " + changed_from;
+
+            File.WriteAllText(my_docs_path + @"\CallerID.com\ELConfig5\log.txt", write_line + Environment.NewLine + Environment.NewLine + current_log);
+        }
+
+        public static string ReadLog()
+        {
+
+            string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            string current_log = "";
+            if (File.Exists(my_docs_path + @"\CallerID.com\ELConfig5\log.txt"))
+            {
+                current_log = File.ReadAllText(my_docs_path + @"\CallerID.com\ELConfig5\log.txt");
+            }
+            else
+            {
+                current_log = "No changes have been made on this computer. You may have made changes on a different computer.";
+            }
+
+            return current_log;
         }
 
         // -----------------------------------------

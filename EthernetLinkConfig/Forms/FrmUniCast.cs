@@ -19,6 +19,12 @@ namespace EthernetLinkConfig.Forms
             Common.SetTitle(this, "Setup Uni-cast");
 
             ipSendIPAddress.Text = FrmMain.SendToIP;
+
+            foreach (string ip in FrmMain.FoundIPs)
+            {
+                tvFoundIPs.Nodes.Add(ip);
+            }
+
         }
 
         private void btnUseBroadcast_Click(object sender, EventArgs e)
@@ -42,6 +48,12 @@ namespace EthernetLinkConfig.Forms
         {
             FrmMain.SendToIP = ipSendIPAddress.Text;
             Close();
+        }
+
+        private void tvFoundIPs_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            string ip = tvFoundIPs.SelectedNode.Text;
+            ipSendIPAddress.Text = ip;
         }
     }
 }

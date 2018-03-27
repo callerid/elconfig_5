@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Classes\CallRecord.cs" />
     <Compile Include="Classes\Common.cs" />
+    <Compile Include="Classes\LinkPortsClass.cs" />
     <Compile Include="Classes\UdpRecieverClass.cs" />
     <Compile Include="Forms\FrmChangeListeningPort.cs">
       <SubType>Form</SubType>
@@ -74,6 +75,12 @@
     <Compile Include="Forms\FrmDupsOverOne.Designer.cs">
       <DependentUpon>FrmDupsOverOne.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLog.Designer.cs">
+      <DependentUpon>FrmLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +98,12 @@
     </Compile>
     <Compile Include="Forms\FrmMultipleUnits.Designer.cs">
       <DependentUpon>FrmMultipleUnits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmOldFirmwareSettingLineCount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmOldFirmwareSettingLineCount.Designer.cs">
+      <DependentUpon>FrmOldFirmwareSettingLineCount.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmPing.cs">
       <SubType>Form</SubType>
@@ -110,6 +123,12 @@
     <Compile Include="Forms\FrmSetLineCount.Designer.cs">
       <DependentUpon>FrmSetLineCount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmSetLineCountWithDipSwitches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSetLineCountWithDipSwitches.Designer.cs">
+      <DependentUpon>FrmSetLineCountWithDipSwitches.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmUniCast.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +146,9 @@
     <EmbeddedResource Include="Forms\FrmDupsOverOne.resx">
       <DependentUpon>FrmDupsOverOne.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLog.resx">
+      <DependentUpon>FrmLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -136,6 +158,9 @@
     <EmbeddedResource Include="Forms\FrmMultipleUnits.resx">
       <DependentUpon>FrmMultipleUnits.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmOldFirmwareSettingLineCount.resx">
+      <DependentUpon>FrmOldFirmwareSettingLineCount.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmPing.resx">
       <DependentUpon>FrmPing.cs</DependentUpon>
     </EmbeddedResource>
@@ -144,6 +169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSetLineCount.resx">
       <DependentUpon>FrmSetLineCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSetLineCountWithDipSwitches.resx">
+      <DependentUpon>FrmSetLineCountWithDipSwitches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmUniCast.resx">
       <DependentUpon>FrmUniCast.cs</DependentUpon>

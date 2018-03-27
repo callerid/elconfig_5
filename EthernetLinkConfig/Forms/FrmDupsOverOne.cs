@@ -12,11 +12,13 @@ namespace EthernetLinkConfig.Forms
 {
     public partial class FrmDupsOverOne : Form
     {
-        public FrmDupsOverOne()
+        public FrmDupsOverOne(int numOfDups)
         {
             InitializeComponent();
             Common.DrawColors(this);
             Common.SetTitle(this, "Use Duplicates?");
+
+            lbMessage.Text = lbMessage.Text.Replace("[X]", numOfDups.ToString());
         }
 
         private void btnIgnore_Click(object sender, EventArgs e)
@@ -28,7 +30,7 @@ namespace EthernetLinkConfig.Forms
         {
             // Set to single records
             string hexStr = 1.ToString("X").PadLeft(2, '0');
-            FrmMain.SendUdp("^^IdO" + hexStr, FrmMain.LinkPort);
+            FrmMain.SendUdp("^^IdO" + hexStr, FrmMain.LinkPorts.MainPort);
             Common.MessageBox("Command sent.", "Finished");
             Close();
         }

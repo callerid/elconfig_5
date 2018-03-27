@@ -47,7 +47,9 @@ namespace EthernetLinkConfig.Forms
         private void cbLineCount_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading) return;
+            int previous_lineCnt = Program.FMain.LineCount;
             SetLineCount(int.Parse(cbLineCount.Text.ToString()));
+            Common.AddToLogFile("Line Count", previous_lineCnt.ToString(), cbLineCount.Text.ToString());
             Common.WaitFor(250);
             FrmMain.AskedToChangeLineCount = true;
             RetrieveToggles();
@@ -60,13 +62,13 @@ namespace EthernetLinkConfig.Forms
 
         private void RetrieveToggles()
         {
-            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPort);
+            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPorts.MainPort);
             Common.WaitFor(250);
-            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPort);
+            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPorts.MainPort);
             Common.WaitFor(250);
-            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPort);
+            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPorts.MainPort);
             Common.WaitFor(250);
-            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPort);
+            FrmMain.SendUdp("^^Id-V", FrmMain.LinkPorts.MainPort);
             Common.WaitFor(250);
         }
 
@@ -105,7 +107,7 @@ namespace EthernetLinkConfig.Forms
                     break;
             }
 
-            FrmMain.SendUdp(sendString, FrmMain.LinkPort);
+            FrmMain.SendUdp(sendString, FrmMain.LinkPorts.MainPort);
 
             Common.MessageBox("Command Sent.", "Finished");
 

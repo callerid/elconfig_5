@@ -61,7 +61,7 @@ namespace EthernetLinkConfig.Classes
             if (!bound)
             {
                 string programName = Common.GetProgramBoundToUDPPort(6699);
-                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 6699. Another program [possible_program]is already be bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\nELConfig will attempt to bind to Port 3520. If the Port on the unit is set to 6699 it will not be detected.";
+                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 6699. Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.";
                 if (programName != "none")
                 {
                     message = message.Replace("[possible_program]", "(" + programName + ") ");
@@ -168,8 +168,8 @@ namespace EthernetLinkConfig.Classes
 
             if (!bound)
             {
-                string programName = Common.GetProgramBoundToUDPPort(6699);
-                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 3520. Another program [possible_program]is already be bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\nELConfig will attempt to bind to Port 6699. If the Port on the unit is set to 3520 it will not be detected.";
+                string programName = Common.GetProgramBoundToUDPPort(3520);
+                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 3520. Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.";
                 if (programName != "none")
                 {
                     message = message.Replace("[possible_program]", "(" + programName + ") ");
@@ -274,8 +274,8 @@ namespace EthernetLinkConfig.Classes
 
             if (!bound)
             {
-                string programName = Common.GetProgramBoundToUDPPort(6699);
-                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port "+ListenOn.ToString() + ". Another program [possible_program]is already be bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\n";
+                string programName = Common.GetProgramBoundToUDPPort(ListenOn);
+                string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port " + ListenOn.ToString() + ". Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\n";
                 if (programName != "none")
                 {
                     message = message.Replace("[possible_program]", "(" + programName + ") ");

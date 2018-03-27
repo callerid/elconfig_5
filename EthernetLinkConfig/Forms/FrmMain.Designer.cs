@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.panStatus = new System.Windows.Forms.Panel();
             this.lbDeluxeUnitDetected = new System.Windows.Forms.Label();
+            this.lbNeedsSaving = new System.Windows.Forms.Label();
+            this.lbSendingTo = new System.Windows.Forms.Label();
+            this.lbUnitFoundIP = new System.Windows.Forms.Label();
             this.lbListeningOn = new System.Windows.Forms.Label();
             this.tbIP = new IPAddressControlLib.IPAddressControl();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,8 +42,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbUnitNumber = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lbEthernetID = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tbDestMAC = new ISEAGE.May610.Diagrammer.matb();
             this.label6 = new System.Windows.Forms.Label();
@@ -68,6 +69,8 @@
             this.setupUnicastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.duplicateTrackingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
             this.dgvCommData = new System.Windows.Forms.DataGridView();
             this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -86,16 +89,13 @@
             this.label9 = new System.Windows.Forms.Label();
             this.btnUnlockUnitNumber = new System.Windows.Forms.Button();
             this.btnUnlockIPAddress = new System.Windows.Forms.Button();
-            this.btnUnlockMACAddress = new System.Windows.Forms.Button();
             this.btnUnlockDestPort = new System.Windows.Forms.Button();
             this.btnUnlockDestIP = new System.Windows.Forms.Button();
             this.btnUnlockDestMAC = new System.Windows.Forms.Button();
             this.panChangers = new System.Windows.Forms.Panel();
-            this.lbMultipleUnits = new System.Windows.Forms.Label();
             this.lbDups = new System.Windows.Forms.Label();
             this.ckbIgnoreDups = new System.Windows.Forms.CheckBox();
             this.btnRetrieveToggles = new System.Windows.Forms.Button();
-            this.lbNeedsSaving = new System.Windows.Forms.Label();
             this.btnClearCommData = new System.Windows.Forms.Button();
             this.btnClearPhoneData = new System.Windows.Forms.Button();
             this.btnToggleC = new System.Windows.Forms.Button();
@@ -107,14 +107,15 @@
             this.btnToggleO = new System.Windows.Forms.Button();
             this.btnToggleS = new System.Windows.Forms.Button();
             this.timerGetToggles = new System.Windows.Forms.Timer(this.components);
-            this.lbUnitFoundIP = new System.Windows.Forms.Label();
-            this.lbSendingTo = new System.Windows.Forms.Label();
             this.lbLineCount = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.timerPreviousReceptionHandliing = new System.Windows.Forms.Timer(this.components);
             this.lbUnlock = new System.Windows.Forms.Label();
             this.timerFoundIPChecker = new System.Windows.Forms.Timer(this.components);
             this.imgConnected = new System.Windows.Forms.PictureBox();
+            this.rtbHint = new System.Windows.Forms.RichTextBox();
+            this.lbHintHeader = new System.Windows.Forms.Label();
+            this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPhoneData)).BeginInit();
@@ -126,10 +127,14 @@
             // 
             this.panStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panStatus.BackColor = System.Drawing.Color.Pink;
-            this.panStatus.Location = new System.Drawing.Point(-4, 602);
+            this.panStatus.BackColor = System.Drawing.Color.OldLace;
+            this.panStatus.Controls.Add(this.lbDeluxeUnitDetected);
+            this.panStatus.Controls.Add(this.lbNeedsSaving);
+            this.panStatus.Controls.Add(this.lbSendingTo);
+            this.panStatus.Controls.Add(this.lbUnitFoundIP);
+            this.panStatus.Location = new System.Drawing.Point(-4, 629);
             this.panStatus.Name = "panStatus";
-            this.panStatus.Size = new System.Drawing.Size(798, 40);
+            this.panStatus.Size = new System.Drawing.Size(808, 40);
             this.panStatus.TabIndex = 0;
             // 
             // lbDeluxeUnitDetected
@@ -137,43 +142,76 @@
             this.lbDeluxeUnitDetected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbDeluxeUnitDetected.AutoSize = true;
             this.lbDeluxeUnitDetected.BackColor = System.Drawing.Color.Pink;
-            this.lbDeluxeUnitDetected.Location = new System.Drawing.Point(504, 611);
+            this.lbDeluxeUnitDetected.Location = new System.Drawing.Point(577, 4);
             this.lbDeluxeUnitDetected.Name = "lbDeluxeUnitDetected";
-            this.lbDeluxeUnitDetected.Size = new System.Drawing.Size(138, 13);
+            this.lbDeluxeUnitDetected.Size = new System.Drawing.Size(75, 26);
             this.lbDeluxeUnitDetected.TabIndex = 3;
-            this.lbDeluxeUnitDetected.Text = "Deluxe Unit Not Detected";
+            this.lbDeluxeUnitDetected.Text = "Deluxe Unit \r\nNot Detected";
+            // 
+            // lbNeedsSaving
+            // 
+            this.lbNeedsSaving.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbNeedsSaving.AutoSize = true;
+            this.lbNeedsSaving.BackColor = System.Drawing.Color.Pink;
+            this.lbNeedsSaving.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbNeedsSaving.Location = new System.Drawing.Point(153, 5);
+            this.lbNeedsSaving.Name = "lbNeedsSaving";
+            this.lbNeedsSaving.Size = new System.Drawing.Size(67, 26);
+            this.lbNeedsSaving.TabIndex = 35;
+            this.lbNeedsSaving.Text = "CHANGES\r\nNOT SAVED";
+            this.lbNeedsSaving.Visible = false;
+            // 
+            // lbSendingTo
+            // 
+            this.lbSendingTo.AutoSize = true;
+            this.lbSendingTo.Location = new System.Drawing.Point(281, 1);
+            this.lbSendingTo.Name = "lbSendingTo";
+            this.lbSendingTo.Size = new System.Drawing.Size(211, 13);
+            this.lbSendingTo.TabIndex = 48;
+            this.lbSendingTo.Text = "Sending Commands to: 000.000.000.000";
+            // 
+            // lbUnitFoundIP
+            // 
+            this.lbUnitFoundIP.AutoSize = true;
+            this.lbUnitFoundIP.Location = new System.Drawing.Point(307, 19);
+            this.lbUnitFoundIP.Name = "lbUnitFoundIP";
+            this.lbUnitFoundIP.Size = new System.Drawing.Size(184, 13);
+            this.lbUnitFoundIP.TabIndex = 47;
+            this.lbUnitFoundIP.Text = "Unit Found On IP: 000.000.000.000";
             // 
             // lbListeningOn
             // 
             this.lbListeningOn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbListeningOn.AutoSize = true;
             this.lbListeningOn.BackColor = System.Drawing.Color.Pink;
-            this.lbListeningOn.Location = new System.Drawing.Point(674, 611);
+            this.lbListeningOn.Location = new System.Drawing.Point(712, 634);
             this.lbListeningOn.Name = "lbListeningOn";
-            this.lbListeningOn.Size = new System.Drawing.Size(103, 13);
+            this.lbListeningOn.Size = new System.Drawing.Size(73, 26);
             this.lbListeningOn.TabIndex = 2;
-            this.lbListeningOn.Text = "Listening On: 3520";
+            this.lbListeningOn.Text = "Listening On\r\nPort: 3520";
             // 
             // tbIP
             // 
             this.tbIP.AllowInternalTab = false;
             this.tbIP.AutoHeight = true;
             this.tbIP.BackColor = System.Drawing.SystemColors.Window;
-            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbIP.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tbIP.Enabled = false;
-            this.tbIP.Location = new System.Drawing.Point(162, 66);
-            this.tbIP.MinimumSize = new System.Drawing.Size(84, 22);
+            this.tbIP.Location = new System.Drawing.Point(162, 46);
+            this.tbIP.MinimumSize = new System.Drawing.Size(82, 22);
             this.tbIP.Name = "tbIP";
             this.tbIP.ReadOnly = false;
             this.tbIP.Size = new System.Drawing.Size(111, 22);
             this.tbIP.TabIndex = 1;
             this.tbIP.Text = "...";
+            this.tbIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(71, 71);
+            this.label1.Location = new System.Drawing.Point(71, 51);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 13);
             this.label1.TabIndex = 4;
@@ -182,17 +220,19 @@
             // tbMAC
             // 
             this.tbMAC.BackColor = System.Drawing.SystemColors.Window;
-            this.tbMAC.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbMAC.Enabled = false;
-            this.tbMAC.Location = new System.Drawing.Point(162, 94);
+            this.tbMAC.Location = new System.Drawing.Point(162, 74);
             this.tbMAC.Name = "tbMAC";
             this.tbMAC.Size = new System.Drawing.Size(171, 24);
             this.tbMAC.TabIndex = 5;
+            this.tbMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 98);
+            this.label2.Location = new System.Drawing.Point(56, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 6;
@@ -200,44 +240,30 @@
             // 
             // tbUnitNumber
             // 
+            this.tbUnitNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbUnitNumber.Enabled = false;
-            this.tbUnitNumber.Location = new System.Drawing.Point(162, 38);
+            this.tbUnitNumber.Location = new System.Drawing.Point(162, 18);
+            this.tbUnitNumber.MaxLength = 12;
             this.tbUnitNumber.Name = "tbUnitNumber";
             this.tbUnitNumber.Size = new System.Drawing.Size(111, 22);
             this.tbUnitNumber.TabIndex = 7;
+            this.tbUnitNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
+            this.tbUnitNumber.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbUnitNumber.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(83, 43);
+            this.label3.Location = new System.Drawing.Point(83, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Unit Number";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(91, 13);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Ethernet ID";
-            // 
-            // lbEthernetID
-            // 
-            this.lbEthernetID.AutoSize = true;
-            this.lbEthernetID.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbEthernetID.Location = new System.Drawing.Point(159, 9);
-            this.lbEthernetID.Name = "lbEthernetID";
-            this.lbEthernetID.Size = new System.Drawing.Size(157, 21);
-            this.lbEthernetID.TabIndex = 10;
-            this.lbEthernetID.Text = "_____________________";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 185);
+            this.label5.Location = new System.Drawing.Point(18, 165);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(138, 13);
             this.label5.TabIndex = 14;
@@ -246,17 +272,19 @@
             // tbDestMAC
             // 
             this.tbDestMAC.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDestMAC.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbDestMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbDestMAC.Enabled = false;
-            this.tbDestMAC.Location = new System.Drawing.Point(162, 180);
+            this.tbDestMAC.Location = new System.Drawing.Point(162, 160);
             this.tbDestMAC.Name = "tbDestMAC";
             this.tbDestMAC.Size = new System.Drawing.Size(171, 24);
             this.tbDestMAC.TabIndex = 13;
+            this.tbDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(33, 157);
+            this.label6.Location = new System.Drawing.Point(33, 137);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(123, 13);
             this.label6.TabIndex = 12;
@@ -267,21 +295,23 @@
             this.tbDestIP.AllowInternalTab = false;
             this.tbDestIP.AutoHeight = true;
             this.tbDestIP.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbDestIP.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tbDestIP.Enabled = false;
-            this.tbDestIP.Location = new System.Drawing.Point(162, 152);
-            this.tbDestIP.MinimumSize = new System.Drawing.Size(84, 22);
+            this.tbDestIP.Location = new System.Drawing.Point(162, 132);
+            this.tbDestIP.MinimumSize = new System.Drawing.Size(82, 22);
             this.tbDestIP.Name = "tbDestIP";
             this.tbDestIP.ReadOnly = false;
             this.tbDestIP.Size = new System.Drawing.Size(111, 22);
             this.tbDestIP.TabIndex = 11;
             this.tbDestIP.Text = "...";
+            this.tbDestIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbDestIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(65, 128);
+            this.label7.Location = new System.Drawing.Point(65, 108);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(91, 13);
             this.label7.TabIndex = 16;
@@ -289,11 +319,17 @@
             // 
             // tbDestPort
             // 
+            this.tbDestPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbDestPort.Enabled = false;
-            this.tbDestPort.Location = new System.Drawing.Point(162, 124);
+            this.tbDestPort.Location = new System.Drawing.Point(163, 104);
+            this.tbDestPort.MaxLength = 5;
             this.tbDestPort.Name = "tbDestPort";
-            this.tbDestPort.Size = new System.Drawing.Size(111, 22);
+            this.tbDestPort.Size = new System.Drawing.Size(38, 22);
             this.tbDestPort.TabIndex = 15;
+            this.tbDestPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbDestPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
+            this.tbDestPort.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.tbDestPort.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // timerRefresher
             // 
@@ -305,10 +341,11 @@
             // 
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configureToolStripMenuItem,
-            this.toolsToolStripMenuItem});
+            this.toolsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(789, 24);
+            this.mnuMain.Size = new System.Drawing.Size(799, 24);
             this.mnuMain.TabIndex = 19;
             // 
             // configureToolStripMenuItem
@@ -429,7 +466,7 @@
             // 
             this.unlockTogglesToolStripMenuItem.Name = "unlockTogglesToolStripMenuItem";
             this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.unlockTogglesToolStripMenuItem.Text = "Unlock Toggles";
+            this.unlockTogglesToolStripMenuItem.Text = "Display Toggles";
             this.unlockTogglesToolStripMenuItem.Click += new System.EventHandler(this.unlockTogglesToolStripMenuItem_Click);
             // 
             // setupUnicastToolStripMenuItem
@@ -452,12 +489,27 @@
             this.duplicateTrackingToolStripMenuItem.Visible = false;
             this.duplicateTrackingToolStripMenuItem.Click += new System.EventHandler(this.duplicateTrackingToolStripMenuItem_Click);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.logToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            // 
+            // logToolStripMenuItem
+            // 
+            this.logToolStripMenuItem.Name = "logToolStripMenuItem";
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.logToolStripMenuItem.Text = "Change &Log";
+            this.logToolStripMenuItem.Click += new System.EventHandler(this.logToolStripMenuItem_Click);
+            // 
             // lbConnected
             // 
             this.lbConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbConnected.AutoSize = true;
             this.lbConnected.BackColor = System.Drawing.Color.Pink;
-            this.lbConnected.Location = new System.Drawing.Point(35, 611);
+            this.lbConnected.Location = new System.Drawing.Point(35, 638);
             this.lbConnected.Name = "lbConnected";
             this.lbConnected.Size = new System.Drawing.Size(88, 13);
             this.lbConnected.TabIndex = 1;
@@ -473,13 +525,13 @@
             this.dgvCommData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCommData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvCommDataColDisplay});
-            this.dgvCommData.Location = new System.Drawing.Point(12, 257);
+            this.dgvCommData.Location = new System.Drawing.Point(10, 273);
             this.dgvCommData.MultiSelect = false;
             this.dgvCommData.Name = "dgvCommData";
             this.dgvCommData.ReadOnly = true;
             this.dgvCommData.RowHeadersVisible = false;
             this.dgvCommData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgvCommData.Size = new System.Drawing.Size(765, 141);
+            this.dgvCommData.Size = new System.Drawing.Size(775, 141);
             this.dgvCommData.TabIndex = 20;
             // 
             // dgvCommDataColDisplay
@@ -509,11 +561,11 @@
             this.dgvPhoneDataColTime,
             this.dgvPhoneDataColNumber,
             this.dgvPhoneDataColName});
-            this.dgvPhoneData.Location = new System.Drawing.Point(12, 417);
+            this.dgvPhoneData.Location = new System.Drawing.Point(12, 440);
             this.dgvPhoneData.Name = "dgvPhoneData";
             this.dgvPhoneData.ReadOnly = true;
             this.dgvPhoneData.RowHeadersVisible = false;
-            this.dgvPhoneData.Size = new System.Drawing.Size(765, 179);
+            this.dgvPhoneData.Size = new System.Drawing.Size(775, 183);
             this.dgvPhoneData.TabIndex = 21;
             // 
             // dgvPhoneDataColLine
@@ -589,7 +641,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 401);
+            this.label8.Location = new System.Drawing.Point(12, 421);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(67, 13);
             this.label8.TabIndex = 22;
@@ -598,7 +650,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 241);
+            this.label9.Location = new System.Drawing.Point(10, 253);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(115, 13);
             this.label9.TabIndex = 23;
@@ -606,12 +658,11 @@
             // 
             // btnUnlockUnitNumber
             // 
-            this.btnUnlockUnitNumber.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockUnitNumber.Location = new System.Drawing.Point(339, 38);
+            this.btnUnlockUnitNumber.Location = new System.Drawing.Point(339, 18);
             this.btnUnlockUnitNumber.Name = "btnUnlockUnitNumber";
             this.btnUnlockUnitNumber.Size = new System.Drawing.Size(75, 23);
             this.btnUnlockUnitNumber.TabIndex = 24;
-            this.btnUnlockUnitNumber.Text = "Unlock";
+            this.btnUnlockUnitNumber.Text = "Change";
             this.btnUnlockUnitNumber.UseVisualStyleBackColor = true;
             this.btnUnlockUnitNumber.Click += new System.EventHandler(this.Unlocks);
             this.btnUnlockUnitNumber.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
@@ -619,38 +670,23 @@
             // 
             // btnUnlockIPAddress
             // 
-            this.btnUnlockIPAddress.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockIPAddress.Location = new System.Drawing.Point(339, 67);
+            this.btnUnlockIPAddress.Location = new System.Drawing.Point(339, 47);
             this.btnUnlockIPAddress.Name = "btnUnlockIPAddress";
             this.btnUnlockIPAddress.Size = new System.Drawing.Size(75, 23);
             this.btnUnlockIPAddress.TabIndex = 25;
-            this.btnUnlockIPAddress.Text = "Unlock";
+            this.btnUnlockIPAddress.Text = "Change";
             this.btnUnlockIPAddress.UseVisualStyleBackColor = true;
             this.btnUnlockIPAddress.Click += new System.EventHandler(this.Unlocks);
             this.btnUnlockIPAddress.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.btnUnlockIPAddress.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
-            // btnUnlockMACAddress
-            // 
-            this.btnUnlockMACAddress.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockMACAddress.Location = new System.Drawing.Point(339, 94);
-            this.btnUnlockMACAddress.Name = "btnUnlockMACAddress";
-            this.btnUnlockMACAddress.Size = new System.Drawing.Size(75, 23);
-            this.btnUnlockMACAddress.TabIndex = 26;
-            this.btnUnlockMACAddress.Text = "Unlock";
-            this.btnUnlockMACAddress.UseVisualStyleBackColor = true;
-            this.btnUnlockMACAddress.Click += new System.EventHandler(this.Unlocks);
-            this.btnUnlockMACAddress.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnUnlockMACAddress.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
-            // 
             // btnUnlockDestPort
             // 
-            this.btnUnlockDestPort.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockDestPort.Location = new System.Drawing.Point(339, 124);
+            this.btnUnlockDestPort.Location = new System.Drawing.Point(339, 104);
             this.btnUnlockDestPort.Name = "btnUnlockDestPort";
             this.btnUnlockDestPort.Size = new System.Drawing.Size(75, 23);
             this.btnUnlockDestPort.TabIndex = 27;
-            this.btnUnlockDestPort.Text = "Unlock";
+            this.btnUnlockDestPort.Text = "Change";
             this.btnUnlockDestPort.UseVisualStyleBackColor = true;
             this.btnUnlockDestPort.Click += new System.EventHandler(this.Unlocks);
             this.btnUnlockDestPort.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
@@ -658,12 +694,11 @@
             // 
             // btnUnlockDestIP
             // 
-            this.btnUnlockDestIP.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockDestIP.Location = new System.Drawing.Point(339, 151);
+            this.btnUnlockDestIP.Location = new System.Drawing.Point(339, 131);
             this.btnUnlockDestIP.Name = "btnUnlockDestIP";
             this.btnUnlockDestIP.Size = new System.Drawing.Size(75, 23);
             this.btnUnlockDestIP.TabIndex = 28;
-            this.btnUnlockDestIP.Text = "Unlock";
+            this.btnUnlockDestIP.Text = "Change";
             this.btnUnlockDestIP.UseVisualStyleBackColor = true;
             this.btnUnlockDestIP.Click += new System.EventHandler(this.Unlocks);
             this.btnUnlockDestIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
@@ -671,12 +706,11 @@
             // 
             // btnUnlockDestMAC
             // 
-            this.btnUnlockDestMAC.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUnlockDestMAC.Location = new System.Drawing.Point(339, 180);
+            this.btnUnlockDestMAC.Location = new System.Drawing.Point(339, 160);
             this.btnUnlockDestMAC.Name = "btnUnlockDestMAC";
             this.btnUnlockDestMAC.Size = new System.Drawing.Size(75, 23);
             this.btnUnlockDestMAC.TabIndex = 29;
-            this.btnUnlockDestMAC.Text = "Unlock";
+            this.btnUnlockDestMAC.Text = "Change";
             this.btnUnlockDestMAC.UseVisualStyleBackColor = true;
             this.btnUnlockDestMAC.Click += new System.EventHandler(this.Unlocks);
             this.btnUnlockDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
@@ -684,7 +718,6 @@
             // 
             // panChangers
             // 
-            this.panChangers.Controls.Add(this.lbMultipleUnits);
             this.panChangers.Controls.Add(this.btnUnlockUnitNumber);
             this.panChangers.Controls.Add(this.btnUnlockDestMAC);
             this.panChangers.Controls.Add(this.tbIP);
@@ -692,34 +725,20 @@
             this.panChangers.Controls.Add(this.label1);
             this.panChangers.Controls.Add(this.btnUnlockDestPort);
             this.panChangers.Controls.Add(this.tbMAC);
-            this.panChangers.Controls.Add(this.btnUnlockMACAddress);
             this.panChangers.Controls.Add(this.label2);
             this.panChangers.Controls.Add(this.btnUnlockIPAddress);
             this.panChangers.Controls.Add(this.tbUnitNumber);
             this.panChangers.Controls.Add(this.label3);
-            this.panChangers.Controls.Add(this.label4);
-            this.panChangers.Controls.Add(this.lbEthernetID);
             this.panChangers.Controls.Add(this.tbDestIP);
             this.panChangers.Controls.Add(this.label6);
             this.panChangers.Controls.Add(this.label7);
             this.panChangers.Controls.Add(this.tbDestMAC);
             this.panChangers.Controls.Add(this.tbDestPort);
             this.panChangers.Controls.Add(this.label5);
-            this.panChangers.Location = new System.Drawing.Point(15, 25);
+            this.panChangers.Location = new System.Drawing.Point(15, 30);
             this.panChangers.Name = "panChangers";
             this.panChangers.Size = new System.Drawing.Size(417, 206);
             this.panChangers.TabIndex = 30;
-            // 
-            // lbMultipleUnits
-            // 
-            this.lbMultipleUnits.AutoSize = true;
-            this.lbMultipleUnits.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbMultipleUnits.Location = new System.Drawing.Point(18, 13);
-            this.lbMultipleUnits.Name = "lbMultipleUnits";
-            this.lbMultipleUnits.Size = new System.Drawing.Size(64, 13);
-            this.lbMultipleUnits.TabIndex = 30;
-            this.lbMultipleUnits.Text = "Mult. Units";
-            this.lbMultipleUnits.Visible = false;
             // 
             // lbDups
             // 
@@ -742,8 +761,7 @@
             // 
             // btnRetrieveToggles
             // 
-            this.btnRetrieveToggles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRetrieveToggles.Location = new System.Drawing.Point(677, 171);
+            this.btnRetrieveToggles.Location = new System.Drawing.Point(685, 206);
             this.btnRetrieveToggles.Name = "btnRetrieveToggles";
             this.btnRetrieveToggles.Size = new System.Drawing.Size(100, 23);
             this.btnRetrieveToggles.TabIndex = 30;
@@ -752,25 +770,11 @@
             this.btnRetrieveToggles.Visible = false;
             this.btnRetrieveToggles.Click += new System.EventHandler(this.btnRetrieveToggles_Click);
             // 
-            // lbNeedsSaving
-            // 
-            this.lbNeedsSaving.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbNeedsSaving.AutoSize = true;
-            this.lbNeedsSaving.BackColor = System.Drawing.Color.Pink;
-            this.lbNeedsSaving.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNeedsSaving.Location = new System.Drawing.Point(231, 610);
-            this.lbNeedsSaving.Name = "lbNeedsSaving";
-            this.lbNeedsSaving.Size = new System.Drawing.Size(144, 17);
-            this.lbNeedsSaving.TabIndex = 35;
-            this.lbNeedsSaving.Text = "CHANGES NOT SAVED";
-            this.lbNeedsSaving.Visible = false;
-            // 
             // btnClearCommData
             // 
-            this.btnClearCommData.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnClearCommData.Location = new System.Drawing.Point(133, 237);
+            this.btnClearCommData.Location = new System.Drawing.Point(131, 249);
             this.btnClearCommData.Name = "btnClearCommData";
-            this.btnClearCommData.Size = new System.Drawing.Size(75, 20);
+            this.btnClearCommData.Size = new System.Drawing.Size(44, 20);
             this.btnClearCommData.TabIndex = 30;
             this.btnClearCommData.Text = "Clear";
             this.btnClearCommData.UseVisualStyleBackColor = true;
@@ -780,10 +784,9 @@
             // 
             // btnClearPhoneData
             // 
-            this.btnClearPhoneData.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnClearPhoneData.Location = new System.Drawing.Point(85, 397);
+            this.btnClearPhoneData.Location = new System.Drawing.Point(81, 417);
             this.btnClearPhoneData.Name = "btnClearPhoneData";
-            this.btnClearPhoneData.Size = new System.Drawing.Size(75, 20);
+            this.btnClearPhoneData.Size = new System.Drawing.Size(42, 20);
             this.btnClearPhoneData.TabIndex = 36;
             this.btnClearPhoneData.Text = "Clear";
             this.btnClearPhoneData.UseVisualStyleBackColor = true;
@@ -793,8 +796,7 @@
             // 
             // btnToggleC
             // 
-            this.btnToggleC.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleC.Location = new System.Drawing.Point(479, 200);
+            this.btnToggleC.Location = new System.Drawing.Point(487, 235);
             this.btnToggleC.Name = "btnToggleC";
             this.btnToggleC.Size = new System.Drawing.Size(32, 31);
             this.btnToggleC.TabIndex = 30;
@@ -802,11 +804,12 @@
             this.btnToggleC.UseVisualStyleBackColor = true;
             this.btnToggleC.Visible = false;
             this.btnToggleC.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleC.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleC.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleU
             // 
-            this.btnToggleU.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleU.Location = new System.Drawing.Point(517, 200);
+            this.btnToggleU.Location = new System.Drawing.Point(525, 235);
             this.btnToggleU.Name = "btnToggleU";
             this.btnToggleU.Size = new System.Drawing.Size(32, 31);
             this.btnToggleU.TabIndex = 37;
@@ -814,11 +817,12 @@
             this.btnToggleU.UseVisualStyleBackColor = true;
             this.btnToggleU.Visible = false;
             this.btnToggleU.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleU.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleU.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleA
             // 
-            this.btnToggleA.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleA.Location = new System.Drawing.Point(593, 200);
+            this.btnToggleA.Location = new System.Drawing.Point(601, 235);
             this.btnToggleA.Name = "btnToggleA";
             this.btnToggleA.Size = new System.Drawing.Size(32, 31);
             this.btnToggleA.TabIndex = 39;
@@ -826,11 +830,12 @@
             this.btnToggleA.UseVisualStyleBackColor = true;
             this.btnToggleA.Visible = false;
             this.btnToggleA.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleA.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleA.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleD
             // 
-            this.btnToggleD.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleD.Location = new System.Drawing.Point(555, 200);
+            this.btnToggleD.Location = new System.Drawing.Point(563, 235);
             this.btnToggleD.Name = "btnToggleD";
             this.btnToggleD.Size = new System.Drawing.Size(32, 31);
             this.btnToggleD.TabIndex = 38;
@@ -838,11 +843,12 @@
             this.btnToggleD.UseVisualStyleBackColor = true;
             this.btnToggleD.Visible = false;
             this.btnToggleD.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleD.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleD.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleK
             // 
-            this.btnToggleK.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleK.Location = new System.Drawing.Point(745, 200);
+            this.btnToggleK.Location = new System.Drawing.Point(753, 235);
             this.btnToggleK.Name = "btnToggleK";
             this.btnToggleK.Size = new System.Drawing.Size(32, 31);
             this.btnToggleK.TabIndex = 43;
@@ -850,11 +856,12 @@
             this.btnToggleK.UseVisualStyleBackColor = true;
             this.btnToggleK.Visible = false;
             this.btnToggleK.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleK.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleK.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleB
             // 
-            this.btnToggleB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleB.Location = new System.Drawing.Point(707, 200);
+            this.btnToggleB.Location = new System.Drawing.Point(715, 235);
             this.btnToggleB.Name = "btnToggleB";
             this.btnToggleB.Size = new System.Drawing.Size(32, 31);
             this.btnToggleB.TabIndex = 42;
@@ -862,11 +869,12 @@
             this.btnToggleB.UseVisualStyleBackColor = true;
             this.btnToggleB.Visible = false;
             this.btnToggleB.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleB.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleB.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleO
             // 
-            this.btnToggleO.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleO.Location = new System.Drawing.Point(669, 200);
+            this.btnToggleO.Location = new System.Drawing.Point(677, 235);
             this.btnToggleO.Name = "btnToggleO";
             this.btnToggleO.Size = new System.Drawing.Size(32, 31);
             this.btnToggleO.TabIndex = 41;
@@ -874,11 +882,12 @@
             this.btnToggleO.UseVisualStyleBackColor = true;
             this.btnToggleO.Visible = false;
             this.btnToggleO.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleO.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleO.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // btnToggleS
             // 
-            this.btnToggleS.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnToggleS.Location = new System.Drawing.Point(631, 200);
+            this.btnToggleS.Location = new System.Drawing.Point(639, 235);
             this.btnToggleS.Name = "btnToggleS";
             this.btnToggleS.Size = new System.Drawing.Size(32, 31);
             this.btnToggleS.TabIndex = 40;
@@ -886,30 +895,14 @@
             this.btnToggleS.UseVisualStyleBackColor = true;
             this.btnToggleS.Visible = false;
             this.btnToggleS.Click += new System.EventHandler(this.SetToggle);
+            this.btnToggleS.MouseEnter += new System.EventHandler(this.ToggleMouseEnter);
+            this.btnToggleS.MouseLeave += new System.EventHandler(this.ToggleMouseLeave);
             // 
             // timerGetToggles
             // 
             this.timerGetToggles.Enabled = true;
             this.timerGetToggles.Interval = 1000;
             this.timerGetToggles.Tick += new System.EventHandler(this.timerGetToggles_Tick);
-            // 
-            // lbUnitFoundIP
-            // 
-            this.lbUnitFoundIP.AutoSize = true;
-            this.lbUnitFoundIP.Location = new System.Drawing.Point(549, 241);
-            this.lbUnitFoundIP.Name = "lbUnitFoundIP";
-            this.lbUnitFoundIP.Size = new System.Drawing.Size(228, 13);
-            this.lbUnitFoundIP.TabIndex = 47;
-            this.lbUnitFoundIP.Text = "Unit Found On IP Address: 000.000.000.000";
-            // 
-            // lbSendingTo
-            // 
-            this.lbSendingTo.AutoSize = true;
-            this.lbSendingTo.Location = new System.Drawing.Point(282, 241);
-            this.lbSendingTo.Name = "lbSendingTo";
-            this.lbSendingTo.Size = new System.Drawing.Size(261, 13);
-            this.lbSendingTo.TabIndex = 48;
-            this.lbSendingTo.Text = "Currently Sending Commands To: 000.000.000.000";
             // 
             // lbLineCount
             // 
@@ -941,11 +934,11 @@
             this.lbUnlock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbUnlock.AutoSize = true;
             this.lbUnlock.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.lbUnlock.Location = new System.Drawing.Point(768, 5);
+            this.lbUnlock.Location = new System.Drawing.Point(778, 5);
             this.lbUnlock.Name = "lbUnlock";
-            this.lbUnlock.Size = new System.Drawing.Size(15, 13);
+            this.lbUnlock.Size = new System.Drawing.Size(12, 13);
             this.lbUnlock.TabIndex = 53;
-            this.lbUnlock.Text = "U";
+            this.lbUnlock.Text = "L";
             this.lbUnlock.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbUnlock_MouseDown);
             // 
             // timerFoundIPChecker
@@ -959,23 +952,42 @@
             this.imgConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.imgConnected.BackColor = System.Drawing.Color.Pink;
             this.imgConnected.Image = global::EthernetLinkConfig.Properties.Resources.connected;
-            this.imgConnected.Location = new System.Drawing.Point(12, 603);
+            this.imgConnected.Location = new System.Drawing.Point(12, 630);
             this.imgConnected.Name = "imgConnected";
             this.imgConnected.Size = new System.Drawing.Size(17, 26);
             this.imgConnected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgConnected.TabIndex = 17;
             this.imgConnected.TabStop = false;
             // 
+            // rtbHint
+            // 
+            this.rtbHint.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbHint.Location = new System.Drawing.Point(441, 75);
+            this.rtbHint.Name = "rtbHint";
+            this.rtbHint.Size = new System.Drawing.Size(344, 125);
+            this.rtbHint.TabIndex = 54;
+            this.rtbHint.Text = resources.GetString("rtbHint.Text");
+            // 
+            // lbHintHeader
+            // 
+            this.lbHintHeader.AutoSize = true;
+            this.lbHintHeader.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHintHeader.Location = new System.Drawing.Point(440, 58);
+            this.lbHintHeader.Name = "lbHintHeader";
+            this.lbHintHeader.Size = new System.Drawing.Size(63, 13);
+            this.lbHintHeader.TabIndex = 55;
+            this.lbHintHeader.Text = "ELConfig 5";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(789, 635);
+            this.ClientSize = new System.Drawing.Size(799, 662);
+            this.Controls.Add(this.lbHintHeader);
+            this.Controls.Add(this.rtbHint);
             this.Controls.Add(this.lbUnlock);
             this.Controls.Add(this.lbLineCount);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.lbSendingTo);
-            this.Controls.Add(this.lbUnitFoundIP);
             this.Controls.Add(this.btnToggleK);
             this.Controls.Add(this.btnToggleB);
             this.Controls.Add(this.btnToggleO);
@@ -986,11 +998,9 @@
             this.Controls.Add(this.btnToggleC);
             this.Controls.Add(this.btnClearPhoneData);
             this.Controls.Add(this.btnClearCommData);
-            this.Controls.Add(this.lbNeedsSaving);
             this.Controls.Add(this.btnRetrieveToggles);
             this.Controls.Add(this.ckbIgnoreDups);
             this.Controls.Add(this.lbDups);
-            this.Controls.Add(this.lbDeluxeUnitDetected);
             this.Controls.Add(this.panChangers);
             this.Controls.Add(this.imgConnected);
             this.Controls.Add(this.lbListeningOn);
@@ -1008,7 +1018,9 @@
             this.MinimumSize = new System.Drawing.Size(459, 523);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Ethernet Link Config v.0.0.0.1";
+            this.Text = "Ethernet Link Config v.5.0.0.0";
+            this.panStatus.ResumeLayout(false);
+            this.panStatus.PerformLayout();
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).EndInit();
@@ -1032,14 +1044,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbUnitNumber;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lbEthernetID;
         private System.Windows.Forms.Label label5;
         private ISEAGE.May610.Diagrammer.matb tbDestMAC;
         private System.Windows.Forms.Label label6;
         private IPAddressControlLib.IPAddressControl tbDestIP;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbDestPort;
         private System.Windows.Forms.PictureBox imgConnected;
         private System.Windows.Forms.Timer timerRefresher;
         private System.Windows.Forms.MenuStrip mnuMain;
@@ -1051,7 +1060,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnUnlockUnitNumber;
         private System.Windows.Forms.Button btnUnlockIPAddress;
-        private System.Windows.Forms.Button btnUnlockMACAddress;
         private System.Windows.Forms.Button btnUnlockDestPort;
         private System.Windows.Forms.Button btnUnlockDestIP;
         private System.Windows.Forms.Button btnUnlockDestMAC;
@@ -1107,7 +1115,11 @@
         private System.Windows.Forms.Label lbUnlock;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.Timer timerFoundIPChecker;
-        private System.Windows.Forms.Label lbMultipleUnits;
+        private System.Windows.Forms.RichTextBox rtbHint;
+        private System.Windows.Forms.Label lbHintHeader;
+        public System.Windows.Forms.TextBox tbDestPort;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logToolStripMenuItem;
     }
 }
 

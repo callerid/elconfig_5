@@ -23,10 +23,15 @@ namespace EthernetLinkConfig
         public bool HaveShownMultipleUnitMessage = false;
         public static bool AskedToChangeLineCount = false;
         public bool HaveShownDupResetWindow = false;
+        public bool WaitingForNewIP = false;
+        public string ChangingIPTo = "";
 
         // Forms
         FrmSetLineCount FSetLineCount = new FrmSetLineCount(0);
         FrmDuplicateTracking FDupsTracking = new FrmDuplicateTracking();
+        FrmLog FLog = new FrmLog();
+        FrmOldFirmwareSettingLineCount FSetLineCountOldFirmware = new FrmOldFirmwareSettingLineCount();
+        FrmSetLineCountWithDipSwitches FSetLineCountDipSwitches = null;
         
         // Receivers
         public static UdpReceiverClass6699 UdpReceiver6699 = new UdpReceiverClass6699();
@@ -39,7 +44,7 @@ namespace EthernetLinkConfig
         public static Thread _udpReceiveThreadCustom = new Thread(UdpReceiverCustom.UdpIdleReceive);
         
         // Receive vitals
-        public static int LinkPort = 0;
+        public static LinkPortsClass LinkPorts;
         public int ConnectionPings = 3;
         public bool DeluxeUnitDetected = false;
 
@@ -61,6 +66,16 @@ namespace EthernetLinkConfig
         public string DestMAC;
         public int LineCount = 1;
         public static int Dups = 1;
+        public double FirmwareVersion;
+
+        public string PreviousUnitNumber;
+        public string PreviousSerialNumber;
+        public string PreviousMACAddress;
+        public string PreviousTheIPAddress;
+        public string PreviousDestPort;
+        public string PreviousListPort;
+        public string PreviousDestIP;
+        public string PreviousDestMAC;
 
         // Phone data
         private const int DGV_PHONE_DATA_LINE_INDEX = 0;
@@ -91,7 +106,10 @@ namespace EthernetLinkConfig
 
             InitializeComponent();
             FSetLineCount = new FrmSetLineCount(0);
+            FSetLineCountOldFirmware = new FrmOldFirmwareSettingLineCount();
             MinimumSize = Size;
+
+            LinkPorts = new LinkPortsClass();
 
             // Setup Toggles
             Toggles = new Dictionary<string, bool>();
@@ -132,6 +150,7 @@ namespace EthernetLinkConfig
             _udpReceiveThreadCustom.Start();
 
             Subscribe(UdpReceiverCustom);
+            LinkPorts.AddPort(UdpReceiverClassCustom.ListenOn);
         }
 
         // UDP Port --------------------------------------------------------------------------
@@ -194,6 +213,9 @@ namespace EthernetLinkConfig
         
         private void HandleAllReception(int port)
         {
+
+            LinkPorts.SetMainPort(port);
+
             // Handle UDP Reception
             string reception;
             byte[] receptionBytes;
@@ -220,7 +242,7 @@ namespace EthernetLinkConfig
 
             if (receptionBytes.Length == 5 || receptionBytes.Length == 6) return;
 
-            LinkPort = port;
+            LinkPorts.AddPort(port);
 
             if (receptionBytes.Length < 57 && reception.Contains("ok"))
             {
@@ -230,14 +252,75 @@ namespace EthernetLinkConfig
                 ReEnableAllUnlocks();
             }
 
+            if (receptionBytes.Length == 28)
+            {
+
+                Match fVersionBoot = Regex.Match(reception, @"V(\d\.\d)");
+
+                if (fVersionBoot.Success)
+                {
+                    FirmwareVersion = double.Parse(fVersionBoot.Groups[1].Value.ToString());
+                }
+
+                Match lineCountBoot = Regex.Match(reception, @"((\d{1,2}) V)");
+
+                if (lineCountBoot.Success)
+                {
+                    LineCount = int.Parse(lineCountBoot.Groups[2].Value.ToString());
+                }
+
+                if (LineCount > 8)
+                {
+                    if (!AskedToChangeLineCount)
+                    {
+                        if (FSetLineCountDipSwitches == null)
+                        {
+                            FSetLineCountDipSwitches = new FrmSetLineCountWithDipSwitches();
+                            FSetLineCountDipSwitches.Show();
+                        }
+                        else if (FSetLineCountDipSwitches.Visible)
+                        {
+                            FSetLineCountDipSwitches.WindowState = FormWindowState.Normal;
+                            FSetLineCountDipSwitches.Focus();
+                        }                        
+                    }
+                }
+
+                int startAt = 0;
+                if (reception.Contains("$"))
+                {
+                    startAt = reception.IndexOf('$') + 1;
+
+                    if (Toggles["C"])
+                    {
+                        startAt -= 1;
+                    }
+
+                }
+
+                string comm_reception = reception.Substring(startAt, reception.Length - startAt);
+
+                if (dgvCommData.Rows.Count > 0)
+                {
+                    if (dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString() != comm_reception)
+                    {
+                        AddToCommData(comm_reception);
+                    }
+                }
+                else
+                {
+                    AddToCommData(comm_reception);
+                }
+
+            }
+
             if (receptionBytes.Length != 90 && receptionBytes.Length != 57 && receptionBytes.Length != 83 && receptionBytes.Length != 52) return;
 
             ConnectionPings = 0;
             lbConnected.Visible = true;
             imgConnected.Visible = true;
             lbListeningOn.Visible = true;
-            lbListeningOn.Text = "Listening On: " + LinkPort;
-            if (FoundIPs.Count > 1) lbMultipleUnits.Visible = true;
+            lbListeningOn.Text = "Listening On\nPort: " + LinkPorts.MainPort;
 
             // ------------------------------------------------------------------------
             // If Call Record
@@ -282,6 +365,16 @@ namespace EthernetLinkConfig
 
                 if (record.IsValid)
                 {
+
+                    if (record.Line > 8)
+                    {
+                        if (!AskedToChangeLineCount)
+                        {
+                            FSetLineCountDipSwitches = new FrmSetLineCountWithDipSwitches();
+                            FSetLineCountDipSwitches.Show();
+                        }
+                    }
+
                     if (record.Detailed)
                     {
                         AddCallRecordToPhoneData(record.Line.ToString(), record.DetailedType.ToString(), "", "", "", "", record.DateTime.ToShortDateString(), record.DateTime.ToShortTimeString(), "", "");
@@ -298,16 +391,31 @@ namespace EthernetLinkConfig
             }
             else if (receptionBytes.Length != 90 && receptionBytes.Length != 83)
             {
+
+                int startAt = 0;
+                if (reception.Contains("$"))
+                {
+                    startAt = reception.IndexOf('$') + 1;
+
+                    if (Toggles["C"])
+                    {
+                        startAt -= 1;
+                    }
+
+                }
+
+                string comm_reception = reception.Substring(startAt, reception.Length - startAt);
+
                 if (dgvCommData.Rows.Count > 0)
                 {
-                    if (dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString() != reception)
+                    if (dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString() != comm_reception)
                     {
-                        AddToCommData(reception);
+                        AddToCommData(comm_reception);
                     }
                 }
                 else
                 {
-                    AddToCommData(reception);
+                    AddToCommData(comm_reception);
                 }
             }
 
@@ -317,6 +425,14 @@ namespace EthernetLinkConfig
 
             if (receptionBytes.Length == 57)
             {
+
+                Match fVersion = Regex.Match(reception, @"V(\d\.\d)");
+
+                if (fVersion.Success)
+                {
+                    FirmwareVersion = double.Parse(fVersion.Groups[1].Value.ToString());
+                }
+                
                 int start_at = 1;
                 Match m = Regex.Match(reception, @"([Ee])([Cc])([Xx])([Uu])([Dd])([Aa])([Ss])([Oo])([Bb])([Kk])([Tt]) L=(\d{1,2}) (\d{1,2}/\d{1,2}) (\d{1,2}:\d{1,2}:\d{1,2})");
 
@@ -335,13 +451,22 @@ namespace EthernetLinkConfig
 
                     LineCount = int.Parse(m.Groups[start_at + 11].Value.ToString());
 
-                    if (LineCount > 8)
+                    if (LineCount > 1)
                     {
                         if (!AskedToChangeLineCount)
                         {
-                            FSetLineCount = new FrmSetLineCount(LineCount, true);
-                            FSetLineCount.Show();
-                            AskedToChangeLineCount = true;
+                            if (FirmwareVersion >= 5.0 && FirmwareVersion <= 9.6)
+                            {
+                                FSetLineCount = new FrmSetLineCount(LineCount, true);
+                                FSetLineCount.Show();
+                                AskedToChangeLineCount = true;
+                            }
+                            else
+                            {
+                                FSetLineCount = new FrmSetLineCount(LineCount, true);
+                                FSetLineCount.Show();
+                                AskedToChangeLineCount = true;
+                            }
                         }
                     }
 
@@ -358,7 +483,8 @@ namespace EthernetLinkConfig
 
                     DeluxeUnitDetected = true;
                     UpdateToggles();
-                    lbDeluxeUnitDetected.Text = "Deluxe Unit DETECTED";
+                    lbDeluxeUnitDetected.Text = "Deluxe Unit\nDETECTED";
+                    unlockTogglesToolStripMenuItem.Visible = false;
                     GotToggles = true;
 
                 }
@@ -394,7 +520,7 @@ namespace EthernetLinkConfig
 
             // ----------------------------------
 
-            // SERIAL NUMBER-----------------------
+            // Ethernet ID 
             SerialNumber = "";
             for (int i = 84; i <= 89; i++)
             {
@@ -403,7 +529,6 @@ namespace EthernetLinkConfig
                 if (sn_piece.Length == 1) sn_piece = "0" + sn_piece;
                 SerialNumber += sn_piece;
             }
-            lbEthernetID.Text = SerialNumber;
 
             // ----------------------------------
 
@@ -501,7 +626,7 @@ namespace EthernetLinkConfig
             if (Dups > 1 && !HaveShownDupResetWindow)
             {
                 HaveShownDupResetWindow = true;
-                FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne();
+                FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne(Dups);
                 fDupsOverOne.Show();
             }
 
@@ -533,6 +658,7 @@ namespace EthernetLinkConfig
             Button btn = (Button)sender;
 
             string toSend = btn.Text.ToString();
+            string previous_toggle = toSend;
 
             if (toSend == toSend.ToUpper())
             {
@@ -543,9 +669,10 @@ namespace EthernetLinkConfig
                 toSend = toSend.ToUpper();
             }
 
-            SendUdp("^^Id-" + toSend, LinkPort);
+            SendUdp("^^Id-" + toSend, LinkPorts.MainPort);
             Common.WaitFor(250);
             btnRetrieveToggles_Click(new object(), new EventArgs());
+            Common.AddToLogFile("Toggle: " + toSend.ToUpper(), previous_toggle, toSend);
 
         }
 
@@ -571,7 +698,7 @@ namespace EthernetLinkConfig
                 if (set)
                 {
                     ctrl.Text = toggle.ToLower();
-                    ctrl.BackColor = Color.LightGreen;
+                    ctrl.BackColor = Common.C_GREENISH;
                 }
                 else
                 {
@@ -602,41 +729,48 @@ namespace EthernetLinkConfig
             {
                 case "btnUnlockUnitNumber":
 
-                    SendUdp("^^IdU" + tbUnitNumber.Text.PadLeft(12, '0'), LinkPort);
+                    SendUdp("^^IdU" + tbUnitNumber.Text.PadLeft(12, '0'), LinkPorts.MainPort);
+                    Common.AddToLogFile("Unit Number", PreviousUnitNumber, tbUnitNumber.Text);
 
                     break;
 
                 case "btnUnlockIPAddress":
 
-                    SendUdp("^^IdI" + Common.HexFromIP(tbIP.Text), LinkPort);
+                    SendUdp("^^IdI" + Common.HexFromIP(tbIP.Text), LinkPorts.MainPort);
+                    Common.AddToLogFile("Unit IP", PreviousTheIPAddress, tbIP.Text);
 
                     break;
 
                 case "btnUnlockMACAddress":
 
-                    SendUdp("^^IdM" + tbMAC.Text.Replace(":", ""), LinkPort);
+                    SendUdp("^^IdM" + tbMAC.Text.Replace(":", ""), LinkPorts.MainPort);
+                    Common.AddToLogFile("Unit MAC", PreviousMACAddress, tbMAC.Text.Replace(":", "-"));
 
                     break;
 
                 case "btnUnlockDestPort":
 
-                    SendUdp("^^IdT" + (int.Parse(tbDestPort.Text).ToString("X")).PadLeft(4, '0'), LinkPort);
+                    SendUdp("^^IdT" + (int.Parse(tbDestPort.Text).ToString("X")).PadLeft(4, '0'), LinkPorts.MainPort);
 
                     if (string.IsNullOrEmpty(tbDestPort.Text)) break;
                     Program.FMain.StartCustomReceiver(int.Parse(tbDestPort.Text));
-                    FrmMain.LinkPort = int.Parse(tbDestPort.Text);
+                    FrmMain.LinkPorts.AddPort(int.Parse(tbDestPort.Text));
+
+                    Common.AddToLogFile("Destination Port", PreviousDestPort, tbDestPort.Text);
 
                     break;
 
                 case "btnUnlockDestIP":
 
-                    SendUdp("^^IdD" + Common.HexFromIP(tbDestIP.Text), LinkPort);
+                    SendUdp("^^IdD" + Common.HexFromIP(tbDestIP.Text), LinkPorts.MainPort);
+                    Common.AddToLogFile("Destination IP", PreviousDestIP, tbDestIP.Text);
 
                     break;
 
                 case "btnUnlockDestMAC":
 
-                    SendUdp("^^IdC" + tbDestMAC.Text.Replace(":", ""), LinkPort);
+                    SendUdp("^^IdC" + tbDestMAC.Text.Replace(":", ""), LinkPorts.MainPort);
+                    Common.AddToLogFile("Destination MAC", PreviousDestMAC, tbDestMAC.Text.Replace(":", "-"));
 
                     break;
 
@@ -657,8 +791,9 @@ namespace EthernetLinkConfig
             {
                 case "btnUnlockUnitNumber":
 
-                    if (btn.Text == "Unlock")
+                    if (btn.Text == "Change")
                     {
+                        PreviousUnitNumber = tbUnitNumber.Text;
                         btn.Text = "Save";
                         tbUnitNumber.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -674,8 +809,17 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockIPAddress":
 
-                    if (btn.Text == "Unlock")
+                    if (FoundIPs.Count > 1)
                     {
+                        string alert = "Unplug all but one unit to change IP address.";
+
+                        MessageBox.Show(new Form() { TopMost = true }, alert, "Multiple Units Detected", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        return;
+                    }
+                    
+                    if (btn.Text == "Change")
+                    {
+                        PreviousTheIPAddress = tbIP.Text;
                         btn.Text = "Save";
                         tbIP.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -683,8 +827,10 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
-                        btn.Text = "Unlock";
+                        btn.Text = "Change";
                         tbIP.Enabled = false;
+                        WaitingForNewIP = true;
+                        ChangingIPTo = tbIP.Text;
                         UpdateParameter(btn.Name);
                         btn.BackColor = Common.C_BUTTON_BACK;
                     }
@@ -693,8 +839,9 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockMACAddress":
 
-                    if (btn.Text == "Unlock")
+                    if (btn.Text == "Change")
                     {
+                        PreviousMACAddress = tbMAC.Text.Replace(":", "-");
                         btn.Text = "Save";
                         tbMAC.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -702,7 +849,7 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
-                        btn.Text = "Unlock";
+                        btn.Text = "Change";
                         tbMAC.Enabled = false;
                         UpdateParameter(btn.Name);
                         btn.BackColor = Common.C_BUTTON_BACK;
@@ -712,12 +859,13 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockDestPort":
 
-                    if (btn.Text == "Unlock")
+                    if (btn.Text == "Change")
                     {
                         string message = "The 2 default Network Ports suuported by ELConfig are 3520 and 6699." + Environment.NewLine + Environment.NewLine + "Changing the port number that the unit sends to other than these 2 default ports is not reccomended." + Environment.NewLine + Environment.NewLine + "Do so only if absolutely neccesary for your application." + Environment.NewLine + Environment.NewLine + "Are you sure you wish to change the Destination Port now?";
 
                         if (MessageBox.Show(new Form() { TopMost = true }, message, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No) return;
-                        
+
+                        PreviousDestPort = tbDestPort.Text;
                         btn.Text = "Save";
                         tbDestPort.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -725,18 +873,20 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
-                        btn.Text = "Unlock";
+                        btn.Text = "Change";
                         tbDestPort.Enabled = false;
                         UpdateParameter(btn.Name);
+                        LinkPorts.SetMainPort(int.Parse(tbDestPort.Text), true);
                         btn.BackColor = Common.C_BUTTON_BACK;
                     }
 
                     break;
 
                 case "btnUnlockDestIP":
-                    
-                    if (btn.Text == "Unlock")
+
+                    if (btn.Text == "Change")
                     {
+                        PreviousDestIP = tbDestIP.Text;
                         btn.Text = "Save";
                         tbDestIP.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -744,7 +894,7 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
-                        btn.Text = "Unlock";
+                        btn.Text = "Change";
                         tbDestIP.Enabled = false;
                         UpdateParameter(btn.Name);
                         btn.BackColor = Common.C_BUTTON_BACK;
@@ -753,9 +903,10 @@ namespace EthernetLinkConfig
                     break;
 
                 case "btnUnlockDestMAC":
-                    
-                    if (btn.Text == "Unlock")
+
+                    if (btn.Text == "Change")
                     {
+                        PreviousDestMAC = tbDestMAC.Text;
                         btn.Text = "Save";
                         tbDestMAC.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -763,7 +914,7 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
-                        btn.Text = "Unlock";
+                        btn.Text = "Change";
                         tbDestMAC.Enabled = false;
                         UpdateParameter(btn.Name);
                         btn.BackColor = Common.C_BUTTON_BACK;
@@ -774,9 +925,13 @@ namespace EthernetLinkConfig
 
                 default:
                     return;
-            }            
-        }
+            }
 
+            Common.WaitFor(250);
+            timerRefresher_Tick(new object(), new EventArgs());
+
+        }
+        
         private void DisableAllUnlocksExcept(string btnName)
         {
             foreach (Control ctrl in Controls)
@@ -812,7 +967,7 @@ namespace EthernetLinkConfig
                         if (pan_ctrl.Name.Contains("btnUnlock"))
                         {
                             pan_ctrl.Enabled = true;
-                            pan_ctrl.Text = "Unlock";
+                            pan_ctrl.Text = "Change";
                             pan_ctrl.BackColor = Common.C_BUTTON_BACK;
                         }
                     }
@@ -833,6 +988,60 @@ namespace EthernetLinkConfig
             if (btn.Text == "Save") return;
 
             btn.BackColor = Common.C_ATTENTION;
+
+            switch (btn.Name)
+            {
+                case "btnUnlockUnitNumber":
+                case "tbUnitNumber":
+
+                    lbHintHeader.Text = "Unit Number";
+                    rtbHint.Text = "Some applications use unit numbers to match data arriving from multiple units.";
+
+                    break;
+
+                case "btnUnlockIPAddress":
+                case "tbIP":
+
+                    lbHintHeader.Text = "Unit IP Address:";
+                    rtbHint.Text = "Set a static IP address within the IP scheme either outside the DHCP range or a value that would not create an IP conflict with another device on the network.";
+
+                    break;
+
+                case "btnUnlockMACAddress":
+                case "tbMAC":
+
+
+
+                    break;
+
+                case "btnUnlockDestPort":
+                case "tbDestPort":
+
+                    lbHintHeader.Text = "Unit Destination Port:";
+                    rtbHint.Text = "The default Network communication port is 3520. Do not change unless your application absolutely requires it. A value other than 3520 or 6699 will require you change the listening port on this application.";
+
+                    break;
+
+                case "btnUnlockDestIP":
+                case "tbDestIP":
+
+                    lbHintHeader.Text = "Destination IP Address:";
+                    rtbHint.Text = "The IP to where the call records will be sent. The default is 255.255.255.255 (broadcast) which most applications use, even if only one PC is listening for data. Change only if necessary.";
+
+                    break;
+
+                case "btnUnlockDestMAC":
+                case "tbDestMAC":
+
+                    lbHintHeader.Text = "Unit MAC Address:";
+                    rtbHint.Text = "The MAC address to where call records will be sent. The default is FF-FF-FF-FF-FF-FF (Broadcast) which most applications use. Change to specific MAC only if the Destination IP is specified as a unicast.";
+
+                    break;
+
+
+                default:
+                    return;
+            }       
         }
 
         private void ButtonMouseLeave(object sender, EventArgs e)
@@ -844,6 +1053,86 @@ namespace EthernetLinkConfig
             if (btn.Text == "Save") return;
 
             btn.BackColor = Common.C_BUTTON_BACK;
+
+            lbHintHeader.Text = "ELConfig. 5";
+            rtbHint.Text = "This configuration and test tool is normally for:\n     - Setting the static IP of the device\n     - Testing for call records arriving from the Caller ID unit\n\n" +
+                "Advanced users can set a number of other parameters including:\n     - Toggles for output options on Deluxe units\n     - Destination IP and MAC unicasts\n     - Duplicate call record delivery to increase throughput.\n" +
+                "     - Starting Line count when connecting multiple units";
+        }
+
+        private void ToggleMouseEnter(object sender, EventArgs e)
+        {
+            if (!(sender is Button)) return;
+
+            Button btn = (Button)sender;
+
+            switch (btn.Name)
+            {
+                case "btnToggleC":
+
+                    lbHintHeader.Text = "Toggle 'C'";
+                    rtbHint.Text = "Lowercase c prepends “$” to records & removes dashes in phone numbers";
+
+                    break;
+
+                case "btnToggleU":
+
+                    lbHintHeader.Text = "Toggle 'U'";
+                    rtbHint.Text = "Used for Call Blocking using relayed-enabled hardware";
+
+                    break;
+
+                case "btnToggleD":
+
+                    lbHintHeader.Text = "Toggle 'D'";
+                    rtbHint.Text = "Lowercase 'd' sends On Hook, Off Hook, and Ring call records";
+
+                    break;
+
+                case "btnToggleA":
+
+                    lbHintHeader.Text = "Toggle 'A'";
+                    rtbHint.Text = "Uppercase 'A' sends both Start and End of Call records";
+
+                    break;
+
+                case "btnToggleS":
+
+                    lbHintHeader.Text = "Toggle 'S'";
+                    rtbHint.Text = "Uppercase 'S' sends only Start of Call records when lowercase 'a' is set";
+
+                    break;
+
+                case "btnToggleO":
+
+                    lbHintHeader.Text = "Toggle 'O'";
+                    rtbHint.Text = "Lowercase 'o' sends Outbound Call records";
+
+                    break;
+
+                case "btnToggleB":
+
+                    lbHintHeader.Text = "Toggle 'B'";
+                    rtbHint.Text = "Uppercase 'B' blocks first ring of Inbound calls using relayed-enabled hardware";
+
+                    break;
+
+                case "btnToggleK":
+
+                    lbHintHeader.Text = "Toggle 'K'";
+                    rtbHint.Text = "Used for Call Blocking using relayed-enabled hardware";
+
+                    break;
+
+            }
+        }
+
+        private void ToggleMouseLeave(object sender, EventArgs e)
+        {
+            lbHintHeader.Text = "ELConfig. 5";
+            rtbHint.Text = "This configuration and test tool is normally for:\n     - Setting the static IP of the device\n     - Testing for call records arriving from the Caller ID unit\n\n" +
+                "Advanced users can set a number of other parameters including:\n     - Toggles for output options on Deluxe units\n     - Destination IP and MAC unicasts\n     - Duplicate call record delivery to increase throughput.\n" +
+                "     - Starting Line count when connecting multiple units";
         }
 
         // -----------------------------------------------------------------
@@ -913,19 +1202,19 @@ namespace EthernetLinkConfig
             else
             {
                 imgConnected.Visible = true;
-                imgConnected.BackColor = Color.LightGreen;
+                imgConnected.BackColor = Common.C_GREENISH;
                 lbListeningOn.Visible = true;
-                lbListeningOn.Text = "Listening On: " + LinkPort;
-                panStatus.BackColor = Color.LightGreen;
-                lbConnected.BackColor = Color.LightGreen;
-                lbDeluxeUnitDetected.BackColor = Color.LightGreen;
-                lbNeedsSaving.BackColor = Color.LightGreen;
-                lbListeningOn.BackColor = Color.LightGreen;
+                lbListeningOn.Text = "Listening On\nPort: " + LinkPorts.MainPort;
+                panStatus.BackColor = Common.C_GREENISH;
+                lbConnected.BackColor = Common.C_GREENISH;
+                lbDeluxeUnitDetected.BackColor = Common.C_GREENISH;
+                lbNeedsSaving.BackColor = Common.C_GREENISH;
+                lbListeningOn.BackColor = Common.C_GREENISH;
                 lbConnected.Text = "Connected";
                 lbUnitFoundIP.Visible = true;
             }
 
-            if (LinkPort == 0)
+            if (LinkPorts.MainPort == 0)
             {
                 SendUdp("^^IdX", 6699);
                 Common.WaitFor(250);
@@ -933,7 +1222,7 @@ namespace EthernetLinkConfig
 
                 if (!AlwaysShowToggles)
                 {
-                    lbDeluxeUnitDetected.Text = "Deluxe Unit NOT detected";
+                    lbDeluxeUnitDetected.Text = "Deluxe Unit\nNOT detected";
                     SetToggleVisibility(false);
                 }
 
@@ -942,7 +1231,11 @@ namespace EthernetLinkConfig
             {
                 HaveHadAConnection = true;
 
-                SendUdp("^^IdX", LinkPort);
+                foreach (int linkedPort in LinkPorts.GetAllPorts())
+                {
+                    SendUdp("^^IdX", linkedPort);
+                    Common.WaitFor(100);
+                }
 
                 // Reset to slow poling
                 if (ConnectionPings < 4)
@@ -954,47 +1247,104 @@ namespace EthernetLinkConfig
                     timerRefresher.Interval = 750;
                 }
 
-                if (LinkPort == 6699)
+                if (LinkPorts.ContainsPort(6699))
                 {
                     
                     if(!(FoundIPs.Contains(UdpReceiverClass6699.LastIncomingIPAddress)))
                     {
                         if (UdpReceiverClass6699.LastIncomingIPAddress != null)
                         {
-                            FoundIPs.Add(UdpReceiverClass6699.LastIncomingIPAddress);
+                            if (UdpReceiverClass6699.LastIncomingIPAddress == ChangingIPTo)
+                            {
+                                WaitingForNewIP = false;
+                                FoundIPs.Clear();
+                                ChangingIPTo = "";
+                                FoundIPs.Add(UdpReceiverClass6699.LastIncomingIPAddress);
+                            }
+                            else
+                            {
+                                FoundIPs.Add(UdpReceiverClass6699.LastIncomingIPAddress);
+                            }
                         }
                     }
+
+                    if (FoundIPs.Count > 1)
+                    {
+                        lbUnitFoundIP.Text = "Multiple Units Found";
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
+                    else
+                    {
+                        lbUnitFoundIP.Text = "Unit Found on IP: " + UdpReceiverClass6699.LastIncomingIPAddress;
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
                     
-                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass6699.LastIncomingIPAddress;
-                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
                 }
-                else if(LinkPort == 3520)
+                
+                if(LinkPorts.ContainsPort(3520))
                 {
 
                     if (!(FoundIPs.Contains(UdpReceiverClass3520.LastIncomingIPAddress)))
                     {
                         if (UdpReceiverClass3520.LastIncomingIPAddress != null)
                         {
-                            FoundIPs.Add(UdpReceiverClass3520.LastIncomingIPAddress);
+                            if (UdpReceiverClass3520.LastIncomingIPAddress == ChangingIPTo)
+                            {
+                                WaitingForNewIP = false;
+                                FoundIPs.Clear();
+                                ChangingIPTo = "";
+                                FoundIPs.Add(UdpReceiverClass3520.LastIncomingIPAddress);
+                            }
+                            else
+                            {
+                                FoundIPs.Add(UdpReceiverClass3520.LastIncomingIPAddress);
+                            }
                         }
                     }
 
-                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClass3520.LastIncomingIPAddress;
-                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
+                    if (FoundIPs.Count > 1)
+                    {
+                        lbUnitFoundIP.Text = "Multiple Units Found";
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
+                    else
+                    {
+                        lbUnitFoundIP.Text = "Unit Found on IP: " + UdpReceiverClass3520.LastIncomingIPAddress;
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
                 }
-                else
+                
+                if(LinkPorts.ContainsPort(UdpReceiverClassCustom.ListenOn))
                 {
 
                     if (!(FoundIPs.Contains(UdpReceiverClassCustom.LastIncomingIPAddress)))
                     {
                         if (UdpReceiverClassCustom.LastIncomingIPAddress != null)
                         {
-                            FoundIPs.Add(UdpReceiverClassCustom.LastIncomingIPAddress);
+                            if (UdpReceiverClassCustom.LastIncomingIPAddress == ChangingIPTo)
+                            {
+                                WaitingForNewIP = false;
+                                FoundIPs.Clear();
+                                ChangingIPTo = "";
+                                FoundIPs.Add(UdpReceiverClassCustom.LastIncomingIPAddress);
+                            }
+                            else
+                            {
+                                FoundIPs.Add(UdpReceiverClassCustom.LastIncomingIPAddress);
+                            }
                         }
                     }
 
-                    lbUnitFoundIP.Text = "Unit Found on IP Address: " + UdpReceiverClassCustom.LastIncomingIPAddress;
-                    lbSendingTo.Text = "Currently Sending Commands To: " + SendToIP;
+                    if (FoundIPs.Count > 1)
+                    {
+                        lbUnitFoundIP.Text = "Multiple Units Found";
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
+                    else
+                    {
+                        lbUnitFoundIP.Text = "Unit Found on IP: " + UdpReceiverClassCustom.LastIncomingIPAddress;
+                        lbSendingTo.Text = "Sending Commands to: " + SendToIP;
+                    }
                 }
             }
         }
@@ -1011,13 +1361,13 @@ namespace EthernetLinkConfig
 
         private void btnRetrieveToggles_Click(object sender, EventArgs e)
         {
-            SendUdp("^^Id-V", LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
-            SendUdp("^^Id-V", LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
-            SendUdp("^^Id-V", LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
-            SendUdp("^^Id-V", LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
         }
 
@@ -1027,21 +1377,21 @@ namespace EthernetLinkConfig
 
             if (!GotToggles)
             {
-                SendUdp("^^Id-V", LinkPort);
+                SendUdp("^^Id-V", LinkPorts.MainPort);
             }
         }
 
         private void resetEthernetDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SendUdp("^^IdDFFFFFFFF", LinkPort); //External IP
+            SendUdp("^^IdDFFFFFFFF", LinkPorts.MainPort); //External IP
             Common.WaitFor(250);
-            SendUdp("^^IdU000000000001", LinkPort); //Unit ID
+            SendUdp("^^IdU000000000001", LinkPorts.MainPort); //Unit ID
             Common.WaitFor(250);
-            SendUdp("^^IdIC0A8005A", LinkPort); //Internal IP
+            SendUdp("^^IdIC0A8005A", LinkPorts.MainPort); //Internal IP
             Common.WaitFor(250);
-            SendUdp("^^IdCFFFFFFFFFFFF", LinkPort); //Destination MAC address
+            SendUdp("^^IdCFFFFFFFFFFFF", LinkPorts.MainPort); //Destination MAC address
             Common.WaitFor(250);
-            SendUdp("^^IdT0DC0", LinkPort); //Port Number
+            SendUdp("^^IdT0DC0", LinkPorts.MainPort); //Port Number
             Common.WaitFor(250);
 
             Common.MessageBox("Command Sent.", "Finished");
@@ -1050,11 +1400,13 @@ namespace EthernetLinkConfig
 
         private void setDeluxeUnitOutputDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SendUdp("^^Id-N0000007701", LinkPort);
+            SendUdp("^^Id-N0000007701", LinkPorts.MainPort);
             Common.WaitFor(250);
-            SendUdp("^^Id-R", LinkPort);
+            SendUdp("^^Id-R", LinkPorts.MainPort);
 
             Common.MessageBox("Command Sent.", "Finished");
+            Common.WaitFor(1000);
+            btnRetrieveToggles_Click(new object(), new EventArgs());
         }
 
         private void displayComputerIPAddressToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1074,45 +1426,45 @@ namespace EthernetLinkConfig
 
         private void setUnitToCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SendUdp("^^Id-N0000007701\r\n",LinkPort);
+            SendUdp("^^Id-N0000007701\r\n", LinkPorts.MainPort);
             Common.WaitFor(250);
             DateTime t = DateTime.Now;
             string timeString = t.Month.ToString().PadLeft(2, '0') + t.Day.ToString().PadLeft(2, '0') + t.Hour.ToString().PadLeft(2, '0') + t.Minute.ToString().PadLeft(2, '0');
             timeString = "^^Id-Z" + timeString + "\r";
-            SendUdp(timeString, LinkPort);
+            SendUdp(timeString, LinkPorts.MainPort);
             Common.WaitFor(800);
-            SendUdp("^^Id-V",LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
 
             Common.MessageBox("Command Sent.", "Finished");
         }
 
         private void setDeluxeUnitToBasicUnitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SendUdp("^^Id-a", LinkPort);
+            SendUdp("^^Id-a", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-E", LinkPort);
+            SendUdp("^^Id-E", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-C", LinkPort);
+            SendUdp("^^Id-C", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-X", LinkPort);
+            SendUdp("^^Id-X", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-U", LinkPort);
+            SendUdp("^^Id-U", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-K", LinkPort);
+            SendUdp("^^Id-K", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-S", LinkPort);
+            SendUdp("^^Id-S", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-B", LinkPort);
+            SendUdp("^^Id-B", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-D", LinkPort);
+            SendUdp("^^Id-D", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-O", LinkPort);
+            SendUdp("^^Id-O", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-T", LinkPort);
+            SendUdp("^^Id-T", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-a", LinkPort);
+            SendUdp("^^Id-a", LinkPorts.MainPort);
             Common.WaitFor(100);
-            SendUdp("^^Id-V", LinkPort);
+            SendUdp("^^Id-V", LinkPorts.MainPort);
 
             Common.MessageBox("Commands to Reset Sent.", "Finished");
         }
@@ -1153,7 +1505,7 @@ namespace EthernetLinkConfig
         {
             // This timer is used to increment all seconds
             // of the previous receptions and remove them 
-            // after 2 seconds have passed.
+            // after 4 seconds have passed.
 
             // If there is nothing in the reception buffer then simply exit function
             if (previousReceptions.Count < 1) return;
@@ -1167,7 +1519,7 @@ namespace EthernetLinkConfig
             // mark the ones to increment the seconds on
             foreach (string key in previousReceptions.Keys)
             {
-                if (previousReceptions[key] > 2)
+                if (previousReceptions[key] > 4) // remove after 4 seconds
                 {
                     // This reception will be removed
                     keysToRemove.Add(key);
@@ -1206,22 +1558,22 @@ namespace EthernetLinkConfig
 
         private void lbUnlock_MouseDown(object sender, MouseEventArgs e)
         {
-            if (lbUnlock.Text == "U")
+            if (lbUnlock.Text == "L")
             {
                 duplicateTrackingToolStripMenuItem.Visible = true;
-                lbUnlock.Text = "L";
+                lbUnlock.Text = "U";
             }
             else
             {
                 duplicateTrackingToolStripMenuItem.Visible = false;
-                lbUnlock.Text = "U";
+                lbUnlock.Text = "L";
             }
         }
 
         private void timerFoundIPChecker_Tick(object sender, EventArgs e)
         {
-
-            if (HaveShownMultipleUnitMessage) return;
+            
+            if (HaveShownMultipleUnitMessage || WaitingForNewIP) return;
 
             if (FoundIPs.Count > 1)
             {
@@ -1237,6 +1589,20 @@ namespace EthernetLinkConfig
         {
             FrmChangeListeningPort fChangeListeningPort = new FrmChangeListeningPort();
             fChangeListeningPort.ShowDialog();
+        }
+
+        private void PreventAlphaCharacters(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void logToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FLog = new FrmLog();
+            FLog.Show();
         }
         
         // ----------------------------------------------------------------------------------
