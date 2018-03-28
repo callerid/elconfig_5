@@ -502,14 +502,7 @@ namespace EthernetLinkConfig
 
             // UNIT NUMBER-----------------------
             UnitNumber = "";
-            int unitStartPos = 4;
-            
-            /* IF NIC CARD -----
-            if (ckbNIC.Checked)
-            {
-                unitStartPos = 5;
-            }
-             ------------------- */
+            int unitStartPos = 57;
 
             for (int i = unitStartPos; i <= unitStartPos + 5; i++)
             {
@@ -774,7 +767,7 @@ namespace EthernetLinkConfig
                 case "btnUnlockDestMAC":
 
                     SendUdp("^^IdC" + tbDestMAC.Text.Replace(":", ""), LinkPorts.MainPort);
-                    Common.AddToLogFile("Destination MAC", PreviousDestMAC, tbDestMAC.Text.Replace(":", "-"));
+                    Common.AddToLogFile("Destination MAC", PreviousDestMAC.Replace(":","-"), tbDestMAC.Text.Replace(":", "-"));
 
                     break;
 
@@ -787,13 +780,18 @@ namespace EthernetLinkConfig
         {
             if (!(sender is Button)) return;
 
-            lbNeedsSaving.Visible = true;
-
             Button btn = (Button)sender;
 
             switch (btn.Name)
             {
                 case "btnUnlockUnitNumber":
+
+                    if (FoundIPs.Count > 1 && FrmMain.SendToIP == "255.255.255.255")
+                    {
+                        FrmMultipleUnits fMultiUnits = new FrmMultipleUnits();
+                        fMultiUnits.Show();
+                        return;
+                    }
 
                     if (btn.Text == "Change")
                     {
@@ -802,6 +800,8 @@ namespace EthernetLinkConfig
                         tbUnitNumber.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -812,11 +812,10 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockIPAddress":
 
-                    if (FoundIPs.Count > 1)
+                    if (FoundIPs.Count > 1 && FrmMain.SendToIP == "255.255.255.255")
                     {
-                        string alert = "Unplug all but one unit to change IP address.";
-
-                        MessageBox.Show(new Form() { TopMost = true }, alert, "Multiple Units Detected", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        FrmMultipleUnits fMultiUnits = new FrmMultipleUnits();
+                        fMultiUnits.Show();
                         return;
                     }
                     
@@ -827,6 +826,8 @@ namespace EthernetLinkConfig
                         tbIP.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -856,6 +857,8 @@ namespace EthernetLinkConfig
                         tbMAC.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -880,6 +883,8 @@ namespace EthernetLinkConfig
                         tbDestPort.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -901,6 +906,8 @@ namespace EthernetLinkConfig
                         tbDestIP.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -928,6 +935,8 @@ namespace EthernetLinkConfig
                         tbDestMAC.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
+                        lbNeedsSaving.Visible = true;
+                        lbNeedsSaving.ForeColor = Color.Red;
                     }
                     else
                     {
@@ -1008,11 +1017,11 @@ namespace EthernetLinkConfig
                     string suggestedIP = "192.168.0.90";
                     if (lastInt > 50 && lastInt < 100)
                     {
-                        suggestedIP = computerIPParts[0] + "." + computerIPParts[0] + "." + computerIPParts[0] + ".190";
+                        suggestedIP = computerIPParts[0] + "." + computerIPParts[1] + "." + computerIPParts[2] + ".190";
                     }
                     else
                     {
-                        suggestedIP = computerIPParts[0] + "." + computerIPParts[0] + "." + computerIPParts[0] + ".90";
+                        suggestedIP = computerIPParts[0] + "." + computerIPParts[1] + "." + computerIPParts[2] + ".90";
                     }
 
                     string message = "Set a static IP address within the IP scheme either outside the DHCP range or a value that would not create an IP conflict with another device on the network." + Environment.NewLine+Environment.NewLine+
@@ -1656,14 +1665,6 @@ namespace EthernetLinkConfig
 
             tbDestMAC.Text = GetComputerMAC().Replace("-", ":");
 
-        }
-        
-        private void EscChangingParameter(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                ReEnableAllUnlocks();
-            }
         }
 
         private void msiLogCallRecords_Click(object sender, EventArgs e)

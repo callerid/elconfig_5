@@ -146,7 +146,7 @@ namespace EthernetLinkConfig.Classes
             }
 
             string write_line = log;
-            string divider = "-------------------------------------------------------------------------";
+            string divider = "---------------------------------------------------------------------------";
 
             File.WriteAllText(filename, write_line + Environment.NewLine + divider + Environment.NewLine + current_log);
         }

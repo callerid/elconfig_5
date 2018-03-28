@@ -69,6 +69,7 @@
             this.setupUnicastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.duplicateTrackingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.msiLogCallRecords = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
@@ -115,7 +116,6 @@
             this.imgConnected = new System.Windows.Forms.PictureBox();
             this.rtbHint = new System.Windows.Forms.RichTextBox();
             this.lbHintHeader = new System.Windows.Forms.Label();
-            this.msiLogCallRecords = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdLogCallLog = new System.Windows.Forms.SaveFileDialog();
             this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
@@ -207,7 +207,6 @@
             this.tbIP.Size = new System.Drawing.Size(111, 22);
             this.tbIP.TabIndex = 1;
             this.tbIP.Text = "...";
-            this.tbIP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -229,7 +228,6 @@
             this.tbMAC.Name = "tbMAC";
             this.tbMAC.Size = new System.Drawing.Size(171, 24);
             this.tbMAC.TabIndex = 5;
-            this.tbMAC.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -251,7 +249,6 @@
             this.tbUnitNumber.Name = "tbUnitNumber";
             this.tbUnitNumber.Size = new System.Drawing.Size(111, 22);
             this.tbUnitNumber.TabIndex = 7;
-            this.tbUnitNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbUnitNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
             this.tbUnitNumber.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbUnitNumber.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -283,7 +280,6 @@
             this.tbDestMAC.Name = "tbDestMAC";
             this.tbDestMAC.Size = new System.Drawing.Size(171, 24);
             this.tbDestMAC.TabIndex = 13;
-            this.tbDestMAC.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -311,7 +307,6 @@
             this.tbDestIP.Size = new System.Drawing.Size(111, 22);
             this.tbDestIP.TabIndex = 11;
             this.tbDestIP.Text = "...";
-            this.tbDestIP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -334,7 +329,6 @@
             this.tbDestPort.Size = new System.Drawing.Size(38, 22);
             this.tbDestPort.TabIndex = 15;
             this.tbDestPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbDestPort.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
             this.tbDestPort.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestPort.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -497,6 +491,13 @@
             this.duplicateTrackingToolStripMenuItem.Text = "Duplicate Tracking";
             this.duplicateTrackingToolStripMenuItem.Visible = false;
             this.duplicateTrackingToolStripMenuItem.Click += new System.EventHandler(this.duplicateTrackingToolStripMenuItem_Click);
+            // 
+            // msiLogCallRecords
+            // 
+            this.msiLogCallRecords.Name = "msiLogCallRecords";
+            this.msiLogCallRecords.Size = new System.Drawing.Size(224, 22);
+            this.msiLogCallRecords.Text = "Start Logging Call Records";
+            this.msiLogCallRecords.Click += new System.EventHandler(this.msiLogCallRecords_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -987,13 +988,6 @@
             this.lbHintHeader.Size = new System.Drawing.Size(63, 13);
             this.lbHintHeader.TabIndex = 55;
             this.lbHintHeader.Text = "ELConfig 5";
-            // 
-            // msiLogCallRecords
-            // 
-            this.msiLogCallRecords.Name = "msiLogCallRecords";
-            this.msiLogCallRecords.Size = new System.Drawing.Size(224, 22);
-            this.msiLogCallRecords.Text = "Start Logging Call Records";
-            this.msiLogCallRecords.Click += new System.EventHandler(this.msiLogCallRecords_Click);
             // 
             // FrmMain
             // 

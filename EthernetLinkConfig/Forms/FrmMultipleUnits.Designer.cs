@@ -43,7 +43,7 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "ELConfig has detected multiple units on the Network.\r\n\r\nUse Menu: Tools / Setup U" +
                 "nicast to configure one\r\nunit at a time.  Or, disconnect all but one unit from \r" +
-                "\nthe Network.";
+                "\nthe Network and relaunch ELConfig 5.";
             // 
             // btnOk
             // 
