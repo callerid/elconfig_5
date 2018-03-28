@@ -10,6 +10,7 @@ using EthernetLinkConfig.Classes;
 using System.Threading;
 using System.Text.RegularExpressions;
 using EthernetLinkConfig.Forms;
+using System.Net.NetworkInformation;
 
 
 namespace EthernetLinkConfig
@@ -25,6 +26,8 @@ namespace EthernetLinkConfig
         public bool HaveShownDupResetWindow = false;
         public bool WaitingForNewIP = false;
         public string ChangingIPTo = "";
+        public bool LoggingCallRecords = false;
+        public string LogPath = "";
 
         // Forms
         FrmSetLineCount FSetLineCount = new FrmSetLineCount(0);
@@ -779,7 +782,7 @@ namespace EthernetLinkConfig
                     return;
             }
         }
-
+        
         private void Unlocks(object sender, EventArgs e)
         {
             if (!(sender is Button)) return;
@@ -799,7 +802,6 @@ namespace EthernetLinkConfig
                         tbUnitNumber.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
-                        DisableAllUnlocksExcept(btn.Name);
                     }
                     else
                     {
@@ -828,6 +830,13 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
+
+                        if (!(Common.IsValidIP(tbIP.Text)))
+                        {
+                            Common.MessageBox("Invalid IP Address.", "Invalid", true);
+                            return;
+                        }
+
                         btn.Text = "Change";
                         tbIP.Enabled = false;
                         WaitingForNewIP = true;
@@ -895,6 +904,13 @@ namespace EthernetLinkConfig
                     }
                     else
                     {
+
+                        if (!(Common.IsValidIP(tbDestIP.Text)))
+                        {
+                            Common.MessageBox("Invalid IP Address.", "Invalid", true);
+                            return;
+                        }
+
                         btn.Text = "Change";
                         tbDestIP.Enabled = false;
                         UpdateParameter(btn.Name);
@@ -933,26 +949,6 @@ namespace EthernetLinkConfig
 
         }
         
-        private void DisableAllUnlocksExcept(string btnName)
-        {
-            foreach (Control ctrl in Controls)
-            {
-                if (!(ctrl is Panel)) continue;
-
-                if (ctrl.Name != "panChangers") continue;
-
-                foreach (Control pan_ctrl in ctrl.Controls)
-                {
-                    if (!(pan_ctrl is Button)) continue;
-
-                    if (pan_ctrl.Name.Contains("btnUnlock"))
-                    {
-                        if (pan_ctrl.Name != btnName) pan_ctrl.Enabled = false;
-                    }
-                }                
-            }
-        }
-
         private void ReEnableAllUnlocks()
         {
             foreach (Control ctrl in Controls)
@@ -1004,7 +1000,29 @@ namespace EthernetLinkConfig
                 case "tbIP":
 
                     lbHintHeader.Text = "Unit IP Address:";
-                    rtbHint.Text = "Set a static IP address within the IP scheme either outside the DHCP range or a value that would not create an IP conflict with another device on the network.";
+                    string computerIP = GetComputerIP();
+
+                    string[] computerIPParts = computerIP.Split('.');
+                    int lastInt = int.Parse(computerIPParts[3]);
+
+                    string suggestedIP = "192.168.0.90";
+                    if (lastInt > 50 && lastInt < 100)
+                    {
+                        suggestedIP = computerIPParts[0] + "." + computerIPParts[0] + "." + computerIPParts[0] + ".190";
+                    }
+                    else
+                    {
+                        suggestedIP = computerIPParts[0] + "." + computerIPParts[0] + "." + computerIPParts[0] + ".90";
+                    }
+
+                    string message = "Set a static IP address within the IP scheme either outside the DHCP range or a value that would not create an IP conflict with another device on the network." + Environment.NewLine+Environment.NewLine+
+                        "Based on this computer’s IP address of: [computer_ip] the suggested IP of the unit should be: [suggested_ip].";
+
+                    message = message.Replace("[computer_ip]", computerIP);
+                    message = message.Replace("[suggested_ip]", suggestedIP);
+
+                    rtbHint.Text = message;
+
 
                     break;
 
@@ -1159,6 +1177,15 @@ namespace EthernetLinkConfig
             dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NUMBER_INDEX].Value = number;
             dgvPhoneData.Rows[dgvPhoneData.Rows.Count - 1].Cells[DGV_PHONE_DATA_NAME_INDEX].Value = name;
             dgvPhoneData.FirstDisplayedScrollingRowIndex = dgvPhoneData.Rows.Count - 1;
+
+            if (LoggingCallRecords)
+            {
+                if(!(string.IsNullOrEmpty(sfdLogCallLog.FileName)))
+                {
+                    string export_line = ln.PadLeft(2, '0') + "  " + io + "  " + se + "  " + dur + "  " + cs + "  " + ring + "  " + date + "  " + time + "  " + number + "  " + name;
+                    Common.AddToCallLogFile(sfdLogCallLog.FileName, export_line);
+                }
+            }
         }
         
         // -----------------------------------------------------------------
@@ -1412,7 +1439,7 @@ namespace EthernetLinkConfig
 
         private void displayComputerIPAddressToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP(), "Computer IP Address", true, -1);
+            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP() + Environment.NewLine + Environment.NewLine+"Your MAC: " + GetComputerMAC() , "Computer IP Address", true, -1);
         }
 
         private string GetComputerIP()
@@ -1423,6 +1450,16 @@ namespace EthernetLinkConfig
         
             return strIPAddress;
 
+        }
+
+        private string GetComputerMAC()
+        {
+
+            var macAddr = (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                           where nic.OperationalStatus == OperationalStatus.Up
+                           select nic.GetPhysicalAddress().ToString()).FirstOrDefault();
+
+            return macAddr.Substring(0, 2) + "-" + macAddr.Substring(2, 2) + "-" + macAddr.Substring(4, 2) + "-" + macAddr.Substring(6, 2) + "-" + macAddr.Substring(8, 2) + "-" + macAddr.Substring(10, 2);
         }
 
         private void setUnitToCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1607,6 +1644,52 @@ namespace EthernetLinkConfig
         {
             FLog = new FrmLog();
             FLog.Show();
+        }
+
+        private void btnDestMAC_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (btnUnlockDestMAC.Text == "Change") return;
+
+            if (!(e.Button == System.Windows.Forms.MouseButtons.Right)) return;
+
+            if (MessageBox.Show("Change to this computer's MAC Address?", "Use Computer MAC?", MessageBoxButtons.YesNo) == DialogResult.No) return;
+
+            tbDestMAC.Text = GetComputerMAC().Replace("-", ":");
+
+        }
+        
+        private void EscChangingParameter(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                ReEnableAllUnlocks();
+            }
+        }
+
+        private void msiLogCallRecords_Click(object sender, EventArgs e)
+        {
+            if (msiLogCallRecords.Text == "Start Logging Call Records")
+            {
+                sfdLogCallLog.Filter = "Text File | *.txt";
+
+                DialogResult result = sfdLogCallLog.ShowDialog();
+
+                if (result != System.Windows.Forms.DialogResult.OK) return;
+
+                if (string.IsNullOrEmpty(sfdLogCallLog.FileName))
+                {
+                    Common.MessageBox("Invalid file path.", "Invalid");
+                    return;
+                }
+
+                msiLogCallRecords.Text = "Stop Logging Call Records";
+                LoggingCallRecords = true;
+            }
+            else
+            {
+                msiLogCallRecords.Text = "Start Logging Call Records";
+                LoggingCallRecords = false;
+            }
         }
         
         // ----------------------------------------------------------------------------------

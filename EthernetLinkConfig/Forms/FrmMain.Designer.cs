@@ -115,6 +115,8 @@
             this.imgConnected = new System.Windows.Forms.PictureBox();
             this.rtbHint = new System.Windows.Forms.RichTextBox();
             this.lbHintHeader = new System.Windows.Forms.Label();
+            this.msiLogCallRecords = new System.Windows.Forms.ToolStripMenuItem();
+            this.sfdLogCallLog = new System.Windows.Forms.SaveFileDialog();
             this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -205,6 +207,7 @@
             this.tbIP.Size = new System.Drawing.Size(111, 22);
             this.tbIP.TabIndex = 1;
             this.tbIP.Text = "...";
+            this.tbIP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -226,6 +229,7 @@
             this.tbMAC.Name = "tbMAC";
             this.tbMAC.Size = new System.Drawing.Size(171, 24);
             this.tbMAC.TabIndex = 5;
+            this.tbMAC.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -247,6 +251,7 @@
             this.tbUnitNumber.Name = "tbUnitNumber";
             this.tbUnitNumber.Size = new System.Drawing.Size(111, 22);
             this.tbUnitNumber.TabIndex = 7;
+            this.tbUnitNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbUnitNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
             this.tbUnitNumber.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbUnitNumber.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -278,6 +283,7 @@
             this.tbDestMAC.Name = "tbDestMAC";
             this.tbDestMAC.Size = new System.Drawing.Size(171, 24);
             this.tbDestMAC.TabIndex = 13;
+            this.tbDestMAC.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -305,6 +311,7 @@
             this.tbDestIP.Size = new System.Drawing.Size(111, 22);
             this.tbDestIP.TabIndex = 11;
             this.tbDestIP.Text = "...";
+            this.tbDestIP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -327,6 +334,7 @@
             this.tbDestPort.Size = new System.Drawing.Size(38, 22);
             this.tbDestPort.TabIndex = 15;
             this.tbDestPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbDestPort.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EscChangingParameter);
             this.tbDestPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PreventAlphaCharacters);
             this.tbDestPort.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestPort.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -438,7 +446,8 @@
             this.unlockTogglesToolStripMenuItem,
             this.setupUnicastToolStripMenuItem,
             this.toolStripSeparator5,
-            this.duplicateTrackingToolStripMenuItem});
+            this.duplicateTrackingToolStripMenuItem,
+            this.msiLogCallRecords});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -446,45 +455,45 @@
             // displayComputerIPAddressToolStripMenuItem
             // 
             this.displayComputerIPAddressToolStripMenuItem.Name = "displayComputerIPAddressToolStripMenuItem";
-            this.displayComputerIPAddressToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.displayComputerIPAddressToolStripMenuItem.Text = "Display Computer &IP Address";
+            this.displayComputerIPAddressToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.displayComputerIPAddressToolStripMenuItem.Text = "Computer &IP / MAC Address";
             this.displayComputerIPAddressToolStripMenuItem.Click += new System.EventHandler(this.displayComputerIPAddressToolStripMenuItem_Click);
             // 
             // pingToolStripMenuItem
             // 
             this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
-            this.pingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.pingToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.pingToolStripMenuItem.Text = "Ping";
             this.pingToolStripMenuItem.Click += new System.EventHandler(this.pingToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(224, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(221, 6);
             // 
             // unlockTogglesToolStripMenuItem
             // 
             this.unlockTogglesToolStripMenuItem.Name = "unlockTogglesToolStripMenuItem";
-            this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.unlockTogglesToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.unlockTogglesToolStripMenuItem.Text = "Display Toggles";
             this.unlockTogglesToolStripMenuItem.Click += new System.EventHandler(this.unlockTogglesToolStripMenuItem_Click);
             // 
             // setupUnicastToolStripMenuItem
             // 
             this.setupUnicastToolStripMenuItem.Name = "setupUnicastToolStripMenuItem";
-            this.setupUnicastToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.setupUnicastToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.setupUnicastToolStripMenuItem.Text = "Setup Uni-cast";
             this.setupUnicastToolStripMenuItem.Click += new System.EventHandler(this.setupUnicastToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(224, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
             // 
             // duplicateTrackingToolStripMenuItem
             // 
             this.duplicateTrackingToolStripMenuItem.Name = "duplicateTrackingToolStripMenuItem";
-            this.duplicateTrackingToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.duplicateTrackingToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.duplicateTrackingToolStripMenuItem.Text = "Duplicate Tracking";
             this.duplicateTrackingToolStripMenuItem.Visible = false;
             this.duplicateTrackingToolStripMenuItem.Click += new System.EventHandler(this.duplicateTrackingToolStripMenuItem_Click);
@@ -713,6 +722,7 @@
             this.btnUnlockDestMAC.Text = "Change";
             this.btnUnlockDestMAC.UseVisualStyleBackColor = true;
             this.btnUnlockDestMAC.Click += new System.EventHandler(this.Unlocks);
+            this.btnUnlockDestMAC.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDestMAC_MouseDown);
             this.btnUnlockDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.btnUnlockDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
@@ -978,6 +988,13 @@
             this.lbHintHeader.TabIndex = 55;
             this.lbHintHeader.Text = "ELConfig 5";
             // 
+            // msiLogCallRecords
+            // 
+            this.msiLogCallRecords.Name = "msiLogCallRecords";
+            this.msiLogCallRecords.Size = new System.Drawing.Size(224, 22);
+            this.msiLogCallRecords.Text = "Start Logging Call Records";
+            this.msiLogCallRecords.Click += new System.EventHandler(this.msiLogCallRecords_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1120,6 +1137,8 @@
         public System.Windows.Forms.TextBox tbDestPort;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem logToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem msiLogCallRecords;
+        private System.Windows.Forms.SaveFileDialog sfdLogCallLog;
     }
 }
 

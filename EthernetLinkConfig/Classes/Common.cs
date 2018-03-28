@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -108,6 +109,13 @@ namespace EthernetLinkConfig.Classes
             return pingable;
         }
 
+        public static bool IsValidIP(string ip)
+        {
+            Match m = Regex.Match(ip, @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+
+            return m.Success;
+        }
+
         public static void AddToLogFile(string field, string changed_from, string changed_to)
         {
             string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -127,6 +135,20 @@ namespace EthernetLinkConfig.Classes
                 "Changed To: " + changed_to + Environment.NewLine + "Changed From: " + changed_from;
 
             File.WriteAllText(my_docs_path + @"\CallerID.com\ELConfig5\log.txt", write_line + Environment.NewLine + Environment.NewLine + current_log);
+        }
+
+        public static void AddToCallLogFile(string filename, string log)
+        {
+            string current_log = "";
+            if (File.Exists(filename))
+            {
+                current_log = File.ReadAllText(filename);
+            }
+
+            string write_line = log;
+            string divider = "-------------------------------------------------------------------------";
+
+            File.WriteAllText(filename, write_line + Environment.NewLine + divider + Environment.NewLine + current_log);
         }
 
         public static string ReadLog()

@@ -44,8 +44,8 @@ namespace EthernetLinkConfig.Forms
             if (result)
             {
                 lbResponse.Visible = true;
-                panResponse.BackColor = Color.LightGreen;
-                lbResponse.BackColor = Color.LightGreen;
+                panResponse.BackColor = Common.C_GREENISH;
+                lbResponse.BackColor = Common.C_GREENISH;
                 lbResponse.ForeColor = Color.DarkGreen;
                 lbResponse.Text = "IP Address Responded";
             }

@@ -46,6 +46,13 @@ namespace EthernetLinkConfig.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+
+            if (!(Common.IsValidIP(ipSendIPAddress.Text)))
+            {
+                Common.MessageBox("Invalid IP Address", "Invalid", true);
+                return;
+            }
+
             FrmMain.SendToIP = ipSendIPAddress.Text;
             Close();
         }
