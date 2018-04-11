@@ -217,7 +217,7 @@ namespace EthernetLinkConfig
         private void HandleAllReception(int port)
         {
 
-            LinkPorts.SetMainPort(port);
+            LinkPorts.SetMainPort(port, true);
 
             // Handle UDP Reception
             string reception;
@@ -255,7 +255,7 @@ namespace EthernetLinkConfig
                 ReEnableAllUnlocks();
             }
 
-            if (receptionBytes.Length == 28)
+            if (receptionBytes.Length == 28 || receptionBytes.Length == 52)
             {
 
                 Match fVersionBoot = Regex.Match(reception, @"V(\d\.\d)");
@@ -620,13 +620,25 @@ namespace EthernetLinkConfig
             Dups = receptionBytes[75];
             lbDups.Text = "# Of Dups: " + Dups.ToString();
 
-            if (Dups > 1 && !HaveShownDupResetWindow)
+            if (Dups >= 254)
             {
-                HaveShownDupResetWindow = true;
-                FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne(Dups);
-                fDupsOverOne.Show();
+                lbDups.Visible = false;
+                ckbIgnoreDups.Visible = false;
+                sendDuplicateCallRecordsToolStripMenuItem.Visible = false;
             }
+            else
+            {
+                lbDups.Visible = true;
+                ckbIgnoreDups.Visible = true;
+                sendDuplicateCallRecordsToolStripMenuItem.Visible = true;
 
+                if (Dups > 1 && !HaveShownDupResetWindow)
+                {
+                    HaveShownDupResetWindow = true;
+                    FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne(Dups);
+                    fDupsOverOne.Show();
+                }
+            }
         }
 
         public static void SendUdp(string toSend, int port)

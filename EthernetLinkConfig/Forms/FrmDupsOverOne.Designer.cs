@@ -66,8 +66,8 @@
             // 
             // FrmDupsOverOne
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(386, 122);
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnResetDupsToOne);
