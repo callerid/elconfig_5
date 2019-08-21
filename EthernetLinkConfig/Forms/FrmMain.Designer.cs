@@ -113,10 +113,15 @@
             this.timerPreviousReceptionHandliing = new System.Windows.Forms.Timer(this.components);
             this.lbUnlock = new System.Windows.Forms.Label();
             this.timerFoundIPChecker = new System.Windows.Forms.Timer(this.components);
-            this.imgConnected = new System.Windows.Forms.PictureBox();
             this.rtbHint = new System.Windows.Forms.RichTextBox();
             this.lbHintHeader = new System.Windows.Forms.Label();
             this.sfdLogCallLog = new System.Windows.Forms.SaveFileDialog();
+            this.btnQ = new System.Windows.Forms.Button();
+            this.btnJ = new System.Windows.Forms.Button();
+            this.btnR = new System.Windows.Forms.Button();
+            this.btnBlockingConfig = new System.Windows.Forms.Button();
+            this.imgConnected = new System.Windows.Forms.PictureBox();
+            this.lbDupsPossible = new System.Windows.Forms.Label();
             this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -127,8 +132,8 @@
             // 
             // panStatus
             // 
-            this.panStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panStatus.BackColor = System.Drawing.Color.OldLace;
             this.panStatus.Controls.Add(this.lbDeluxeUnitDetected);
             this.panStatus.Controls.Add(this.lbNeedsSaving);
@@ -529,8 +534,8 @@
             // 
             this.dgvCommData.AllowUserToAddRows = false;
             this.dgvCommData.AllowUserToDeleteRows = false;
-            this.dgvCommData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvCommData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvCommData.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvCommData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCommData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -555,9 +560,9 @@
             // 
             this.dgvPhoneData.AllowUserToAddRows = false;
             this.dgvPhoneData.AllowUserToDeleteRows = false;
-            this.dgvPhoneData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvPhoneData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPhoneData.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvPhoneData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPhoneData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -958,18 +963,6 @@
             this.timerFoundIPChecker.Interval = 750;
             this.timerFoundIPChecker.Tick += new System.EventHandler(this.timerFoundIPChecker_Tick);
             // 
-            // imgConnected
-            // 
-            this.imgConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.imgConnected.BackColor = System.Drawing.Color.Pink;
-            this.imgConnected.Image = global::EthernetLinkConfig.Properties.Resources.connected;
-            this.imgConnected.Location = new System.Drawing.Point(12, 630);
-            this.imgConnected.Name = "imgConnected";
-            this.imgConnected.Size = new System.Drawing.Size(17, 26);
-            this.imgConnected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgConnected.TabIndex = 17;
-            this.imgConnected.TabStop = false;
-            // 
             // rtbHint
             // 
             this.rtbHint.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -989,11 +982,84 @@
             this.lbHintHeader.TabIndex = 55;
             this.lbHintHeader.Text = "ELConfig 5";
             // 
+            // btnQ
+            // 
+            this.btnQ.Location = new System.Drawing.Point(321, 248);
+            this.btnQ.Name = "btnQ";
+            this.btnQ.Size = new System.Drawing.Size(32, 22);
+            this.btnQ.TabIndex = 56;
+            this.btnQ.Text = "Q";
+            this.btnQ.UseVisualStyleBackColor = true;
+            this.btnQ.Visible = false;
+            this.btnQ.Click += new System.EventHandler(this.CommandButtonSend);
+            // 
+            // btnJ
+            // 
+            this.btnJ.Location = new System.Drawing.Point(359, 248);
+            this.btnJ.Name = "btnJ";
+            this.btnJ.Size = new System.Drawing.Size(32, 22);
+            this.btnJ.TabIndex = 57;
+            this.btnJ.Text = "J";
+            this.btnJ.UseVisualStyleBackColor = true;
+            this.btnJ.Visible = false;
+            this.btnJ.Click += new System.EventHandler(this.CommandButtonSend);
+            // 
+            // btnR
+            // 
+            this.btnR.Location = new System.Drawing.Point(397, 248);
+            this.btnR.Name = "btnR";
+            this.btnR.Size = new System.Drawing.Size(32, 22);
+            this.btnR.TabIndex = 58;
+            this.btnR.Text = "R";
+            this.btnR.UseVisualStyleBackColor = true;
+            this.btnR.Visible = false;
+            this.btnR.Click += new System.EventHandler(this.CommandButtonSend);
+            // 
+            // btnBlockingConfig
+            // 
+            this.btnBlockingConfig.Location = new System.Drawing.Point(213, 248);
+            this.btnBlockingConfig.Name = "btnBlockingConfig";
+            this.btnBlockingConfig.Size = new System.Drawing.Size(102, 22);
+            this.btnBlockingConfig.TabIndex = 59;
+            this.btnBlockingConfig.Text = "Blocking Config.";
+            this.btnBlockingConfig.UseVisualStyleBackColor = true;
+            this.btnBlockingConfig.Visible = false;
+            this.btnBlockingConfig.Click += new System.EventHandler(this.btnBlockingConfig_Click);
+            // 
+            // imgConnected
+            // 
+            this.imgConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.imgConnected.BackColor = System.Drawing.Color.Pink;
+            this.imgConnected.Image = global::EthernetLinkConfig.Properties.Resources.connected;
+            this.imgConnected.Location = new System.Drawing.Point(12, 630);
+            this.imgConnected.Name = "imgConnected";
+            this.imgConnected.Size = new System.Drawing.Size(17, 26);
+            this.imgConnected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgConnected.TabIndex = 17;
+            this.imgConnected.TabStop = false;
+            // 
+            // lbDupsPossible
+            // 
+            this.lbDupsPossible.AutoSize = true;
+            this.lbDupsPossible.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDupsPossible.ForeColor = System.Drawing.Color.ForestGreen;
+            this.lbDupsPossible.Location = new System.Drawing.Point(570, 47);
+            this.lbDupsPossible.Name = "lbDupsPossible";
+            this.lbDupsPossible.Size = new System.Drawing.Size(204, 13);
+            this.lbDupsPossible.TabIndex = 60;
+            this.lbDupsPossible.Text = "Duplicates available for Wireless Apps";
+            this.lbDupsPossible.Visible = false;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(799, 662);
+            this.Controls.Add(this.lbDupsPossible);
+            this.Controls.Add(this.btnBlockingConfig);
+            this.Controls.Add(this.btnR);
+            this.Controls.Add(this.btnJ);
+            this.Controls.Add(this.btnQ);
             this.Controls.Add(this.lbHintHeader);
             this.Controls.Add(this.rtbHint);
             this.Controls.Add(this.lbUnlock);
@@ -1061,7 +1127,6 @@
         private IPAddressControlLib.IPAddressControl tbDestIP;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox imgConnected;
-        private System.Windows.Forms.Timer timerRefresher;
         private System.Windows.Forms.MenuStrip mnuMain;
         private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
         private System.Windows.Forms.Label lbConnected;
@@ -1133,6 +1198,12 @@
         private System.Windows.Forms.ToolStripMenuItem logToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem msiLogCallRecords;
         private System.Windows.Forms.SaveFileDialog sfdLogCallLog;
+        private System.Windows.Forms.Button btnQ;
+        private System.Windows.Forms.Button btnJ;
+        private System.Windows.Forms.Button btnR;
+        private System.Windows.Forms.Button btnBlockingConfig;
+        private System.Windows.Forms.Label lbDupsPossible;
+        public System.Windows.Forms.Timer timerRefresher;
     }
 }
 

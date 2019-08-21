@@ -1,6 +1,6 @@
 ﻿namespace EthernetLinkConfig.Forms
 {
-    partial class FrmMultipleUnits
+    partial class FrmMultiplePorts
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMultipleUnits));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMultiplePorts));
             this.label1 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -39,15 +39,15 @@
             this.label1.ForeColor = System.Drawing.Color.DarkRed;
             this.label1.Location = new System.Drawing.Point(20, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(283, 65);
+            this.label1.Size = new System.Drawing.Size(283, 39);
             this.label1.TabIndex = 0;
-            this.label1.Text = "ELConfig has detected multiple units on the Network.\r\n\r\nUse Menu: Tools / Setup U" +
-    "nicast to configure one\r\nunit at a time.  Or, disconnect all but one unit from \r" +
-    "\nthe Network and relaunch ELConfig 5.";
+            this.label1.Text = "ELConfig received responses from multiple UDP ports.\r\n\r\nPlease re-power the Whozz" +
+    " Calling? unit. \r\n";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(121, 100);
+            this.btnOk.Location = new System.Drawing.Point(121, 82);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -55,20 +55,20 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // FrmMultipleUnits
+            // FrmMultiplePorts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(316, 135);
+            this.ClientSize = new System.Drawing.Size(316, 126);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "FrmMultipleUnits";
+            this.Name = "FrmMultiplePorts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Multiple Units";
+            this.Text = "Multiple Ports";
             this.ResumeLayout(false);
             this.PerformLayout();
 

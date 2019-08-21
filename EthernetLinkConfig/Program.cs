@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using EthernetLinkConfig.Classes;
+using EthernetLinkConfig.Forms;
 
 namespace EthernetLinkConfig
 {
@@ -10,6 +11,7 @@ namespace EthernetLinkConfig
     {
 
         public static FrmMain FMain = null;
+        public static FrmBlockingConfig FBlockingConfig = null;
 
         /// <summary>
         /// The main entry point for the application.

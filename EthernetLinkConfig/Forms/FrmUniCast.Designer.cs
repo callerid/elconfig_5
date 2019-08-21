@@ -35,6 +35,7 @@
             this.btnUseBroadcast = new System.Windows.Forms.Button();
             this.tvFoundIPs = new System.Windows.Forms.TreeView();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ipSendIPAddress
@@ -44,7 +45,7 @@
             this.ipSendIPAddress.BackColor = System.Drawing.SystemColors.Window;
             this.ipSendIPAddress.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ipSendIPAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.ipSendIPAddress.Location = new System.Drawing.Point(141, 24);
+            this.ipSendIPAddress.Location = new System.Drawing.Point(155, 104);
             this.ipSendIPAddress.MinimumSize = new System.Drawing.Size(84, 22);
             this.ipSendIPAddress.Name = "ipSendIPAddress";
             this.ipSendIPAddress.ReadOnly = false;
@@ -55,15 +56,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 27);
+            this.label1.Location = new System.Drawing.Point(41, 107);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(123, 13);
+            this.label1.Size = new System.Drawing.Size(108, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Send all commands to:";
+            this.label1.Text = "Send commands to:";
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(241, 52);
+            this.btnSave.Location = new System.Drawing.Point(87, 168);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(87, 23);
             this.btnSave.TabIndex = 3;
@@ -73,9 +74,9 @@
             // 
             // btnUseBroadcast
             // 
-            this.btnUseBroadcast.Location = new System.Drawing.Point(140, 52);
+            this.btnUseBroadcast.Location = new System.Drawing.Point(145, 132);
             this.btnUseBroadcast.Name = "btnUseBroadcast";
-            this.btnUseBroadcast.Size = new System.Drawing.Size(95, 23);
+            this.btnUseBroadcast.Size = new System.Drawing.Size(97, 23);
             this.btnUseBroadcast.TabIndex = 4;
             this.btnUseBroadcast.Text = "Use Broadcast";
             this.btnUseBroadcast.UseVisualStyleBackColor = true;
@@ -83,26 +84,37 @@
             // 
             // tvFoundIPs
             // 
-            this.tvFoundIPs.Location = new System.Drawing.Point(12, 94);
+            this.tvFoundIPs.Location = new System.Drawing.Point(12, 33);
             this.tvFoundIPs.Name = "tvFoundIPs";
-            this.tvFoundIPs.Size = new System.Drawing.Size(313, 64);
+            this.tvFoundIPs.Size = new System.Drawing.Size(230, 65);
             this.tvFoundIPs.TabIndex = 5;
             this.tvFoundIPs.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvFoundIPs_AfterSelect);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 78);
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(139, 13);
+            this.label2.Size = new System.Drawing.Size(119, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Or Use A Found IP Below:";
+            this.label2.Text = "Units Found, Select IP";
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(182, 4);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(60, 23);
+            this.btnRefresh.TabIndex = 7;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // FrmUniCast
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(340, 171);
+            this.ClientSize = new System.Drawing.Size(257, 195);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tvFoundIPs);
             this.Controls.Add(this.btnUseBroadcast);
@@ -129,5 +141,6 @@
         private System.Windows.Forms.Button btnUseBroadcast;
         private System.Windows.Forms.TreeView tvFoundIPs;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }

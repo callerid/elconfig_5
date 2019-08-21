@@ -33,7 +33,7 @@ namespace EthernetLinkConfig.Classes
             Done = false;
 
             // Setup filter for too small messages
-            const int filterMessageSmallerThan = 4;
+            const int filterMessageSmallerThan = 6;
 
             // Setup socket for listening
             bool bound = false;
@@ -141,7 +141,7 @@ namespace EthernetLinkConfig.Classes
             Done = false;
 
             // Setup filter for too small messages
-            const int filterMessageSmallerThan = 4;
+            const int filterMessageSmallerThan = 6;
 
             // Setup socket for listening
             bool bound = false;
@@ -247,7 +247,7 @@ namespace EthernetLinkConfig.Classes
             Done = false;
 
             // Setup filter for too small messages
-            const int filterMessageSmallerThan = 4;
+            const int filterMessageSmallerThan = 6;
 
             // Setup socket for listening
             bool bound = false;

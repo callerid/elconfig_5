@@ -71,9 +71,13 @@ namespace EthernetLinkConfig.Classes
                 {
                     StartOrEnd = "S";
                 }
-                else
+                else if(CallMatch.Groups[3].Value == "E")
                 {
                     StartOrEnd = "E";
+                }
+                else
+                {
+                    StartOrEnd = "B";
                 }
 
                 Duration = int.Parse(CallMatch.Groups[4].Value.ToString());
@@ -81,7 +85,15 @@ namespace EthernetLinkConfig.Classes
                 RingType = CallMatch.Groups[6].Value;
                 RingNumber = int.Parse(CallMatch.Groups[7].Value.ToString());
 
-                DateTime = DateTime.ParseExact(CallMatch.Groups[8].Value.ToString(), "MM/dd hh:mm tt", new CultureInfo("en-US"));
+                try
+                {
+                    DateTime = DateTime.ParseExact(CallMatch.Groups[8].Value.ToString(), "MM/dd hh:mm tt", new CultureInfo("en-US"));
+                }
+                catch(Exception)
+                {
+                    DateTime = DateTime.Now;
+                }
+                
 
                 PhoneNumber = CallMatch.Groups[9].Value;
                 Name = CallMatch.Groups[10].Value;
@@ -133,7 +145,7 @@ namespace EthernetLinkConfig.Classes
 
         public bool IsInternalBlock()
         {
-            if (InboundOrOutboundOrBlock == "B") return true;
+            if (InboundOrOutboundOrBlock == "B" || StartOrEnd == "B") return true;
             return false;
         }
 

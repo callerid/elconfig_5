@@ -12,7 +12,7 @@ namespace EthernetLinkConfig.Forms
 {
     public partial class FrmMessageBox : Form
     {
-        public FrmMessageBox(string message, string title, bool ok_only = true, int auto_close_ms = -1)
+        public FrmMessageBox(string message, string title, bool ok_only = true, int auto_close_ms = -1, bool disable_ok_button=false)
         {
             InitializeComponent();
             Common.DrawColors(this);
@@ -20,6 +20,12 @@ namespace EthernetLinkConfig.Forms
             tbText.Text = Environment.NewLine + Environment.NewLine + message;
 
             if (ok_only) btnCancel.Visible = false;
+
+            if (disable_ok_button)
+            {
+                btnOK.Enabled = false;
+                if (auto_close_ms < 1500) auto_close_ms = 1500;
+            }
 
             if (auto_close_ms > -1)
             {

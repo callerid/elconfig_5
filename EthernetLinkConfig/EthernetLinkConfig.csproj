@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\Local VS Builds\ELConfig5\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -57,6 +57,12 @@
     <Compile Include="Classes\Common.cs" />
     <Compile Include="Classes\LinkPortsClass.cs" />
     <Compile Include="Classes\UdpRecieverClass.cs" />
+    <Compile Include="Forms\FrmBlockingConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmBlockingConfig.Designer.cs">
+      <DependentUpon>FrmBlockingConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmChangeListeningPort.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +98,12 @@
     </Compile>
     <Compile Include="Forms\FrmMessageBox.Designer.cs">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmMultiplePorts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmMultiplePorts.Designer.cs">
+      <DependentUpon>FrmMultiplePorts.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmMultipleUnits.cs">
       <SubType>Form</SubType>
@@ -137,6 +149,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmBlockingConfig.resx">
+      <DependentUpon>FrmBlockingConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeListeningPort.resx">
       <DependentUpon>FrmChangeListeningPort.cs</DependentUpon>
     </EmbeddedResource>
@@ -154,6 +169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMessageBox.resx">
       <DependentUpon>FrmMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmMultiplePorts.resx">
+      <DependentUpon>FrmMultiplePorts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMultipleUnits.resx">
       <DependentUpon>FrmMultipleUnits.cs</DependentUpon>

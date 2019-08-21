@@ -20,11 +20,18 @@ namespace EthernetLinkConfig.Forms
 
             ipSendIPAddress.Text = FrmMain.SendToIP;
 
-            foreach (string ip in FrmMain.FoundIPs)
-            {
-                tvFoundIPs.Nodes.Add(ip);
-            }
+            PopulateList();
 
+        }
+
+        private void PopulateList()
+        {
+            tvFoundIPs.Nodes.Clear();
+            foreach (string ip in FrmMain.FoundUnitIPs)
+            {
+                string entry = ip + (FrmMain.LinkPorts.MultipleIPsExists(ip) ? " (Multiple Units)" : "");
+                tvFoundIPs.Nodes.Add(entry);
+            }
         }
 
         private void btnUseBroadcast_Click(object sender, EventArgs e)
@@ -34,9 +41,9 @@ namespace EthernetLinkConfig.Forms
 
         private void btnUseFound_Click(object sender, EventArgs e)
         {
-            if (FrmMain.FoundIPs.Count > 0)
+            if (FrmMain.FoundUnitIPs.Count > 0)
             {
-                ipSendIPAddress.Text = FrmMain.FoundIPs[0];
+                ipSendIPAddress.Text = FrmMain.FoundUnitIPs[0];
             }
             else
             {
@@ -46,21 +53,56 @@ namespace EthernetLinkConfig.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            string selected_ip = ipSendIPAddress.Text.Replace(" (Multiple Units)", "");
 
-            if (!(Common.IsValidIP(ipSendIPAddress.Text)))
+            if (!(Common.IsValidIP(selected_ip)))
             {
                 Common.MessageBox("Invalid IP Address", "Invalid", true);
                 return;
             }
 
-            FrmMain.SendToIP = ipSendIPAddress.Text;
+            if (FrmMain.LinkPorts.MultipleIPsExists(selected_ip))
+            {
+                MessageBox.Show("Two or more units on same IP address.  Power one unit at a time to configure.", "Multiple Units");
+                return;
+            }
+
+            FrmMain.SendToIP = selected_ip;
+            Program.FMain.HaveShownMultipleUnitMessage = false;
+
+            int new_port = FrmMain.LinkPorts.GetPortOfIP(selected_ip);
+            if(new_port != -1)
+            {
+                FrmMain.LinkPorts.SetMainPort(new_port, true);
+            }
+
+            Program.FMain.timerRefresher.Interval = 10;
+
             Close();
         }
 
         private void tvFoundIPs_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            string ip = tvFoundIPs.SelectedNode.Text;
+            string ip = tvFoundIPs.SelectedNode.Text.Replace(" (Multiple Units)", "");;
             ipSendIPAddress.Text = ip;
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            FrmMain.LinkPorts.ResetPorts();
+
+            FrmMain.SendToIP = "255.255.255.255";
+
+            FrmMain.SendUdp("^^IdX", 6699);
+            Common.WaitFor(250);
+            FrmMain.SendUdp("^^IdX", 3520);
+
+            FrmMain.SendUdp("^^IdX", 6699);
+            Common.WaitFor(250);
+            FrmMain.SendUdp("^^IdX", 3520);
+
+            Common.MessageBox("Refreshing...", "Refreshing", true, 3000, true);
+            PopulateList();
         }
     }
 }

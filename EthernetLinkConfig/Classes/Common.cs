@@ -170,10 +170,10 @@ namespace EthernetLinkConfig.Classes
         }
 
         // -----------------------------------------
-        public static DialogResult MessageBox(string mText, string mTitle, bool ok_only = true, int auto_close_ms = 1500)
+        public static DialogResult MessageBox(string mText, string mTitle, bool ok_only = true, int auto_close_ms = 1500, bool disable_ok_button = false)
         {
             DialogResult result;
-            using (var fMsgBox = new FrmMessageBox(mText, mTitle, ok_only, auto_close_ms))
+            using (var fMsgBox = new FrmMessageBox(mText, mTitle, ok_only, auto_close_ms, disable_ok_button))
             {
                 result = fMsgBox.ShowDialog();
 
