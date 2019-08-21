@@ -63,7 +63,7 @@ namespace EthernetLinkConfig.Forms
 
             if (FrmMain.LinkPorts.MultipleIPsExists(selected_ip))
             {
-                MessageBox.Show("Two or more units on same IP address.  Power one unit at a time to configure.", "Multiple Units");
+                MessageBox.Show("Two or more units on same IP address.  Power one unit at a time to configure. Use 'Refresh' button to update unit list.", "Multiple Units");
                 return;
             }
 
