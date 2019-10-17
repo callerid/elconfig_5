@@ -11,7 +11,8 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using EthernetLinkConfig.Forms;
 using System.Net.NetworkInformation;
-
+using System.Net.Sockets;
+using System.Net;
 
 namespace EthernetLinkConfig
 {
@@ -277,7 +278,7 @@ namespace EthernetLinkConfig
                 }
             }
 
-            LinkPorts.AddPort(port, ip);
+            //LinkPorts.AddPort(port, ip);
 
             if (receptionBytes.Length == 31)
             {
@@ -406,7 +407,6 @@ namespace EthernetLinkConfig
             lbConnected.Visible = true;
             imgConnected.Visible = true;
             lbListeningOn.Visible = true;
-            lbListeningOn.Text = "Listening On\nPort: " + LinkPorts.MainPort;
 
             // ------------------------------------------------------------------------
             // If Call Record
@@ -672,6 +672,19 @@ namespace EthernetLinkConfig
             }
             DestPort = Convert.ToInt32(DestPort, 16).ToString();
 
+            int dest_port = int.Parse(DestPort);
+            LinkPorts.AddPort(dest_port, TheIPAddress);
+            LinkPorts.SetMainPort(dest_port, true);
+
+            if(dest_port != 3520 && dest_port != 6699)
+            {
+                // Use custom receiver
+                UdpReceiverClassCustom.Done = true;
+
+                StartCustomReceiver(dest_port);
+
+            }
+
             if (!tbDestPort.Enabled)
             {
                 tbDestPort.Text = DestPort;
@@ -831,6 +844,10 @@ namespace EthernetLinkConfig
 
         private void SetToggleVisibility(bool visible)
         {
+            if (btnRetrieveToggles.Visible) return;
+
+            if (LinkPorts.MainPort == 0) visible = false;
+
             foreach (Control ctrl in Controls)
             {
                 if (!(ctrl is Button)) continue;
@@ -942,9 +959,10 @@ namespace EthernetLinkConfig
                         return;
                     }
                     
-                    if (btn.Text == "Change")
+                    if (btn.Text.Contains("Set"))
                     {
                         PreviousTheIPAddress = tbIP.Text;
+                        tbIP.Text = GetComputerIP().Substring(0, GetComputerIP().LastIndexOf(".")) + ".90";
                         btn.Text = "Save";
                         tbIP.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
@@ -961,7 +979,7 @@ namespace EthernetLinkConfig
                             return;
                         }
 
-                        btn.Text = "Change";
+                        btn.Text = "Set Unit IP to Suggested";
                         tbIP.Enabled = false;
                         WaitingForNewIP = true;
                         ChangingIPTo = tbIP.Text;
@@ -1011,7 +1029,7 @@ namespace EthernetLinkConfig
 
                     if (btn.Text == "Change")
                     {
-                        string message = "The 2 default Network Ports suuported by ELConfig are 3520 and 6699." + Environment.NewLine + Environment.NewLine + "Changing the port number that the unit sends to other than these 2 default ports is not reccomended." + Environment.NewLine + Environment.NewLine + "Do so only if absolutely neccesary for your application." + Environment.NewLine + Environment.NewLine + "Are you sure you wish to change the Destination Port now?";
+                        string message = "The 2 default Network Ports suported by ELConfig are 3520 and 6699." + Environment.NewLine + Environment.NewLine + "Changing the port number that the unit sends to other than these 2 default ports is not reccomended." + Environment.NewLine + Environment.NewLine + "Do so only if absolutely neccesary for your application." + Environment.NewLine + Environment.NewLine + "Are you sure you wish to change the Destination Port now?";
 
                         if (MessageBox.Show(new Form() { TopMost = true }, message, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No) return;
 
@@ -1020,7 +1038,6 @@ namespace EthernetLinkConfig
                         tbDestPort.Enabled = true;
                         btn.BackColor = Common.C_NEEDS_SAVING;
                         NeedsSaving = true;
-                        LinkPorts.ResetPorts();
                         lbNeedsSaving.Visible = true;
                         lbNeedsSaving.ForeColor = Color.Red;
                     }
@@ -1106,7 +1123,6 @@ namespace EthernetLinkConfig
             }
 
             Common.WaitFor(250);
-            timerRefresher_Tick(new object(), new EventArgs());
 
         }
         
@@ -1124,6 +1140,13 @@ namespace EthernetLinkConfig
                     {
                         if (pan_ctrl.Name.Contains("btnUnlock"))
                         {
+                            if(pan_ctrl.Name == "btnUnlockIPAddress")
+                            {
+                                pan_ctrl.Enabled = true;
+                                pan_ctrl.Text = "Set IP to Suggested";
+                                pan_ctrl.BackColor = Common.C_BUTTON_BACK;
+                                continue;
+                            }
                             pan_ctrl.Enabled = true;
                             pan_ctrl.Text = "Change";
                             pan_ctrl.BackColor = Common.C_BUTTON_BACK;
@@ -1316,9 +1339,24 @@ namespace EthernetLinkConfig
         }
 
         // -----------------------------------------------------------------
-
+        private bool CheckingToggles = false;
         private void AddToCommData(string message)
         {
+            
+            if(dgvCommData.Rows.Count > 0)
+            {
+                string previous = dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString();
+
+                Match m = Regex.Match(previous, @"([Ee])([Cc])([Xx])([Uu])([Dd])([Aa])([Ss])([Oo])([Bb])([Kk])([Tt]) L=(\d{1,2}) (\d{1,2}/\d{1,2}) (\d{1,2}:\d{1,2}:\d{1,2})");
+
+                if (m.Success && !CheckingToggles)
+                { 
+                    return;
+                }
+            }
+
+            CheckingToggles = false;
+
             dgvCommData.Rows.Add();
             dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value = message;
             dgvCommData.FirstDisplayedScrollingRowIndex = dgvCommData.Rows.Count - 1;
@@ -1348,12 +1386,48 @@ namespace EthernetLinkConfig
                 }
             }
         }
-        
-        // -----------------------------------------------------------------
 
-        private void timerRefresher_Tick(object sender, EventArgs e)
+        // -----------------------------------------------------------------
+        public void timerRefresher_Tick(object sender, EventArgs e)
         {
             timerRefresher.Interval = 1000;
+
+            if(fComputerMsg != null)
+            {
+                if (fComputerMsg.Visible) fComputerMsg.timerRefresher_Tick(null, null);
+            }
+
+            bool bound = false;
+            switch (LinkPorts.MainPort)
+            {
+                case 3520:
+
+                    bound = UdpReceiverClass3520.IsBound;
+
+                    break;
+
+                case 6699:
+
+                    bound = UdpReceiverClass6699.IsBound;
+
+                    break;
+
+                default:
+
+                    bound = UdpReceiverClassCustom.IsBound;
+
+                    break;
+            }
+            
+            if (bound)
+            {
+                lbListeningOn.Text = "Listening on: " + LinkPorts.MainPort;
+            }
+            else
+            {
+                lbListeningOn.Text = "Failed to bind";
+                ConnectionPings = 5;
+            }
 
             ConnectionPings += 1;
             
@@ -1367,7 +1441,6 @@ namespace EthernetLinkConfig
                 lbListeningOn.BackColor = Color.Pink;
                 lbNeedsSaving.BackColor = Color.Pink;
                 lbConnected.Text = "NOT Connected";
-                lbListeningOn.Text = "Listening...";
                 lbUnitFoundIP.Visible = false;
 
                 ResetDisplay();
@@ -1387,9 +1460,9 @@ namespace EthernetLinkConfig
                         }
                     }
                 }
-
+                
                 // Reset for fast poling unit
-                timerRefresher.Interval = 4000;
+                timerRefresher.Interval = 1000;
 
             }
             else
@@ -1409,7 +1482,6 @@ namespace EthernetLinkConfig
                 imgConnected.Visible = true;
                 imgConnected.BackColor = Common.C_GREENISH;
                 lbListeningOn.Visible = true;
-                lbListeningOn.Text = "Listening On\nPort: " + LinkPorts.MainPort;
                 panStatus.BackColor = Common.C_GREENISH;
                 lbConnected.BackColor = Common.C_GREENISH;
                 lbDeluxeUnitDetected.BackColor = Common.C_GREENISH;
@@ -1424,6 +1496,10 @@ namespace EthernetLinkConfig
                 SendUdp("^^IdX", 6699);
                 Common.WaitFor(250);
                 SendUdp("^^IdX", 3520);
+                Common.WaitFor(250);
+                SendUdp("^^Id-V", 6699);
+                Common.WaitFor(250);
+                SendUdp("^^Id-V", 3520);
 
                 if (!AlwaysShowToggles)
                 {
@@ -1441,19 +1517,13 @@ namespace EthernetLinkConfig
                 {
                     SendUdp("^^IdX", linkedPort);
                     Common.WaitFor(100);
+                    SendUdp("^^Id-V", linkedPort);
+                    Common.WaitFor(100);
                     SendUdp("^^IdV", linkedPort);
                     Common.WaitFor(100);
                 }
 
-                // Reset to slow poling
-                if (ConnectionPings < 4)
-                {
-                    timerRefresher.Interval = 6000;
-                }
-                else
-                {
-                    timerRefresher.Interval = 4000;
-                }
+                timerRefresher.Interval = 4000;
 
                 if (LinkPorts.ContainsPort(6699))
                 {
@@ -1571,6 +1641,7 @@ namespace EthernetLinkConfig
 
         public void btnRetrieveToggles_Click(object sender, EventArgs e)
         {
+            CheckingToggles = true;
             SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
             SendUdp("^^Id-V", LinkPorts.MainPort);
@@ -1592,6 +1663,7 @@ namespace EthernetLinkConfig
 
         private void resetEthernetDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
             SendUdp("^^IdDFFFFFFFF", LinkPorts.MainPort); //External IP
             Common.WaitFor(250);
             SendUdp("^^IdU000000000001", LinkPorts.MainPort); //Unit ID
@@ -1602,6 +1674,12 @@ namespace EthernetLinkConfig
             Common.WaitFor(250);
             SendUdp("^^IdT0DC0", LinkPorts.MainPort); //Port Number
             Common.WaitFor(250);
+
+            int intVal = 1;
+            string hexStr = intVal.ToString("X").PadLeft(2, '0');
+            int previous_dups = Dups;
+            SendUdp("^^IdO" + hexStr, LinkPorts.MainPort);
+            Common.AddToLogFile("Duplicates", previous_dups.ToString(), intVal.ToString());
 
             Common.MessageBox("Command Sent.", "Finished");
 
@@ -1618,13 +1696,30 @@ namespace EthernetLinkConfig
             btnRetrieveToggles_Click(new object(), new EventArgs());
         }
 
+        public FrmComputerIP fComputerMsg = null;
         private void displayComputerIPAddressToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Common.MessageBox(Environment.NewLine + "Your IP: " + GetComputerIP() + Environment.NewLine + Environment.NewLine+"Your MAC: " + GetComputerMAC() , "Computer IP Address", true, -1);
+            fComputerMsg = new FrmComputerIP(GetComputerIP(), GetComputerMAC(), tbDestIP.Text, tbDestMAC.Text);
+            fComputerMsg.Show();
         }
 
         private string GetComputerIP()
         {
+
+            if (Common.IsRunningOnMono())
+            {
+
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return ip.ToString();
+                    }
+                }
+                throw new Exception("No network adapters with an IPv4 address in the system!");
+
+            }
 
             string strHostName = System.Net.Dns.GetHostName();
             string strIPAddress = System.Net.Dns.GetHostByName(strHostName).AddressList[0].ToString();
@@ -1913,7 +2008,6 @@ namespace EthernetLinkConfig
             if (!tbUnitNumber.Focused) tbUnitNumber.Text = "NO UNIT";
             if (!tbIP.Focused) tbIP.Text = "0.0.0.0";
             if (!tbMAC.Focused) tbMAC.Text = "00:00:00:00:00:00";
-            if (!tbDestPort.Focused) tbDestPort.Text = "n/a";
             if (!tbDestIP.Focused) tbDestIP.Text = "0.0.0.0";
             if (!tbDestMAC.Focused) tbDestMAC.Text = "00:00:00:00:00:00";
 
@@ -1930,6 +2024,12 @@ namespace EthernetLinkConfig
             UpdateToggles();
 
 
+        }
+
+        private void boundStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoundStatus fBound = new BoundStatus();
+            fBound.ShowDialog();
         }
     }
 }

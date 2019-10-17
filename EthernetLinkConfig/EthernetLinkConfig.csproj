@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Local VS Builds\ELConfig5\</OutputPath>
+    <OutputPath>..\..\..\..\..\Local VS Builds\ELConfig5_MAC\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,6 +37,9 @@
   <ItemGroup>
     <Reference Include="IPAddressControlLib">
       <HintPath>.\IPAddressControlLib.dll</HintPath>
+    </Reference>
+    <Reference Include="IPControlsClass">
+      <HintPath>..\..\..\..\..\Local VS Builds\IPControlsClass\IPControlsClass.dll</HintPath>
     </Reference>
     <Reference Include="matb">
       <HintPath>.\matb.dll</HintPath>
@@ -57,6 +60,12 @@
     <Compile Include="Classes\Common.cs" />
     <Compile Include="Classes\LinkPortsClass.cs" />
     <Compile Include="Classes\UdpRecieverClass.cs" />
+    <Compile Include="Forms\BoundStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BoundStatus.Designer.cs">
+      <DependentUpon>BoundStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmBlockingConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +77,12 @@
     </Compile>
     <Compile Include="Forms\FrmChangeListeningPort.Designer.cs">
       <DependentUpon>FrmChangeListeningPort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmComputerIP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmComputerIP.Designer.cs">
+      <DependentUpon>FrmComputerIP.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmDuplicateTracking.cs">
       <SubType>Form</SubType>
@@ -141,6 +156,12 @@
     <Compile Include="Forms\FrmSetLineCountWithDipSwitches.Designer.cs">
       <DependentUpon>FrmSetLineCountWithDipSwitches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmTimerMsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTimerMsgBox.Designer.cs">
+      <DependentUpon>FrmTimerMsgBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmUniCast.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,11 +170,19 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\BoundStatus.resx">
+      <DependentUpon>BoundStatus.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmBlockingConfig.resx">
       <DependentUpon>FrmBlockingConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeListeningPort.resx">
       <DependentUpon>FrmChangeListeningPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmComputerIP.resx">
+      <DependentUpon>FrmComputerIP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDuplicateTracking.resx">
       <DependentUpon>FrmDuplicateTracking.cs</DependentUpon>
@@ -190,6 +219,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSetLineCountWithDipSwitches.resx">
       <DependentUpon>FrmSetLineCountWithDipSwitches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmTimerMsgBox.resx">
+      <DependentUpon>FrmTimerMsgBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmUniCast.resx">
       <DependentUpon>FrmUniCast.cs</DependentUpon>

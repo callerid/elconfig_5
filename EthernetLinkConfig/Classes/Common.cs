@@ -27,6 +27,11 @@ namespace EthernetLinkConfig.Classes
         public static Color C_NEEDS_SAVING = Color.FromArgb(251, 215, 218);
         public static Color C_GREENISH = Color.FromArgb(189, 221, 189);
 
+        public static bool IsRunningOnMono()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
+
         public static void DrawColors(Form frm)
         {
             frm.BackColor = Color.WhiteSmoke;
@@ -118,6 +123,12 @@ namespace EthernetLinkConfig.Classes
 
         public static void AddToLogFile(string field, string changed_from, string changed_to)
         {
+
+            if (Common.IsRunningOnMono())
+            {
+                return;
+            }
+
             string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             if(!(Directory.Exists(my_docs_path + @"\CallerID.com\ELConfig5")))
@@ -135,10 +146,17 @@ namespace EthernetLinkConfig.Classes
                 "Changed To: " + changed_to + Environment.NewLine + "Changed From: " + changed_from;
 
             File.WriteAllText(my_docs_path + @"\CallerID.com\ELConfig5\log.txt", write_line + Environment.NewLine + Environment.NewLine + current_log);
+
         }
 
         public static void AddToCallLogFile(string filename, string log)
         {
+
+            if (Common.IsRunningOnMono())
+            {
+                return;
+            }
+
             string current_log = "";
             if (File.Exists(filename))
             {
@@ -153,6 +171,11 @@ namespace EthernetLinkConfig.Classes
 
         public static string ReadLog()
         {
+
+            if (Common.IsRunningOnMono())
+            {
+                return "";
+            }
 
             string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 

@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -11,12 +12,14 @@ namespace EthernetLinkConfig.Classes
     public class UdpReceiverClass6699
     {
         // Declare variables
+        public static string StatusString = "";
         public static Boolean Done;
         public static string ReceivedMessage;
         public static byte[] ReceviedMessageByte;
         public static string LastIncomingIPAddress;
         public static int[] NListenPorts = new int[] { 6699 };
         public static string BoundTo;
+        public static bool IsBound = false;
 
         // Define event
         public delegate void UdpEventHandler(UdpReceiverClass6699 u, EventArgs e);
@@ -28,6 +31,35 @@ namespace EthernetLinkConfig.Classes
         UdpClient sendClient = new UdpClient();
         public void UdpIdleReceive()
         {
+
+            // Check if port already bound
+            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
+
+            if(alreadyinuse)
+            {
+                string programName = Common.GetProgramBoundToUDPPort(6699);
+                string message = "Another Program[possible_program] is Bound to Port 6699. Please close the other program and then relaunch ELConfig.";
+
+                if (programName == "EthernetLinkConfig")
+                {
+                    alreadyinuse = false;
+                }
+                else
+                {
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", " (" + programName + ")");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
+
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Program found on port.";
+                    return;
+                }
+            }
 
             // Set done to false so loop will begin
             Done = false;
@@ -55,29 +87,43 @@ namespace EthernetLinkConfig.Classes
             catch (Exception ex)
             {
                 bound = false;
-                Console.Write("Failed to bind: " + ex.ToString());
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write("Failed to bind: " + ex.ToString());
+                }
             }
 
             if (!bound)
             {
                 string programName = Common.GetProgramBoundToUDPPort(6699);
                 string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 6699. Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.";
-                if (programName != "none")
+
+                if (programName == "EthernetLinkConfig")
                 {
-                    message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    return;
                 }
                 else
                 {
-                    message.Replace("[possible_program]", "");
-                }
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
 
-                MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Failed to bind to port.";
+                    return;
+                }
             }
 
             // Wait for broadcast
             try
             {
+                StatusString = "Bound";
+                IsBound = true;
                 while (!Done)
                 {
                     // Receive broadcast
@@ -102,10 +148,15 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write(ex.ToString());
+                }
+                StatusString = "Listening failed.";
             }
 
             listener.Close();
+            StatusString = "Released bind.";
         }
 
         public void SendUDP(byte[] toSend)
@@ -119,12 +170,14 @@ namespace EthernetLinkConfig.Classes
     public class UdpReceiverClass3520
     {
         // Declare variables
+        public static string StatusString = "";
         public static Boolean Done;
         public static string ReceivedMessage;
         public static byte[] ReceviedMessageByte;
         public static string LastIncomingIPAddress;
         public static int[] NListenPorts = new int[] { 3520 };
         public static string BoundTo;
+        public static bool IsBound = false;
 
         // Define event
         public delegate void UdpEventHandler(UdpReceiverClass3520 u, EventArgs e);
@@ -136,6 +189,34 @@ namespace EthernetLinkConfig.Classes
         UdpClient sendClient = new UdpClient();
         public void UdpIdleReceive()
         {
+
+            // Check if port already bound
+            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 3520);
+
+            if (alreadyinuse)
+            {
+                string programName = Common.GetProgramBoundToUDPPort(3520);
+                if (programName == "EthernetLinkConfig")
+                {
+                    alreadyinuse = false;
+                }
+                else
+                {
+                    string message = "Another Program[possible_program] is Bound to Port 3520. Please close the other program and then relaunch ELConfig.";
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", " (" + programName + ")");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
+
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Program found on port.";
+                    return;
+                }
+            }
 
             // Set done to false so loop will begin
             Done = false;
@@ -163,30 +244,48 @@ namespace EthernetLinkConfig.Classes
             catch (Exception ex)
             {
                 bound = false;
-                Console.Write("Failed to bind: " + ex.ToString());
+
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write("Failed to bind: " + ex.ToString());
+                }
+
+                
             }
 
             if (!bound)
             {
                 string programName = Common.GetProgramBoundToUDPPort(3520);
                 string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port 3520. Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.";
-                if (programName != "none")
+
+                if (programName == "EthernetLinkConfig")
                 {
-                    message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    return;
                 }
                 else
                 {
-                    message.Replace("[possible_program]", "");
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
+
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Failed to bind to port.";
+                    return;
                 }
 
-                MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                return;
+                
             }
 
             // Wait for broadcast
             try
             {
+                StatusString = "Bound";
+                IsBound = true;
                 while (!Done)
                 {
                     // Receive broadcast
@@ -209,10 +308,15 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write(ex.ToString());
+                }
+                StatusString = "Listening failed.";
             }
 
             listener.Close();
+            StatusString = "Released bind.";
         }
 
         public void SendUDP(byte[] toSend)
@@ -226,12 +330,14 @@ namespace EthernetLinkConfig.Classes
     public class UdpReceiverClassCustom
     {
         // Declare variables
+        public static string StatusString = "";
         public static Boolean Done;
         public static string ReceivedMessage;
         public static byte[] ReceviedMessageByte;
         public static string LastIncomingIPAddress;
         public static int ListenOn;
         public static string BoundTo;
+        public static bool IsBound = false;
 
         // Define event
         public delegate void UdpEventHandler(UdpReceiverClassCustom u, EventArgs e);
@@ -243,6 +349,37 @@ namespace EthernetLinkConfig.Classes
         UdpClient sendClient = new UdpClient();
         public void UdpIdleReceive()
         {
+
+            // Check if port already bound
+            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == ListenOn);
+
+            if (alreadyinuse)
+            {
+                string programName = Common.GetProgramBoundToUDPPort(ListenOn);
+                string message = "Another Program[possible_program] is Bound to Port " + ListenOn + ". Please close the other program and then relaunch ELConfig.";
+
+                if(programName == "EthernetLinkConfig")
+                {
+                    alreadyinuse = false;
+                }
+                else
+                {
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", " (" + programName + ")");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
+
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Program found on port.";
+                    return;
+                }
+                
+            }
+
             // Set done to false so loop will begin
             Done = false;
 
@@ -269,29 +406,46 @@ namespace EthernetLinkConfig.Classes
             catch (Exception ex)
             {
                 bound = false;
-                Console.Write("Failed to bind: " + ex.ToString());
+
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write("Failed to bind: " + ex.ToString());
+                }
             }
 
             if (!bound)
             {
                 string programName = Common.GetProgramBoundToUDPPort(ListenOn);
                 string message = "The Ethernet Link Configuration Tool cannot bind to UDP Port " + ListenOn.ToString() + ". Another program [possible_program]is already bound to this port. Close any other application that uses Caller ID and relaunch ELConfig.\n\n";
-                if (programName != "none")
+
+                if (programName == "EthernetLinkConfig")
                 {
-                    message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    return;
                 }
                 else
                 {
-                    message.Replace("[possible_program]", "");
+                    if (programName != "none")
+                    {
+                        message = message.Replace("[possible_program]", "(" + programName + ") ");
+                    }
+                    else
+                    {
+                        message.Replace("[possible_program]", "");
+                    }
+
+                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusString = "Failed to bind to port.";
+                    return;
                 }
 
-                MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                
             }
 
             // Wait for broadcast
             try
             {
+                StatusString = "Bound";
+                IsBound = true;
                 while (!Done)
                 {
                     // Receive broadcast
@@ -316,10 +470,15 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                if (!Common.IsRunningOnMono())
+                {
+                    Console.Write(ex.ToString());
+                }
+                StatusString = "Listening failed.";
             }
 
             listener.Close();
+            StatusString = "Released bind.";
         }
 
         public void SendUDP(byte[] toSend)

@@ -36,7 +36,6 @@
             this.lbSendingTo = new System.Windows.Forms.Label();
             this.lbUnitFoundIP = new System.Windows.Forms.Label();
             this.lbListeningOn = new System.Windows.Forms.Label();
-            this.tbIP = new IPAddressControlLib.IPAddressControl();
             this.label1 = new System.Windows.Forms.Label();
             this.tbMAC = new ISEAGE.May610.Diagrammer.matb();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,7 +44,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbDestMAC = new ISEAGE.May610.Diagrammer.matb();
             this.label6 = new System.Windows.Forms.Label();
-            this.tbDestIP = new IPAddressControlLib.IPAddressControl();
             this.label7 = new System.Windows.Forms.Label();
             this.tbDestPort = new System.Windows.Forms.TextBox();
             this.timerRefresher = new System.Windows.Forms.Timer(this.components);
@@ -72,6 +70,7 @@
             this.msiLogCallRecords = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boundStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbConnected = new System.Windows.Forms.Label();
             this.dgvCommData = new System.Windows.Forms.DataGridView();
             this.dgvCommDataColDisplay = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -89,11 +88,13 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.btnUnlockUnitNumber = new System.Windows.Forms.Button();
-            this.btnUnlockIPAddress = new System.Windows.Forms.Button();
             this.btnUnlockDestPort = new System.Windows.Forms.Button();
             this.btnUnlockDestIP = new System.Windows.Forms.Button();
             this.btnUnlockDestMAC = new System.Windows.Forms.Button();
             this.panChangers = new System.Windows.Forms.Panel();
+            this.tbDestIP = new IPControlsClass.IPInput();
+            this.tbIP = new IPControlsClass.IPInput();
+            this.btnUnlockIPAddress = new System.Windows.Forms.Button();
             this.lbDups = new System.Windows.Forms.Label();
             this.ckbIgnoreDups = new System.Windows.Forms.CheckBox();
             this.btnRetrieveToggles = new System.Windows.Forms.Button();
@@ -139,6 +140,7 @@
             this.panStatus.Controls.Add(this.lbNeedsSaving);
             this.panStatus.Controls.Add(this.lbSendingTo);
             this.panStatus.Controls.Add(this.lbUnitFoundIP);
+            this.panStatus.Controls.Add(this.lbListeningOn);
             this.panStatus.Location = new System.Drawing.Point(-4, 629);
             this.panStatus.Name = "panStatus";
             this.panStatus.Size = new System.Drawing.Size(808, 40);
@@ -191,29 +193,11 @@
             this.lbListeningOn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbListeningOn.AutoSize = true;
             this.lbListeningOn.BackColor = System.Drawing.Color.Pink;
-            this.lbListeningOn.Location = new System.Drawing.Point(712, 634);
+            this.lbListeningOn.Location = new System.Drawing.Point(697, 5);
             this.lbListeningOn.Name = "lbListeningOn";
-            this.lbListeningOn.Size = new System.Drawing.Size(73, 26);
+            this.lbListeningOn.Size = new System.Drawing.Size(97, 26);
             this.lbListeningOn.TabIndex = 2;
-            this.lbListeningOn.Text = "Listening On\r\nPort: 3520";
-            // 
-            // tbIP
-            // 
-            this.tbIP.AllowInternalTab = false;
-            this.tbIP.AutoHeight = true;
-            this.tbIP.BackColor = System.Drawing.SystemColors.Window;
-            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbIP.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.tbIP.Enabled = false;
-            this.tbIP.Location = new System.Drawing.Point(162, 46);
-            this.tbIP.MinimumSize = new System.Drawing.Size(82, 22);
-            this.tbIP.Name = "tbIP";
-            this.tbIP.ReadOnly = false;
-            this.tbIP.Size = new System.Drawing.Size(111, 22);
-            this.tbIP.TabIndex = 1;
-            this.tbIP.Text = "...";
-            this.tbIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.tbIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
+            this.lbListeningOn.Text = "Listening On\r\nPort: 3520 && 6699";
             // 
             // label1
             // 
@@ -231,7 +215,7 @@
             this.tbMAC.Enabled = false;
             this.tbMAC.Location = new System.Drawing.Point(162, 74);
             this.tbMAC.Name = "tbMAC";
-            this.tbMAC.Size = new System.Drawing.Size(171, 24);
+            this.tbMAC.Size = new System.Drawing.Size(166, 24);
             this.tbMAC.TabIndex = 5;
             this.tbMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -283,7 +267,7 @@
             this.tbDestMAC.Enabled = false;
             this.tbDestMAC.Location = new System.Drawing.Point(162, 160);
             this.tbDestMAC.Name = "tbDestMAC";
-            this.tbDestMAC.Size = new System.Drawing.Size(171, 24);
+            this.tbDestMAC.Size = new System.Drawing.Size(166, 24);
             this.tbDestMAC.TabIndex = 13;
             this.tbDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.tbDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
@@ -296,24 +280,6 @@
             this.label6.Size = new System.Drawing.Size(123, 13);
             this.label6.TabIndex = 12;
             this.label6.Text = "Destination IP Address";
-            // 
-            // tbDestIP
-            // 
-            this.tbDestIP.AllowInternalTab = false;
-            this.tbDestIP.AutoHeight = true;
-            this.tbDestIP.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbDestIP.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.tbDestIP.Enabled = false;
-            this.tbDestIP.Location = new System.Drawing.Point(162, 132);
-            this.tbDestIP.MinimumSize = new System.Drawing.Size(82, 22);
-            this.tbDestIP.Name = "tbDestIP";
-            this.tbDestIP.ReadOnly = false;
-            this.tbDestIP.Size = new System.Drawing.Size(111, 22);
-            this.tbDestIP.TabIndex = 11;
-            this.tbDestIP.Text = "...";
-            this.tbDestIP.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.tbDestIP.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label7
             // 
@@ -375,64 +341,64 @@
             // resetEthernetDefaultsToolStripMenuItem
             // 
             this.resetEthernetDefaultsToolStripMenuItem.Name = "resetEthernetDefaultsToolStripMenuItem";
-            this.resetEthernetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.resetEthernetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.resetEthernetDefaultsToolStripMenuItem.Text = "Reset &Ethernet Defaults";
             this.resetEthernetDefaultsToolStripMenuItem.Click += new System.EventHandler(this.resetEthernetDefaultsToolStripMenuItem_Click);
             // 
             // setDeluxeUnitOutputDefaultsToolStripMenuItem
             // 
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Name = "setDeluxeUnitOutputDefaultsToolStripMenuItem";
-            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Text = "Set &Deluxe Unit Output Defaults";
             this.setDeluxeUnitOutputDefaultsToolStripMenuItem.Click += new System.EventHandler(this.setDeluxeUnitOutputDefaultsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(237, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(238, 6);
             // 
             // setUnitToCurrentTimeToolStripMenuItem
             // 
             this.setUnitToCurrentTimeToolStripMenuItem.Name = "setUnitToCurrentTimeToolStripMenuItem";
-            this.setUnitToCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setUnitToCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.setUnitToCurrentTimeToolStripMenuItem.Text = "Set Unit to &Current Time";
             this.setUnitToCurrentTimeToolStripMenuItem.Click += new System.EventHandler(this.setUnitToCurrentTimeToolStripMenuItem_Click);
             // 
             // setDeluxeUnitToBasicUnitToolStripMenuItem
             // 
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Name = "setDeluxeUnitToBasicUnitToolStripMenuItem";
-            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setDeluxeUnitToBasicUnitToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Text = "Set Deluxe Unit to &Basic Unit";
             this.setDeluxeUnitToBasicUnitToolStripMenuItem.Click += new System.EventHandler(this.setDeluxeUnitToBasicUnitToolStripMenuItem_Click);
             // 
             // setLineCountToolStripMenuItem
             // 
             this.setLineCountToolStripMenuItem.Name = "setLineCountToolStripMenuItem";
-            this.setLineCountToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.setLineCountToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.setLineCountToolStripMenuItem.Text = "Set Line Count";
             this.setLineCountToolStripMenuItem.Click += new System.EventHandler(this.setLineCountToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(237, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(238, 6);
             // 
             // sendDuplicateCallRecordsToolStripMenuItem
             // 
             this.sendDuplicateCallRecordsToolStripMenuItem.Name = "sendDuplicateCallRecordsToolStripMenuItem";
-            this.sendDuplicateCallRecordsToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.sendDuplicateCallRecordsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.sendDuplicateCallRecordsToolStripMenuItem.Text = "Send Duplicate Call &Records";
             this.sendDuplicateCallRecordsToolStripMenuItem.Click += new System.EventHandler(this.sendDuplicateCallRecordsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(237, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
             // 
             // listeningPortToolStripMenuItem
             // 
             this.listeningPortToolStripMenuItem.Name = "listeningPortToolStripMenuItem";
-            this.listeningPortToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.listeningPortToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.listeningPortToolStripMenuItem.Text = "Listening Port";
             this.listeningPortToolStripMenuItem.Click += new System.EventHandler(this.listeningPortToolStripMenuItem_Click);
             // 
@@ -448,7 +414,7 @@
             this.duplicateTrackingToolStripMenuItem,
             this.msiLogCallRecords});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // displayComputerIPAddressToolStripMenuItem
@@ -507,7 +473,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logToolStripMenuItem});
+            this.logToolStripMenuItem,
+            this.boundStatusToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -515,9 +482,16 @@
             // logToolStripMenuItem
             // 
             this.logToolStripMenuItem.Name = "logToolStripMenuItem";
-            this.logToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.logToolStripMenuItem.Text = "Change &Log";
             this.logToolStripMenuItem.Click += new System.EventHandler(this.logToolStripMenuItem_Click);
+            // 
+            // boundStatusToolStripMenuItem
+            // 
+            this.boundStatusToolStripMenuItem.Name = "boundStatusToolStripMenuItem";
+            this.boundStatusToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.boundStatusToolStripMenuItem.Text = "Bound Status";
+            this.boundStatusToolStripMenuItem.Click += new System.EventHandler(this.boundStatusToolStripMenuItem_Click);
             // 
             // lbConnected
             // 
@@ -526,7 +500,7 @@
             this.lbConnected.BackColor = System.Drawing.Color.Pink;
             this.lbConnected.Location = new System.Drawing.Point(35, 638);
             this.lbConnected.Name = "lbConnected";
-            this.lbConnected.Size = new System.Drawing.Size(88, 13);
+            this.lbConnected.Size = new System.Drawing.Size(89, 13);
             this.lbConnected.TabIndex = 1;
             this.lbConnected.Text = "NOT Connected";
             // 
@@ -683,18 +657,6 @@
             this.btnUnlockUnitNumber.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
             this.btnUnlockUnitNumber.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
-            // btnUnlockIPAddress
-            // 
-            this.btnUnlockIPAddress.Location = new System.Drawing.Point(339, 47);
-            this.btnUnlockIPAddress.Name = "btnUnlockIPAddress";
-            this.btnUnlockIPAddress.Size = new System.Drawing.Size(75, 23);
-            this.btnUnlockIPAddress.TabIndex = 25;
-            this.btnUnlockIPAddress.Text = "Change";
-            this.btnUnlockIPAddress.UseVisualStyleBackColor = true;
-            this.btnUnlockIPAddress.Click += new System.EventHandler(this.Unlocks);
-            this.btnUnlockIPAddress.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.btnUnlockIPAddress.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
-            // 
             // btnUnlockDestPort
             // 
             this.btnUnlockDestPort.Location = new System.Drawing.Point(339, 104);
@@ -734,9 +696,10 @@
             // 
             // panChangers
             // 
+            this.panChangers.Controls.Add(this.tbDestIP);
+            this.panChangers.Controls.Add(this.tbIP);
             this.panChangers.Controls.Add(this.btnUnlockUnitNumber);
             this.panChangers.Controls.Add(this.btnUnlockDestMAC);
-            this.panChangers.Controls.Add(this.tbIP);
             this.panChangers.Controls.Add(this.btnUnlockDestIP);
             this.panChangers.Controls.Add(this.label1);
             this.panChangers.Controls.Add(this.btnUnlockDestPort);
@@ -745,7 +708,6 @@
             this.panChangers.Controls.Add(this.btnUnlockIPAddress);
             this.panChangers.Controls.Add(this.tbUnitNumber);
             this.panChangers.Controls.Add(this.label3);
-            this.panChangers.Controls.Add(this.tbDestIP);
             this.panChangers.Controls.Add(this.label6);
             this.panChangers.Controls.Add(this.label7);
             this.panChangers.Controls.Add(this.tbDestMAC);
@@ -755,6 +717,42 @@
             this.panChangers.Name = "panChangers";
             this.panChangers.Size = new System.Drawing.Size(417, 206);
             this.panChangers.TabIndex = 30;
+            // 
+            // tbDestIP
+            // 
+            this.tbDestIP.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDestIP.Enabled = false;
+            this.tbDestIP.HexIP = "00000000";
+            this.tbDestIP.Location = new System.Drawing.Point(162, 132);
+            this.tbDestIP.MinimumSize = new System.Drawing.Size(125, 20);
+            this.tbDestIP.Name = "tbDestIP";
+            this.tbDestIP.Size = new System.Drawing.Size(126, 20);
+            this.tbDestIP.TabIndex = 31;
+            // 
+            // tbIP
+            // 
+            this.tbIP.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbIP.Enabled = false;
+            this.tbIP.HexIP = "00000000";
+            this.tbIP.Location = new System.Drawing.Point(162, 48);
+            this.tbIP.MinimumSize = new System.Drawing.Size(125, 20);
+            this.tbIP.Name = "tbIP";
+            this.tbIP.Size = new System.Drawing.Size(126, 20);
+            this.tbIP.TabIndex = 30;
+            // 
+            // btnUnlockIPAddress
+            // 
+            this.btnUnlockIPAddress.Location = new System.Drawing.Point(339, 47);
+            this.btnUnlockIPAddress.Name = "btnUnlockIPAddress";
+            this.btnUnlockIPAddress.Size = new System.Drawing.Size(75, 44);
+            this.btnUnlockIPAddress.TabIndex = 25;
+            this.btnUnlockIPAddress.Text = "Set IP to Suggested";
+            this.btnUnlockIPAddress.UseVisualStyleBackColor = true;
+            this.btnUnlockIPAddress.Click += new System.EventHandler(this.Unlocks);
+            this.btnUnlockIPAddress.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
+            this.btnUnlockIPAddress.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // lbDups
             // 
@@ -1080,7 +1078,6 @@
             this.Controls.Add(this.lbDups);
             this.Controls.Add(this.panChangers);
             this.Controls.Add(this.imgConnected);
-            this.Controls.Add(this.lbListeningOn);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.lbConnected);
             this.Controls.Add(this.label8);
@@ -1115,16 +1112,13 @@
         private System.Windows.Forms.Panel panStatus;
         private System.Windows.Forms.Label lbDeluxeUnitDetected;
         private System.Windows.Forms.Label lbListeningOn;
-        private IPAddressControlLib.IPAddressControl tbIP;
         private System.Windows.Forms.Label label1;
         private ISEAGE.May610.Diagrammer.matb tbMAC;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbUnitNumber;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
-        private ISEAGE.May610.Diagrammer.matb tbDestMAC;
         private System.Windows.Forms.Label label6;
-        private IPAddressControlLib.IPAddressControl tbDestIP;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox imgConnected;
         private System.Windows.Forms.MenuStrip mnuMain;
@@ -1135,7 +1129,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnUnlockUnitNumber;
-        private System.Windows.Forms.Button btnUnlockIPAddress;
         private System.Windows.Forms.Button btnUnlockDestPort;
         private System.Windows.Forms.Button btnUnlockDestIP;
         private System.Windows.Forms.Button btnUnlockDestMAC;
@@ -1204,6 +1197,11 @@
         private System.Windows.Forms.Button btnBlockingConfig;
         private System.Windows.Forms.Label lbDupsPossible;
         public System.Windows.Forms.Timer timerRefresher;
+        private System.Windows.Forms.ToolStripMenuItem boundStatusToolStripMenuItem;
+        public ISEAGE.May610.Diagrammer.matb tbDestMAC;
+        private System.Windows.Forms.Button btnUnlockIPAddress;
+        private IPControlsClass.IPInput tbIP;
+        public IPControlsClass.IPInput tbDestIP;
     }
 }
 
