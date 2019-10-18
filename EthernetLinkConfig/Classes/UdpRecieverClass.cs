@@ -558,7 +558,7 @@ namespace EthernetLinkConfig.Classes
 
             try
             {
-                sendClient.Send(toSend, toSend.Length, sendEndPoint);
+                //sendClient.Send(toSend, toSend.Length, sendEndPoint);
             }
             catch(Exception ex)
             {

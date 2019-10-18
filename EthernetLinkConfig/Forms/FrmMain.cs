@@ -1390,7 +1390,7 @@ namespace EthernetLinkConfig
         // -----------------------------------------------------------------
         public void timerRefresher_Tick(object sender, EventArgs e)
         {
-            timerRefresher.Interval = Program.IsMono ? 5000 : 1000;
+            timerRefresher.Interval = 1000;
 
             if(fComputerMsg != null)
             {
@@ -1460,9 +1460,9 @@ namespace EthernetLinkConfig
                         }
                     }
                 }
-
+                
                 // Reset for fast poling unit
-                timerRefresher.Interval = Program.IsMono ? 5000 : 1000;
+                timerRefresher.Interval = 1000;
 
             }
             else
@@ -1523,7 +1523,7 @@ namespace EthernetLinkConfig
                     Common.WaitFor(100);
                 }
 
-                timerRefresher.Interval = Program.IsMono ? 8000 : 4000;
+                timerRefresher.Interval = 4000;
 
                 if (LinkPorts.ContainsPort(6699))
                 {
@@ -1626,7 +1626,7 @@ namespace EthernetLinkConfig
                 }
             }
 
-            if (LinkPorts.AnyDuplicateIPs()) timerRefresher.Interval = Program.IsMono ? 8000 : 4000;
+            if (LinkPorts.AnyDuplicateIPs()) timerRefresher.Interval = 4000;
         }
 
         private void btnClearPhoneData_Click(object sender, EventArgs e)
