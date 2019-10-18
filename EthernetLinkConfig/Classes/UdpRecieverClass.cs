@@ -34,7 +34,7 @@ namespace EthernetLinkConfig.Classes
 
             // Check if port already bound
             bool alreadyinuse = false;
-            if (!Common.IsRunningOnMono())
+            if (!Program.IsMono)
             {
                 alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
             }
@@ -91,7 +91,7 @@ namespace EthernetLinkConfig.Classes
             catch (Exception ex)
             {
                 bound = false;
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write("Failed to bind: " + ex.ToString());
                 }
@@ -152,7 +152,7 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write(ex.ToString());
                 }
@@ -170,7 +170,7 @@ namespace EthernetLinkConfig.Classes
 
             IPEndPoint sendEndPoint;
 
-            if (Type.GetType("Mono.Runtime") != null)
+            if (Program.IsMono)
             {
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
@@ -216,7 +216,7 @@ namespace EthernetLinkConfig.Classes
 
             // Check if port already bound
             bool alreadyinuse = false;
-            if (!Common.IsRunningOnMono())
+            if (!Program.IsMono)
             {
                 alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
             }
@@ -273,7 +273,7 @@ namespace EthernetLinkConfig.Classes
             {
                 bound = false;
 
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write("Failed to bind: " + ex.ToString());
                 }
@@ -336,7 +336,7 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write(ex.ToString());
                 }
@@ -354,7 +354,7 @@ namespace EthernetLinkConfig.Classes
 
             IPEndPoint sendEndPoint;
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
@@ -400,7 +400,7 @@ namespace EthernetLinkConfig.Classes
 
             // Check if port already bound
             bool alreadyinuse = false;
-            if (!Common.IsRunningOnMono())
+            if (!Program.IsMono)
             {
                 alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
             }
@@ -459,7 +459,7 @@ namespace EthernetLinkConfig.Classes
             {
                 bound = false;
 
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write("Failed to bind: " + ex.ToString());
                 }
@@ -522,7 +522,7 @@ namespace EthernetLinkConfig.Classes
             }
             catch (Exception ex)
             {
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write(ex.ToString());
                 }
@@ -540,7 +540,7 @@ namespace EthernetLinkConfig.Classes
 
             IPEndPoint sendEndPoint;
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
@@ -562,7 +562,7 @@ namespace EthernetLinkConfig.Classes
             }
             catch(Exception ex)
             {
-                if (!Common.IsRunningOnMono())
+                if (!Program.IsMono)
                 {
                     Console.Write(ex.ToString());
                 }

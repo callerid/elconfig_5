@@ -124,7 +124,7 @@ namespace EthernetLinkConfig.Classes
         public static void AddToLogFile(string field, string changed_from, string changed_to)
         {
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
                 return;
             }
@@ -152,7 +152,7 @@ namespace EthernetLinkConfig.Classes
         public static void AddToCallLogFile(string filename, string log)
         {
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
                 return;
             }
@@ -172,7 +172,7 @@ namespace EthernetLinkConfig.Classes
         public static string ReadLog()
         {
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
                 return "";
             }

@@ -1706,7 +1706,7 @@ namespace EthernetLinkConfig
         private string GetComputerIP()
         {
 
-            if (Common.IsRunningOnMono())
+            if (Program.IsMono)
             {
 
                 var host = Dns.GetHostEntry(Dns.GetHostName());

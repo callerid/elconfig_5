@@ -12,6 +12,7 @@ namespace EthernetLinkConfig
 
         public static FrmMain FMain = null;
         public static FrmBlockingConfig FBlockingConfig = null;
+        public static bool IsMono = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -31,6 +32,7 @@ namespace EthernetLinkConfig
                 return;
             }
 
+            IsMono = Common.IsRunningOnMono();
 
             FMain = new FrmMain();
             Application.Run(FMain);
