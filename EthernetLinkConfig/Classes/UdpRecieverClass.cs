@@ -165,6 +165,9 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
+
+            if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
+
             IPEndPoint sendEndPoint;
 
             if (Common.IsRunningOnMono())
@@ -346,6 +349,9 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
+
+            if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
+
             IPEndPoint sendEndPoint;
 
             if (Common.IsRunningOnMono())
@@ -529,11 +535,13 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
+
+            if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
+
             IPEndPoint sendEndPoint;
 
             if (Common.IsRunningOnMono())
             {
-                MessageBox.Show("IP: " + FrmMain.SendToIP);
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
                     sendEndPoint = new IPEndPoint(IPAddress.Any, ListenOn);
