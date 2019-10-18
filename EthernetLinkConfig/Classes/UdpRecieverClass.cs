@@ -533,6 +533,7 @@ namespace EthernetLinkConfig.Classes
 
             if (Common.IsRunningOnMono())
             {
+                MessageBox.Show("IP: " + FrmMain.SendToIP);
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
                     sendEndPoint = new IPEndPoint(IPAddress.Any, ListenOn);
