@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -75,13 +76,19 @@ namespace EthernetLinkConfig.Classes
 
         public static void WaitFor(int milliSeconds)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            while (sw.ElapsedMilliseconds < milliSeconds)
-            {
-                Application.DoEvents();
-            }
-            sw.Stop();
+            Delay((double)milliSeconds);
+            return;
+        }
+
+        public static Task Delay(double milliseconds)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Elapsed += (o, e) => tcs.TrySetResult(true);
+            timer.Interval = milliseconds;
+            timer.AutoReset = false;
+            timer.Start();
+            return tcs.Task;
         }
 
         public static string HexFromIP(string ip)
