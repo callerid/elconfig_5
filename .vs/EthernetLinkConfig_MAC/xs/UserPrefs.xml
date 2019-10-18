@@ -1,0 +1,29 @@
+﻿<Properties StartupConfiguration="{78663C7E-F31B-4820-A1BD-D1A181511072}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="EthernetLinkConfig/Classes/UdpRecieverClass.cs">
+    <Files>
+      <File FileName="EthernetLinkConfig/Classes/UdpRecieverClass.cs" Line="181" Column="92" />
+      <File FileName="EthernetLinkConfig/Forms/FrmMain.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="EthernetLinkConfig_MAC" expanded="True">
+            <Node name="EthernetLinkConfig" expanded="True">
+              <Node name="Classes" expanded="True">
+                <Node name="UdpRecieverClass.cs" selected="True" />
+              </Node>
+              <Node name="Forms" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.EthernetLinkConfig PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
