@@ -29,29 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUniCast));
-            this.ipSendIPAddress = new IPAddressControlLib.IPAddressControl();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnUseBroadcast = new System.Windows.Forms.Button();
             this.tvFoundIPs = new System.Windows.Forms.TreeView();
             this.label2 = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.ipSendIPAddress = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // ipSendIPAddress
-            // 
-            this.ipSendIPAddress.AllowInternalTab = false;
-            this.ipSendIPAddress.AutoHeight = true;
-            this.ipSendIPAddress.BackColor = System.Drawing.SystemColors.Window;
-            this.ipSendIPAddress.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ipSendIPAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.ipSendIPAddress.Location = new System.Drawing.Point(155, 104);
-            this.ipSendIPAddress.MinimumSize = new System.Drawing.Size(84, 22);
-            this.ipSendIPAddress.Name = "ipSendIPAddress";
-            this.ipSendIPAddress.ReadOnly = false;
-            this.ipSendIPAddress.Size = new System.Drawing.Size(87, 22);
-            this.ipSendIPAddress.TabIndex = 0;
-            this.ipSendIPAddress.Text = "255.255.255.255";
             // 
             // label1
             // 
@@ -109,18 +94,25 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
+            // ipSendIPAddress
+            // 
+            this.ipSendIPAddress.Location = new System.Drawing.Point(155, 104);
+            this.ipSendIPAddress.Name = "ipSendIPAddress";
+            this.ipSendIPAddress.Size = new System.Drawing.Size(90, 22);
+            this.ipSendIPAddress.TabIndex = 8;
+            // 
             // FrmUniCast
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(257, 195);
+            this.Controls.Add(this.ipSendIPAddress);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tvFoundIPs);
             this.Controls.Add(this.btnUseBroadcast);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.ipSendIPAddress);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -134,13 +126,13 @@
         }
 
         #endregion
-
-        private IPAddressControlLib.IPAddressControl ipSendIPAddress;
+        
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnUseBroadcast;
         private System.Windows.Forms.TreeView tvFoundIPs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.TextBox ipSendIPAddress;
     }
 }

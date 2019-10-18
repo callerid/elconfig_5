@@ -37,12 +37,10 @@
             this.lbUnitFoundIP = new System.Windows.Forms.Label();
             this.lbListeningOn = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.tbMAC = new ISEAGE.May610.Diagrammer.matb();
             this.label2 = new System.Windows.Forms.Label();
             this.tbUnitNumber = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.tbDestMAC = new ISEAGE.May610.Diagrammer.matb();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbDestPort = new System.Windows.Forms.TextBox();
@@ -123,6 +121,8 @@
             this.lbDupsPossible = new System.Windows.Forms.Label();
             this.tbIP = new System.Windows.Forms.TextBox();
             this.tbDestIP = new System.Windows.Forms.TextBox();
+            this.tbMAC = new System.Windows.Forms.TextBox();
+            this.tbDestMAC = new System.Windows.Forms.TextBox();
             this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -208,18 +208,6 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Unit IP Address";
             // 
-            // tbMAC
-            // 
-            this.tbMAC.BackColor = System.Drawing.SystemColors.Window;
-            this.tbMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbMAC.Enabled = false;
-            this.tbMAC.Location = new System.Drawing.Point(162, 74);
-            this.tbMAC.Name = "tbMAC";
-            this.tbMAC.Size = new System.Drawing.Size(166, 24);
-            this.tbMAC.TabIndex = 5;
-            this.tbMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.tbMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -259,18 +247,6 @@
             this.label5.Size = new System.Drawing.Size(138, 13);
             this.label5.TabIndex = 14;
             this.label5.Text = "Destination MAC Address";
-            // 
-            // tbDestMAC
-            // 
-            this.tbDestMAC.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDestMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbDestMAC.Enabled = false;
-            this.tbDestMAC.Location = new System.Drawing.Point(162, 160);
-            this.tbDestMAC.Name = "tbDestMAC";
-            this.tbDestMAC.Size = new System.Drawing.Size(166, 24);
-            this.tbDestMAC.TabIndex = 13;
-            this.tbDestMAC.MouseEnter += new System.EventHandler(this.ButtonMouseEnter);
-            this.tbDestMAC.MouseLeave += new System.EventHandler(this.ButtonMouseLeave);
             // 
             // label6
             // 
@@ -696,6 +672,8 @@
             // 
             // panChangers
             // 
+            this.panChangers.Controls.Add(this.tbDestMAC);
+            this.panChangers.Controls.Add(this.tbMAC);
             this.panChangers.Controls.Add(this.tbDestIP);
             this.panChangers.Controls.Add(this.tbIP);
             this.panChangers.Controls.Add(this.btnUnlockUnitNumber);
@@ -703,14 +681,12 @@
             this.panChangers.Controls.Add(this.btnUnlockDestIP);
             this.panChangers.Controls.Add(this.label1);
             this.panChangers.Controls.Add(this.btnUnlockDestPort);
-            this.panChangers.Controls.Add(this.tbMAC);
             this.panChangers.Controls.Add(this.label2);
             this.panChangers.Controls.Add(this.btnUnlockIPAddress);
             this.panChangers.Controls.Add(this.tbUnitNumber);
             this.panChangers.Controls.Add(this.label3);
             this.panChangers.Controls.Add(this.label6);
             this.panChangers.Controls.Add(this.label7);
-            this.panChangers.Controls.Add(this.tbDestMAC);
             this.panChangers.Controls.Add(this.tbDestPort);
             this.panChangers.Controls.Add(this.label5);
             this.panChangers.Location = new System.Drawing.Point(15, 30);
@@ -1044,6 +1020,26 @@
             this.tbDestIP.Size = new System.Drawing.Size(111, 22);
             this.tbDestIP.TabIndex = 31;
             // 
+            // tbMAC
+            // 
+            this.tbMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbMAC.Enabled = false;
+            this.tbMAC.Location = new System.Drawing.Point(163, 76);
+            this.tbMAC.MaxLength = 12;
+            this.tbMAC.Name = "tbMAC";
+            this.tbMAC.Size = new System.Drawing.Size(111, 22);
+            this.tbMAC.TabIndex = 32;
+            // 
+            // tbDestMAC
+            // 
+            this.tbDestMAC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDestMAC.Enabled = false;
+            this.tbDestMAC.Location = new System.Drawing.Point(163, 160);
+            this.tbDestMAC.MaxLength = 12;
+            this.tbDestMAC.Name = "tbDestMAC";
+            this.tbDestMAC.Size = new System.Drawing.Size(111, 22);
+            this.tbDestMAC.TabIndex = 33;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1109,7 +1105,6 @@
         private System.Windows.Forms.Label lbDeluxeUnitDetected;
         private System.Windows.Forms.Label lbListeningOn;
         private System.Windows.Forms.Label label1;
-        private ISEAGE.May610.Diagrammer.matb tbMAC;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbUnitNumber;
         private System.Windows.Forms.Label label3;
@@ -1194,10 +1189,11 @@
         private System.Windows.Forms.Label lbDupsPossible;
         public System.Windows.Forms.Timer timerRefresher;
         private System.Windows.Forms.ToolStripMenuItem boundStatusToolStripMenuItem;
-        public ISEAGE.May610.Diagrammer.matb tbDestMAC;
         private System.Windows.Forms.Button btnUnlockIPAddress;
         private System.Windows.Forms.TextBox tbIP;
         public System.Windows.Forms.TextBox tbDestIP;
+        private System.Windows.Forms.TextBox tbMAC;
+        public System.Windows.Forms.TextBox tbDestMAC;
     }
 }
 
