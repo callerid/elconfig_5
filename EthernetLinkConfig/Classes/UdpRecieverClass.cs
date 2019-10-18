@@ -556,17 +556,7 @@ namespace EthernetLinkConfig.Classes
                 sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
             }
 
-            try
-            {
-                //sendClient.Send(toSend, toSend.Length, sendEndPoint);
-            }
-            catch(Exception ex)
-            {
-                if (!Program.IsMono)
-                {
-                    Console.Write(ex.ToString());
-                }
-            }
+            sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
     }
