@@ -1706,26 +1706,41 @@ namespace EthernetLinkConfig
         private string GetComputerIP()
         {
 
-            if (Program.IsMono)
-            {
+            string ip_wired = GetLocalIPv4(NetworkInterfaceType.Ethernet);
+            string ip_wireless = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
 
-                var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (var ip in host.AddressList)
+            if (string.IsNullOrEmpty(ip_wired))
+            {
+                if (string.IsNullOrEmpty(ip_wireless))
                 {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    return "0.0.0.0";
+                }
+
+                return ip_wireless;
+            }
+            else
+            {
+                return ip_wired;
+            }
+        }
+
+        public string GetLocalIPv4(NetworkInterfaceType _type)
+        {
+            string output = "";
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
                     {
-                        return ip.ToString();
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            output = ip.Address.ToString();
+                        }
                     }
                 }
-                throw new Exception("No network adapters with an IPv4 address in the system!");
-
             }
-
-            string strHostName = System.Net.Dns.GetHostName();
-            string strIPAddress = System.Net.Dns.GetHostByName(strHostName).AddressList[0].ToString();
-        
-            return strIPAddress;
-
+            return output;
         }
 
         private string GetComputerMAC()
