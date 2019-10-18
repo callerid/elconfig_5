@@ -38,9 +38,6 @@
     <Reference Include="IPAddressControlLib">
       <HintPath>.\IPAddressControlLib.dll</HintPath>
     </Reference>
-    <Reference Include="IPControlsClass">
-      <HintPath>..\..\..\..\..\Local VS Builds\IPControlsClass\IPControlsClass.dll</HintPath>
-    </Reference>
     <Reference Include="matb">
       <HintPath>.\matb.dll</HintPath>
     </Reference>

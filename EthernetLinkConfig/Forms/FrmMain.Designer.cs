@@ -92,8 +92,6 @@
             this.btnUnlockDestIP = new System.Windows.Forms.Button();
             this.btnUnlockDestMAC = new System.Windows.Forms.Button();
             this.panChangers = new System.Windows.Forms.Panel();
-            this.tbDestIP = new IPControlsClass.IPInput();
-            this.tbIP = new IPControlsClass.IPInput();
             this.btnUnlockIPAddress = new System.Windows.Forms.Button();
             this.lbDups = new System.Windows.Forms.Label();
             this.ckbIgnoreDups = new System.Windows.Forms.CheckBox();
@@ -123,6 +121,8 @@
             this.btnBlockingConfig = new System.Windows.Forms.Button();
             this.imgConnected = new System.Windows.Forms.PictureBox();
             this.lbDupsPossible = new System.Windows.Forms.Label();
+            this.tbIP = new System.Windows.Forms.TextBox();
+            this.tbDestIP = new System.Windows.Forms.TextBox();
             this.panStatus.SuspendLayout();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommData)).BeginInit();
@@ -718,30 +718,6 @@
             this.panChangers.Size = new System.Drawing.Size(417, 206);
             this.panChangers.TabIndex = 30;
             // 
-            // tbDestIP
-            // 
-            this.tbDestIP.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbDestIP.Enabled = false;
-            this.tbDestIP.HexIP = "00000000";
-            this.tbDestIP.Location = new System.Drawing.Point(162, 132);
-            this.tbDestIP.MinimumSize = new System.Drawing.Size(125, 20);
-            this.tbDestIP.Name = "tbDestIP";
-            this.tbDestIP.Size = new System.Drawing.Size(126, 20);
-            this.tbDestIP.TabIndex = 31;
-            // 
-            // tbIP
-            // 
-            this.tbIP.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbIP.Enabled = false;
-            this.tbIP.HexIP = "00000000";
-            this.tbIP.Location = new System.Drawing.Point(162, 48);
-            this.tbIP.MinimumSize = new System.Drawing.Size(125, 20);
-            this.tbIP.Name = "tbIP";
-            this.tbIP.Size = new System.Drawing.Size(126, 20);
-            this.tbIP.TabIndex = 30;
-            // 
             // btnUnlockIPAddress
             // 
             this.btnUnlockIPAddress.Location = new System.Drawing.Point(339, 47);
@@ -1048,6 +1024,26 @@
             this.lbDupsPossible.Text = "Duplicates available for Wireless Apps";
             this.lbDupsPossible.Visible = false;
             // 
+            // tbIP
+            // 
+            this.tbIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbIP.Enabled = false;
+            this.tbIP.Location = new System.Drawing.Point(162, 45);
+            this.tbIP.MaxLength = 12;
+            this.tbIP.Name = "tbIP";
+            this.tbIP.Size = new System.Drawing.Size(111, 22);
+            this.tbIP.TabIndex = 30;
+            // 
+            // tbDestIP
+            // 
+            this.tbDestIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDestIP.Enabled = false;
+            this.tbDestIP.Location = new System.Drawing.Point(163, 134);
+            this.tbDestIP.MaxLength = 12;
+            this.tbDestIP.Name = "tbDestIP";
+            this.tbDestIP.Size = new System.Drawing.Size(111, 22);
+            this.tbDestIP.TabIndex = 31;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1200,8 +1196,8 @@
         private System.Windows.Forms.ToolStripMenuItem boundStatusToolStripMenuItem;
         public ISEAGE.May610.Diagrammer.matb tbDestMAC;
         private System.Windows.Forms.Button btnUnlockIPAddress;
-        private IPControlsClass.IPInput tbIP;
-        public IPControlsClass.IPInput tbDestIP;
+        private System.Windows.Forms.TextBox tbIP;
+        public System.Windows.Forms.TextBox tbDestIP;
     }
 }
 
