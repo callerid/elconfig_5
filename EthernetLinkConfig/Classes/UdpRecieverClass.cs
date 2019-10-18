@@ -535,7 +535,7 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-
+            if (!IsBound) return;
             if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
 
             IPEndPoint sendEndPoint;
