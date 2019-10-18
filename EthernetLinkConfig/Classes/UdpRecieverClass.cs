@@ -170,7 +170,7 @@ namespace EthernetLinkConfig.Classes
 
             IPEndPoint sendEndPoint;
 
-            if (Common.IsRunningOnMono())
+            if (Type.GetType("Mono.Runtime") != null)
             {
                 if (FrmMain.SendToIP == "255.255.255.255")
                 {
