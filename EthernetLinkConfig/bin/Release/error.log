@@ -1,0 +1,36 @@
+
+Unhandled Exception:
+System.NotImplementedException: The method or operation is not implemented.
+  at System.Net.NetworkInformation.UnixIPGlobalProperties.GetActiveUdpListeners () [0x00000] in <bc69ad8632744cfba18f9705e53c6302>:0 
+  at EthernetLinkConfig.Classes.UdpReceiverClass6699.UdpIdleReceive () [0x00006] in <dbcd7d6f22a44766a10cefe5541fa681>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00014] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00071] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x0002b] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x00008] in <ba70b91736bd40cb990a357097dba9c3>:0 
+
+Unhandled Exception:
+System.NotImplementedException: The method or operation is not implemented.
+  at System.Net.NetworkInformation.UnixIPGlobalProperties.GetActiveUdpListeners () [0x00000] in <bc69ad8632744cfba18f9705e53c6302>:0 
+  at EthernetLinkConfig.Classes.UdpReceiverClass3520.UdpIdleReceive () [0x00006] in <dbcd7d6f22a44766a10cefe5541fa681>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00014] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00071] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x0002b] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x00008] in <ba70b91736bd40cb990a357097dba9c3>:0 
+[ERROR] FATAL UNHANDLED EXCEPTION: System.NotImplementedException: The method or operation is not implemented.
+  at System.Net.NetworkInformation.UnixIPGlobalProperties.GetActiveUdpListeners () [0x00000] in <bc69ad8632744cfba18f9705e53c6302>:0 
+  at EthernetLinkConfig.Classes.UdpReceiverClass3520.UdpIdleReceive () [0x00006] in <dbcd7d6f22a44766a10cefe5541fa681>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00014] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00071] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x0002b] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x00008] in <ba70b91736bd40cb990a357097dba9c3>:0 
+[ERROR] FATAL UNHANDLED EXCEPTION: System.NotImplementedException: The method or operation is not implemented.
+  at System.Net.NetworkInformation.UnixIPGlobalProperties.GetActiveUdpListeners () [0x00000] in <bc69ad8632744cfba18f9705e53c6302>:0 
+  at EthernetLinkConfig.Classes.UdpReceiverClass6699.UdpIdleReceive () [0x00006] in <dbcd7d6f22a44766a10cefe5541fa681>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00014] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00071] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x0002b] in <ba70b91736bd40cb990a357097dba9c3>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x00008] in <ba70b91736bd40cb990a357097dba9c3>:0 
