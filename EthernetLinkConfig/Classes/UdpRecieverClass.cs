@@ -33,7 +33,11 @@ namespace EthernetLinkConfig.Classes
         {
 
             // Check if port already bound
-            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
+            bool alreadyinuse = false;
+            if (!Common.IsRunningOnMono())
+            {
+                alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
+            }
 
             if(alreadyinuse)
             {
@@ -191,7 +195,11 @@ namespace EthernetLinkConfig.Classes
         {
 
             // Check if port already bound
-            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 3520);
+            bool alreadyinuse = false;
+            if (!Common.IsRunningOnMono())
+            {
+                alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
+            }
 
             if (alreadyinuse)
             {
