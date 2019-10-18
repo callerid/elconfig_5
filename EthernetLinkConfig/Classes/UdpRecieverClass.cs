@@ -165,7 +165,24 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
+            IPEndPoint sendEndPoint;
+
+            if (Common.IsRunningOnMono())
+            {
+                if (FrmMain.SendToIP == "255.255.255.255")
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Any, 6699);
+                }
+                else
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
+                }
+            }
+            else
+            {
+                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
+            }
+
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
@@ -329,7 +346,24 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
+            IPEndPoint sendEndPoint;
+
+            if (Common.IsRunningOnMono())
+            {
+                if (FrmMain.SendToIP == "255.255.255.255")
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Any, 3520);
+                }
+                else
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
+                }
+            }
+            else
+            {
+                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
+            }
+
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
@@ -359,7 +393,11 @@ namespace EthernetLinkConfig.Classes
         {
 
             // Check if port already bound
-            bool alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == ListenOn);
+            bool alreadyinuse = false;
+            if (!Common.IsRunningOnMono())
+            {
+                alreadyinuse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(p => p.Port == 6699);
+            }
 
             if (alreadyinuse)
             {
@@ -491,7 +529,24 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
+            IPEndPoint sendEndPoint;
+
+            if (Common.IsRunningOnMono())
+            {
+                if (FrmMain.SendToIP == "255.255.255.255")
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Any, ListenOn);
+                }
+                else
+                {
+                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
+                }
+            }
+            else
+            {
+                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
+            }
+
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
