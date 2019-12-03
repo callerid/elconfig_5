@@ -51,9 +51,9 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(166, 24);
+            this.label11.Location = new System.Drawing.Point(181, 24);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(111, 13);
+            this.label11.Size = new System.Drawing.Size(112, 13);
             this.label11.TabIndex = 49;
             this.label11.Text = "Reset Line Count To:";
             // 
@@ -78,18 +78,18 @@
             "21",
             "25",
             "33"});
-            this.cbLineCount.Location = new System.Drawing.Point(283, 21);
+            this.cbLineCount.Location = new System.Drawing.Point(299, 21);
             this.cbLineCount.Name = "cbLineCount";
-            this.cbLineCount.Size = new System.Drawing.Size(44, 21);
+            this.cbLineCount.Size = new System.Drawing.Size(75, 21);
             this.cbLineCount.TabIndex = 48;
             this.cbLineCount.SelectedIndexChanged += new System.EventHandler(this.cbLineCount_SelectedIndexChanged);
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(252, 102);
+            this.btnOK.Location = new System.Drawing.Point(299, 102);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 51;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -98,12 +98,12 @@
             // 
             this.lbAskingChange.AutoSize = true;
             this.lbAskingChange.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbAskingChange.Location = new System.Drawing.Point(58, 51);
+            this.lbAskingChange.Location = new System.Drawing.Point(80, 51);
             this.lbAskingChange.Name = "lbAskingChange";
             this.lbAskingChange.Size = new System.Drawing.Size(224, 39);
             this.lbAskingChange.TabIndex = 52;
             this.lbAskingChange.Text = "Starting line number on the unit is [X].\r\nIf only one Caller ID device is install" +
-                "ed, the\r\nline number needs to be changed to 1.";
+    "ed, the\r\nline number needs to be changed to 1.";
             // 
             // btnCancel
             // 
@@ -119,7 +119,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(339, 137);
+            this.ClientSize = new System.Drawing.Size(386, 137);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lbAskingChange);
             this.Controls.Add(this.btnOK);

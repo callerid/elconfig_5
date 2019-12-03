@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace EthernetLinkConfig.Classes
 {
@@ -75,13 +76,20 @@ namespace EthernetLinkConfig.Classes
 
         public static void WaitFor(int milliSeconds)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            while (sw.ElapsedMilliseconds < milliSeconds)
+            if (!IsRunningOnMono())
             {
-                Application.DoEvents();
+                var sw = new Stopwatch();
+                sw.Start();
+                while (sw.ElapsedMilliseconds < milliSeconds)
+                {
+                    Application.DoEvents();
+                }
+                sw.Stop();
+
+                return;
             }
-            sw.Stop();
+
+            Thread.Sleep(milliSeconds);
         }
 
         public static string HexFromIP(string ip)
@@ -126,6 +134,29 @@ namespace EthernetLinkConfig.Classes
 
             if (Program.IsMono)
             {
+                string filepath = Application.StartupPath + @"/log.txt";
+                
+                string write_linem = "Field Changed: " + field + Environment.NewLine + "On: " + DateTime.Now.ToShortDateString() + " at " + DateTime.Now.ToShortTimeString() + Environment.NewLine +
+                    "Changed To: " + changed_to + Environment.NewLine + "Changed From: " + changed_from;
+
+                if (File.Exists(filepath))
+                {
+                    using (StreamWriter fs = File.AppendText(filepath))
+                    {
+                        // writing data in string
+                        fs.Write(Environment.NewLine + write_linem);
+                    }
+                }
+                else
+                {
+                    using (FileStream fs = File.Create(filepath))
+                    {
+                        // writing data in string
+                        byte[] info = new UTF8Encoding(true).GetBytes(write_linem);
+                        fs.Write(info, 0, info.Length);
+                    }
+                }
+
                 return;
             }
 
@@ -154,6 +185,26 @@ namespace EthernetLinkConfig.Classes
 
             if (Program.IsMono)
             {
+                string dividerm = "---------------------------------------------------------------------------";
+                if (File.Exists(filename))
+                {
+                    using (StreamWriter fs = File.AppendText(filename))
+                    {
+                        // writing data in string
+                        fs.Write(log + Environment.NewLine + dividerm + Environment.NewLine);
+                    }
+                }
+                else
+                {
+                    using (FileStream fs = File.Create(filename))
+                    {
+                        // writing data in string
+                        byte[] info = new UTF8Encoding(true).GetBytes(log + Environment.NewLine + dividerm + Environment.NewLine);
+                        fs.Write(info, 0, info.Length);
+                    }
+                }
+                
+
                 return;
             }
 
@@ -174,7 +225,16 @@ namespace EthernetLinkConfig.Classes
 
             if (Program.IsMono)
             {
-                return "";
+                FileStream fileStream = new FileStream(Application.StartupPath + @"/log.txt", FileMode.Open, FileAccess.Read, FileShare.Read, 64 * 1024,
+                    (FileOptions)0x20000000 | FileOptions.WriteThrough & FileOptions.SequentialScan);
+
+                string fileContents;
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    fileContents = reader.ReadToEnd();
+                }
+
+                return fileContents;
             }
 
             string my_docs_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

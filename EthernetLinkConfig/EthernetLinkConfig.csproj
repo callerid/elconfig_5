@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\..\Local VS Builds\ELConfig5_MAC\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,15 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IPAddressControlLib">
-      <HintPath>.\IPAddressControlLib.dll</HintPath>
+    <Reference Include="CustomIPControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Local VS Builds\ELConfig5_MAC\CustomIPControl.dll</HintPath>
     </Reference>
-    <Reference Include="IPControlsClass">
-      <HintPath>..\..\..\..\..\Local VS Builds\IPControlsClass\IPControlsClass.dll</HintPath>
-    </Reference>
-    <Reference Include="matb">
-      <HintPath>.\matb.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -1,0 +1,11 @@
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\bin\Debug\CustomIPControl.dll
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\bin\Debug\CustomIPControl.pdb
+C:\Local VS Builds\ELConfig5_MAC\CustomIPControl.dll
+C:\Local VS Builds\ELConfig5_MAC\CustomIPControl.pdb
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.ipControl.resources
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.csproj.GenerateResource.cache
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.csproj.CoreCompileInputs.cache
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.dll
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.pdb
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.csprojAssemblyReference.cache
+C:\Users\spenl\Desktop\elconfig_5m\CustomIPControl\obj\Debug\CustomIPControl.macControl.resources

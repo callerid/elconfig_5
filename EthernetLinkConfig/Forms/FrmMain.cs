@@ -13,6 +13,7 @@ using EthernetLinkConfig.Forms;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
+using System.IO;
 
 namespace EthernetLinkConfig
 {
@@ -110,6 +111,18 @@ namespace EthernetLinkConfig
             Loading = true;
 
             InitializeComponent();
+
+            string filepath = Application.StartupPath + @"/log.txt";
+            if (!File.Exists(filepath))
+            {
+                using (FileStream fs = File.Create(filepath))
+                {
+                    // writing data in string
+                    byte[] info = new UTF8Encoding(true).GetBytes("");
+                    fs.Write(info, 0, info.Length);
+                }
+            }
+
             FSetLineCount = new FrmSetLineCount(0);
             FSetLineCountOldFirmware = new FrmOldFirmwareSettingLineCount();
             MinimumSize = Size;
@@ -139,6 +152,35 @@ namespace EthernetLinkConfig
             // Start Listeners
             Subscribe(UdpReceiver6699);
             Subscribe(UdpReceiver3520);
+
+            if(!Common.IsRunningOnMono())
+            {
+                rtbHint.Text = @"This configuration and test tool is normally for:" + (char)13 + "     - Setting the static IP of the device" + (char)13 + "     - Testing for call records arriving from the Caller ID unit" + (char)13 + "" + (char)13 + "Advanced users can set a number of other parameters including:" + (char)13 + "     - Toggles for output options on Deluxe units" + (char)13 + "     - Destination IP and MAC unicasts" + (char)13 + "     - Duplicate call record delivery to increase throughput." + (char)13 + "     - Starting Line count when connecting multiple units" + (char)13 + "	 " + (char)13 + "Unit Number:" + (char)13 + "	Some applications use unit numbers to match data arriving from multiple units." + (char)13 + "" + (char)13 + "Unit IP Address:" + (char)13 + "	Set a static IP address within the IP scheme either outside the DHCP range or a value that would not create an IP conflict with another device on the network." + (char)13 + "	Based on this computer’s IP address of: [computer_ip] the suggested IP of the unit should be: [suggested_ip]." + (char)13 + "	" + (char)13 + "Unit Destination Port:" + (char)13 + "	The default Network communication port is 3520. Do not change unless your application absolutely requires it. A value other than 3520 or 6699 will require you change the listening port on this application." + (char)13 + "	" + (char)13 + "Destination IP Address:" + (char)13 + "	The IP to where the call records will be sent. The default is 255.255.255.255 (broadcast) which most applications use, even if only one PC is listening for data. Change only if necessary." + (char)13 + "	" + (char)13 + "Unit MAC Address:" + (char)13 + "	The MAC address to where call records will be sent. The default is FF-FF-FF-FF-FF-FF (Broadcast) which most applications use. Change to specific MAC only if the Destination IP is specified as a unicast.";
+
+                string computerIP = GetComputerIP();
+
+                string[] computerIPParts = computerIP.Split('.');
+                int lastInt = int.Parse(computerIPParts[3]);
+
+                string suggestedIP = "192.168.0.90";
+                if (lastInt > 50 && lastInt < 100)
+                {
+                    suggestedIP = computerIPParts[0] + "." + computerIPParts[1] + "." + computerIPParts[2] + ".190";
+                }
+                else
+                {
+                    suggestedIP = computerIPParts[0] + "." + computerIPParts[1] + "." + computerIPParts[2] + ".90";
+                }
+
+                rtbHint.Text = rtbHint.Text.Replace("[computer_ip]", computerIP);
+                rtbHint.Text = rtbHint.Text.Replace("[suggested_ip]", suggestedIP);
+
+
+            }
+            else
+            {
+                
+            }
 
             Loading = false;
         }
@@ -514,7 +556,7 @@ namespace EthernetLinkConfig
 
             if (receptionBytes.Length == 57)
             {
-
+                
                 Match fVersion = Regex.Match(reception, @"V(\d\.\d)");
 
                 if (fVersion.Success)
@@ -634,6 +676,11 @@ namespace EthernetLinkConfig
             }
             MACAddress = MACAddress.Substring(0, MACAddress.Length - 1);
             
+            if(MACAddress.Substring(0,2) != "06")
+            {
+                ResetUnitMAC();
+            }
+            
             if (!tbMAC.Enabled)
             {
                 tbMAC.Text = MACAddress;
@@ -745,10 +792,30 @@ namespace EthernetLinkConfig
                 if (Dups > 1 && !HaveShownDupResetWindow)
                 {
                     HaveShownDupResetWindow = true;
-                    FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne(Dups);
-                    fDupsOverOne.Show();
+
+                    if (!Common.IsRunningOnMono())
+                    {
+                        FrmDupsOverOne fDupsOverOne = new FrmDupsOverOne(Dups);
+                        fDupsOverOne.ShowDialog();
+                    }
                 }
             }
+        }
+
+        public void ResetUnitMAC()
+        {
+            Common.WaitFor(150);
+
+            string year = DateTime.Now.Year.ToString();
+            string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
+            string day = DateTime.Now.Day.ToString().PadLeft(2, '0');
+            string secs = DateTime.Now.Second.ToString().PadLeft(2, '0');
+
+            string mac = "06" + year + month + day + secs;
+
+            byte[] to_send = ASCIIEncoding.ASCII.GetBytes("^^IdM" + mac);
+            UdpReceiver3520.SendUDP(to_send);
+
         }
 
         public static void SendUdp(string toSend, int port)
@@ -780,7 +847,7 @@ namespace EthernetLinkConfig
             
             SendUdp("^^Id-" + toSend, LinkPorts.MainPort);
             Common.WaitFor(250);
-            Common.AddToLogFile("Command: " + toSend.ToUpper(), "", "");
+            Common.AddToLogFile("Command: " + btn.Text.ToUpper(), "", "");
 
         }
 
@@ -807,6 +874,11 @@ namespace EthernetLinkConfig
             btnRetrieveToggles_Click(new object(), new EventArgs());
             Common.AddToLogFile("Toggle: " + toSend.ToUpper(), previous_toggle, toSend);
 
+            if (Common.IsRunningOnMono())
+            {
+                Common.WaitFor(250);
+                btnRetrieveToggles_Click(new object(), new EventArgs());
+            }
         }
 
         private void UpdateToggles()
@@ -906,7 +978,8 @@ namespace EthernetLinkConfig
 
                 case "btnUnlockDestMAC":
 
-                    SendUdp("^^IdC" + tbDestMAC.Text.Replace(":", ""), LinkPorts.MainPort);
+                    string mac = tbDestMAC.Text.Replace(":", "").Replace("-","");
+                    SendUdp("^^IdC" + mac, LinkPorts.MainPort);
                     Common.AddToLogFile("Destination MAC", PreviousDestMAC.Replace(":","-"), tbDestMAC.Text.Replace(":", "-"));
 
                     break;
@@ -1332,7 +1405,7 @@ namespace EthernetLinkConfig
 
         private void ToggleMouseLeave(object sender, EventArgs e)
         {
-            lbHintHeader.Text = "ELConfig. 5";
+            lbHintHeader.Text = "ELConfig 5";
             rtbHint.Text = "This configuration and test tool is normally for:\n     - Setting the static IP of the device\n     - Testing for call records arriving from the Caller ID unit\n\n" +
                 "Advanced users can set a number of other parameters including:\n     - Toggles for output options on Deluxe units\n     - Destination IP and MAC unicasts\n     - Duplicate call record delivery to increase throughput.\n" +
                 "     - Starting Line count when connecting multiple units";
@@ -1627,6 +1700,9 @@ namespace EthernetLinkConfig
             }
 
             if (LinkPorts.AnyDuplicateIPs()) timerRefresher.Interval = 4000;
+
+
+
         }
 
         private void btnClearPhoneData_Click(object sender, EventArgs e)
@@ -1649,6 +1725,11 @@ namespace EthernetLinkConfig
             SendUdp("^^Id-V", LinkPorts.MainPort);
             Common.WaitFor(250);
             SendUdp("^^Id-V", LinkPorts.MainPort);
+
+            if (Common.IsRunningOnMono())
+            {
+                btnRetrieveToggles.BackColor = SystemColors.Control;
+            }
         }
 
         private void timerGetToggles_Tick(object sender, EventArgs e)
@@ -1692,8 +1773,9 @@ namespace EthernetLinkConfig
             SendUdp("^^Id-R", LinkPorts.MainPort);
 
             Common.MessageBox("Command Sent.", "Finished");
-            Common.WaitFor(1000);
-            btnRetrieveToggles_Click(new object(), new EventArgs());
+            Program.FMain.dgvCommData.Rows.Clear();
+            Common.WaitFor(100);
+            btnRetrieveToggles_Click(null, null);
         }
 
         public FrmComputerIP fComputerMsg = null;
@@ -1709,15 +1791,49 @@ namespace EthernetLinkConfig
             if (Program.IsMono)
             {
 
-                var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (var ip in host.AddressList)
+                //Create process
+                System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+
+                //strCommand is path and file name of command to run
+                pProcess.StartInfo.FileName = "ifconfig";
+                
+                pProcess.StartInfo.UseShellExecute = false;
+
+                //Set output of program to be written to process output stream
+                pProcess.StartInfo.RedirectStandardOutput = true;
+
+                //Start the process
+                pProcess.Start();
+
+                //Get program output
+                string strOutput = pProcess.StandardOutput.ReadToEnd();
+
+                //Wait for process to finish
+                pProcess.WaitForExit();
+
+                Match matcher = Regex.Match(strOutput, @"inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})");
+
+                List<string> ips = new List<string>();
+                while (matcher.Success)
                 {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    string ip = matcher.Groups[1].Value.ToString();
+
+                    if(ip != "127.0.0.1")
                     {
-                        return ip.ToString();
+                        ips.Add(ip);
                     }
+
+                    matcher = matcher.NextMatch();
                 }
-                throw new Exception("No network adapters with an IPv4 address in the system!");
+
+                if (ips.Count > 0)
+                {
+                    return ips[0];
+                }
+                else
+                {
+                    return "127.0.0.1";
+                }
 
             }
 
@@ -1728,8 +1844,54 @@ namespace EthernetLinkConfig
 
         }
 
-        private string GetComputerMAC()
+        private string GetComputerMAC(string ip = "")
         {
+
+            if (Program.IsMono)
+            {
+
+                //Create process
+                System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+
+                //strCommand is path and file name of command to run
+                pProcess.StartInfo.FileName = "ifconfig";
+
+                pProcess.StartInfo.UseShellExecute = false;
+
+                //Set output of program to be written to process output stream
+                pProcess.StartInfo.RedirectStandardOutput = true;
+
+                //Start the process
+                pProcess.Start();
+
+                //Get program output
+                string strOutput = pProcess.StandardOutput.ReadToEnd();
+
+                //Wait for process to finish
+                pProcess.WaitForExit();
+
+                Match matcher = Regex.Match(strOutput, @"ether ([0-9A-Za-z]{2}\:[0-9A-Za-z]{2}\:[0-9A-Za-z]{2}\:[0-9A-Za-z]{2}\:[0-9A-Za-z]{2}\:[0-9A-Za-z]{2})");
+
+                List<string> macs = new List<string>();
+                while (matcher.Success)
+                {
+                    string mac = matcher.Groups[1].Value.ToString();
+
+                    macs.Add(mac.Replace(":", "-").ToUpper());
+                    matcher = matcher.NextMatch();
+
+                }
+
+                if (macs.Count > 0)
+                {
+                    return macs[0];
+                }
+                else
+                {
+                    return "00-00-00-00-00-00";
+                }
+
+            }
 
             var macAddr = (from nic in NetworkInterface.GetAllNetworkInterfaces()
                            where nic.OperationalStatus == OperationalStatus.Up
@@ -2030,6 +2192,16 @@ namespace EthernetLinkConfig
         {
             BoundStatus fBound = new BoundStatus();
             fBound.ShowDialog();
+        }
+
+        private void btnUnlockUnitNumber_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMouseEnter(sender, e);
+        }
+
+        private void btnUnlockDestPort_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMouseEnter(sender, e);
         }
     }
 }

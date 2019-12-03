@@ -52,6 +52,8 @@ namespace EthernetLinkConfig.Forms
             Common.AddToLogFile("Line Count", previous_lineCnt.ToString(), cbLineCount.Text.ToString());
             Common.WaitFor(250);
             FrmMain.AskedToChangeLineCount = true;
+            Program.FMain.dgvCommData.Rows.Clear();
+            Common.WaitFor(100);
             RetrieveToggles();
 
             lbAskingChange.Visible = int.Parse(cbLineCount.Text.ToString()) > 8;

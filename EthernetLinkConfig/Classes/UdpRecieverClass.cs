@@ -167,25 +167,7 @@ namespace EthernetLinkConfig.Classes
         {
 
             if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
-
-            IPEndPoint sendEndPoint;
-
-            if (Program.IsMono)
-            {
-                if (FrmMain.SendToIP == "255.255.255.255")
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Any, 6699);
-                }
-                else
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
-                }
-            }
-            else
-            {
-                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
-            }
-
+            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 6699);
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
         }
 
@@ -351,26 +333,9 @@ namespace EthernetLinkConfig.Classes
         {
 
             if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
-
-            IPEndPoint sendEndPoint;
-
-            if (Program.IsMono)
-            {
-                if (FrmMain.SendToIP == "255.255.255.255")
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Any, 3520);
-                }
-                else
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
-                }
-            }
-            else
-            {
-                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
-            }
-
+            IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), 3520);
             sendClient.Send(toSend, toSend.Length, sendEndPoint);
+
         }
 
     }
@@ -535,28 +500,17 @@ namespace EthernetLinkConfig.Classes
 
         public void SendUDP(byte[] toSend)
         {
-
-            if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
-
-            IPEndPoint sendEndPoint;
-
-            if (Program.IsMono)
+            try
             {
-                if (FrmMain.SendToIP == "255.255.255.255")
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Any, ListenOn);
-                }
-                else
-                {
-                    sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
-                }
+                if (string.IsNullOrEmpty(FrmMain.SendToIP)) return;
+                IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
+                sendClient.Send(toSend, toSend.Length, sendEndPoint);
             }
-            else
+            catch
             {
-                sendEndPoint = new IPEndPoint(IPAddress.Parse(FrmMain.SendToIP), ListenOn);
+                Console.WriteLine("send-custom-failed: " + FrmMain.SendToIP);
             }
-
-            sendClient.Send(toSend, toSend.Length, sendEndPoint);
+            
         }
 
     }

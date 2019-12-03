@@ -21,6 +21,9 @@ namespace EthernetLinkConfig.Forms
 
         private void timerUpdate_Tick(object sender, EventArgs e)
         {
+
+            if (Program.FMain == null) return;
+
             lbLineCount.Text = "Line Count = " + Program.FMain.LineCount.ToString();
 
             if (Program.FMain.LineCount == 49)
