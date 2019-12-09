@@ -59,9 +59,13 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Program found on port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
+                    
                 }
             }
 
@@ -117,9 +121,12 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Failed to bind to port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
                 }
             }
 
@@ -222,9 +229,12 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Program found on port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
                 }
             }
 
@@ -283,9 +293,12 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Failed to bind to port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
                 }
 
                 
@@ -390,9 +403,12 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Program found on port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
                 }
                 
             }
@@ -450,9 +466,12 @@ namespace EthernetLinkConfig.Classes
                         message.Replace("[possible_program]", "");
                     }
 
-                    MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    StatusString = "Failed to bind to port.";
-                    return;
+                    if (!message.Contains("[possible"))
+                    {
+                        MessageBox.Show(new Form() { TopMost = true }, message, "Failed To Bind", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StatusString = "Program found on port.";
+                        return;
+                    }
                 }
 
                 

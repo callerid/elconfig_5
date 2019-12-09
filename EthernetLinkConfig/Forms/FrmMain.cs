@@ -380,7 +380,7 @@ namespace EthernetLinkConfig
             if (receptionBytes.Length == 28 || receptionBytes.Length == 29 || receptionBytes.Length == 52 || receptionBytes.Length == 53)
             {
 
-                Match fVersionBoot = Regex.Match(reception, @"V(\d\.\d)");
+                Match fVersionBoot = Regex.Match(reception, @"V(\d(\.)?\d)");
 
                 if (fVersionBoot.Success)
                 {
@@ -1421,8 +1421,9 @@ namespace EthernetLinkConfig
                 string previous = dgvCommData.Rows[dgvCommData.Rows.Count - 1].Cells[DGV_COMM_DATA_DISPLAY_INDEX].Value.ToString();
 
                 Match m = Regex.Match(previous, @"([Ee])([Cc])([Xx])([Uu])([Dd])([Aa])([Ss])([Oo])([Bb])([Kk])([Tt]) L=(\d{1,2}) (\d{1,2}/\d{1,2}) (\d{1,2}:\d{1,2}:\d{1,2})");
+                Match msg = Regex.Match(message, @"([Ee])([Cc])([Xx])([Uu])([Dd])([Aa])([Ss])([Oo])([Bb])([Kk])([Tt]) L=(\d{1,2}) (\d{1,2}/\d{1,2}) (\d{1,2}:\d{1,2}:\d{1,2})");
 
-                if (m.Success && !CheckingToggles)
+                if ((m.Success && msg.Success) && !CheckingToggles)
                 { 
                     return;
                 }
